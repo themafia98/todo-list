@@ -161,8 +161,8 @@ function (_View) {
       }
 
       for (var i = 0; i < arrayTodo.length; i++) {
-        var todoList = document.createElement('p');
-        todoList.setAttribute('draggable', 'true');
+        var todoList = document.createElement('p'); // todoList.setAttribute('draggable','true');
+
         todoList.dataset.num = i;
         todoList.innerHTML = arrayTodo[i];
         here.appendChild(todoList);

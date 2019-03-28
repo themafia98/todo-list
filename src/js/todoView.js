@@ -77,7 +77,7 @@ class Todo extends View {
     for (let i = 0; i < arrayTodo.length; i++){
 
     let todoList = document.createElement('p');
-    todoList.setAttribute('draggable','true');
+    // todoList.setAttribute('draggable','true');
     todoList.dataset.num = i;
     todoList.innerHTML = arrayTodo[i];
     here.appendChild(todoList);
