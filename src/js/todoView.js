@@ -14,6 +14,9 @@ class Todo extends View {
     }
 
     build(){
+        
+        let time = new Date().toLocaleDateString().split('.').reverse().join().replace(/\,/g,'-');
+
         let wrapper = document.createElement('div');
         wrapper.classList.add('wrapper');
 
@@ -41,16 +44,22 @@ class Todo extends View {
         input.setAttribute('type','text');
         input.setAttribute('maxlength', '110');
         input.classList.add('getTodo');
-        input.setAttribute('placeholder','What should you do today?');
+        input.setAttribute('placeholder','What should you do?');
 
         let button = document.createElement('input');
         button.setAttribute('type','button');
         button.classList.add('setTodo');
         button.setAttribute('value','ADD');
 
+        let datePick = document.createElement('input');
+        datePick.classList.add('date');
+        datePick.setAttribute('type','datetime-local');
+        datePick.setAttribute('value',time  + `T${new Date().toLocaleTimeString()}`);
+
         footer.appendChild(titleName);
 
         todoControllers.appendChild(input);
+        todoControllers.appendChild(datePick);
         todoControllers.appendChild(button);
 
         todoList.appendChild(titleTodoList);
@@ -67,21 +76,28 @@ class Todo extends View {
     let here = document.querySelector('.todoList');
     let oldTodo = document.querySelectorAll('p');
 
+    let todoList;
+    let dateAdd;
     if (oldTodo.length){
 
         oldTodo.forEach(element => {
             element.remove();
         });;
     }
-
     for (let i = 0; i < arrayTodo.length; i++){
 
-    let todoList = document.createElement('p');
-    todoList.setAttribute('draggable','true');
-    todoList.dataset.num = i;
-    todoList.innerHTML = arrayTodo[i];
-    here.appendChild(todoList);
+        todoList = document.createElement('p');
+        dateAdd = document.createElement('p');
+        dateAdd.classList.add('dateAdd');
+        dateAdd.innerHTML = 'Last add: ' + localStorage.newTIME;
+        todoList.setAttribute('draggable','true');
+        todoList.dataset.dateAdd = new Date().toLocaleDateString();
+        todoList.dataset.num = i;
+        todoList.innerHTML = arrayTodo[i];
+        here.appendChild(todoList);
     }
+
+    here.insertBefore(dateAdd,here.children[1]);
 
     }
 

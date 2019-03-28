@@ -37,12 +37,15 @@ function (_ListModal) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Storage).call(this));
     _this.arrayList = [];
+    _this.TIMES = [];
     return _this;
   }
 
   _createClass(Storage, [{
     key: "store",
     value: function store(stringTodo) {
+      var date = null;
+      var times = null;
       stringTodo && this.arrayList.push(stringTodo);
       localStorage.list = this.arrayList.join();
       localStorage.newTodo && localStorage.removeItem('newTodo');
@@ -111,6 +114,7 @@ function (_View) {
   _createClass(Todo, [{
     key: "build",
     value: function build() {
+      var time = new Date().toLocaleDateString().split('.').reverse().join().replace(/\,/g, '-');
       var wrapper = document.createElement('div');
       wrapper.classList.add('wrapper');
       var footer = document.createElement('div');
@@ -131,13 +135,18 @@ function (_View) {
       input.setAttribute('type', 'text');
       input.setAttribute('maxlength', '110');
       input.classList.add('getTodo');
-      input.setAttribute('placeholder', 'What should you do today?');
+      input.setAttribute('placeholder', 'What should you do?');
       var button = document.createElement('input');
       button.setAttribute('type', 'button');
       button.classList.add('setTodo');
       button.setAttribute('value', 'ADD');
+      var datePick = document.createElement('input');
+      datePick.classList.add('date');
+      datePick.setAttribute('type', 'datetime-local');
+      datePick.setAttribute('value', time + "T".concat(new Date().toLocaleTimeString()));
       footer.appendChild(titleName);
       todoControllers.appendChild(input);
+      todoControllers.appendChild(datePick);
       todoControllers.appendChild(button);
       todoList.appendChild(titleTodoList);
       section.appendChild(todoList);
@@ -152,6 +161,8 @@ function (_View) {
       var arrayTodo = value.split(',');
       var here = document.querySelector('.todoList');
       var oldTodo = document.querySelectorAll('p');
+      var todoList;
+      var dateAdd;
 
       if (oldTodo.length) {
         oldTodo.forEach(function (element) {
@@ -161,12 +172,18 @@ function (_View) {
       }
 
       for (var i = 0; i < arrayTodo.length; i++) {
-        var todoList = document.createElement('p');
+        todoList = document.createElement('p');
+        dateAdd = document.createElement('p');
+        dateAdd.classList.add('dateAdd');
+        dateAdd.innerHTML = 'Last add: ' + localStorage.newTIME;
         todoList.setAttribute('draggable', 'true');
+        todoList.dataset.dateAdd = new Date().toLocaleDateString();
         todoList.dataset.num = i;
         todoList.innerHTML = arrayTodo[i];
         here.appendChild(todoList);
       }
+
+      here.insertBefore(dateAdd, here.children[1]);
     }
   }]);
 
@@ -228,16 +245,18 @@ function (_Storage) {
         if (e.target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
           localStorage.setItem('newTodo', _this2.btnEnter.value);
 
-          _this2.store(localStorage.newTodo);
+          _this2.store(localStorage.newTodo, e.target.previousSibling);
 
+          localStorage.setItem('newTIME', new Date().toLocaleString());
           console.log(_this2.btnEnter.value.length);
-          todoView.showNewTodo(localStorage.list);
+          todoView.showNewTodo(localStorage.list, localStorage.newTIME);
           _this2.btnEnter.value = '';
         }
 
         if (e.target.dataset.num) {
           var splits = localStorage.list.split(',');
           var currentTodo = null;
+          debugger;
 
           if (splits.some(function (item) {
             return item === e.target.innerHTML;
@@ -252,9 +271,6 @@ function (_Storage) {
 
       document.addEventListener('click', clickEvent, false);
       document.addEventListener('touchend', clickEvent, false);
-      window.addEventListener('storage', function (v) {
-        v.key === 'list' && showNewTodo(todoView.newValue);
-      }, false);
       window.addEventListener('DOMContentLoaded', function () {
         localStorage.list && _this2.store(localStorage.list);
         localStorage.list && todoView.showNewTodo(localStorage.list);

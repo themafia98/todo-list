@@ -11,9 +11,14 @@ class Storage extends ListModal{
     constructor(){
         super();
         this.arrayList = [];
+        this.TIMES = [];
     }
 
-    store(stringTodo){
+    store(stringTodo,...spread){
+
+        let date = null;
+        let times = null;
+
         (stringTodo) && (this.arrayList.push(stringTodo));
         localStorage.list = this.arrayList.join();
         (localStorage.newTodo) && (localStorage.removeItem('newTodo'));

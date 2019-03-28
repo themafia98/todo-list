@@ -61,7 +61,7 @@ body{
             border-radius: 25px;
             border: 2px solid brown;
             text-align: center;
-            top: 50%;
+            top: 80%;
         }
         .setTodo::placeholder{
             text-align: center;
@@ -72,6 +72,16 @@ body{
             background: lightblue;
             color: brown;
         }
+
+        .date {
+            position: absolute;
+            width: 200px;
+            height: 26px;
+            text-align: center;
+            top: 43%;
+            border-radius: 5px;
+            border: 2px solid brown;
+            }
 
     }
 
@@ -98,17 +108,22 @@ body{
             color: brown;
             margin-top: 0;
         }
-        
+
         p[data-num]{
             word-wrap: break-word;
             font-size: 23px;
             background: lightblue;
             text-align: center;
+            margin-top: 0;
         }
         p[data-num]:hover {
             cursor: pointer;
             background: green;
             color: red;
+        }
+
+        .dateAdd {
+            text-align: center;
         }
     }
 
@@ -135,4 +150,13 @@ body{
         height: 100%;
         min-height: 0;
     }
+
+    #todo .title {
+        margin-bottom: 0;
+    }
+
+    #todo .controllers {
+        margin-bottom: 10%;
+
   }
+}

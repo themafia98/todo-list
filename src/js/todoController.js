@@ -12,16 +12,18 @@ class TodoControl extends Storage{
             
             if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
             localStorage.setItem('newTodo',this.btnEnter.value);
-            this.store(localStorage.newTodo);
+            
+            this.store(localStorage.newTodo,e.target.previousSibling);
+            localStorage.setItem('newTIME', new Date().toLocaleString());
             console.log(this.btnEnter.value.length);
-            todoView.showNewTodo(localStorage.list);
+            todoView.showNewTodo(localStorage.list,localStorage.newTIME);
             this.btnEnter.value = '';
             }
 
             if (e.target.dataset.num) {
                let splits = localStorage.list.split(',');
                let currentTodo = null;
-
+                debugger;
                if (splits.some((item) => item === e.target.innerHTML)) {
                    
                 e.target.remove();
@@ -29,17 +31,10 @@ class TodoControl extends Storage{
                 this.updateStorage('list',currentTodo);
                }
             }
-
         };
 
         document.addEventListener('click',clickEvent,false);
         document.addEventListener('touchend',clickEvent,false);
-
-
-        window.addEventListener('storage',(v) => {
-            
-            (v.key === 'list') && (showNewTodo(todoView.newValue));
-        },false);
 
         window.addEventListener('DOMContentLoaded',() =>{
             (localStorage.list) && (this.store(localStorage.list));
