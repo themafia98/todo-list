@@ -14,13 +14,23 @@ class Storage extends ListModal{
     }
 
     store(stringTodo){
-        this.arrayList.push(stringTodo);
+        (stringTodo) && (this.arrayList.push(stringTodo));
         localStorage.list = this.arrayList.join();
-        debugger;
         (localStorage.newTodo) && (localStorage.removeItem('newTodo'));
     }
+
+    resetStore(){
+        localStorage.clear();
+    }
+
+    updateStorage(key, current){
+        this.arrayList = [];
+        current.forEach(element => {
+            this.arrayList.push(element.innerHTML);
+        });
+        localStorage[key] = this.arrayList.join();
+    }
 }
-console.log('list');
 
 class View {
 
@@ -84,8 +94,31 @@ class Todo extends View {
         this.ID.appendChild(wrapper);
     }
 
+    showNewTodo(value){
+    let arrayTodo = value.split(',');
+    let here = document.querySelector('.todoList');
+    let oldTodo = document.querySelectorAll('p');
+
+    if (oldTodo.length){
+        debugger;
+        oldTodo.forEach(element => {
+            element.remove();
+        });;
+    }
+  
+
+    for (let i = 0; i < arrayTodo.length; i++){
+
+    let todoList = document.createElement('p');
+    todoList.dataset.num = i;
+    todoList.innerHTML = arrayTodo[i];
+    here.appendChild(todoList);
+    }
+
+    }
+
 }
-class todoControl extends Storage{
+class TodoControl extends Storage{
 
     constructor({btn,controllerEnter}){
     super();
@@ -93,34 +126,71 @@ class todoControl extends Storage{
     this.btnAdd = btn;
     }
 
-    setLsitener(){
-        this.btnAdd.addEventListener('click',() =>{
-            
-            (this.btnAdd) &&
+    setLsitener(todoView){
+        document.addEventListener('click',(e) =>{
+            if (e.target.classList[0] === 'setTodo') {
             localStorage.setItem('newTodo',this.btnEnter.value);
             this.store(localStorage.newTodo);
-        })
+            todoView.showNewTodo(localStorage.list);
+            }
+
+            if (e.target.dataset.num) {
+               let splits = localStorage.list.split(',');
+               let currentTodo = null;
+
+               if (splits.some((item) => item === e.target.innerHTML)) {
+                   debugger;
+                e.target.remove();
+                currentTodo = document.querySelectorAll('[data-num]');
+                this.updateStorage('list',currentTodo);
+               }
+            }
+
+        },false);
+        window.addEventListener('storage',(v) => {
+            debugger;
+            (v.key === 'list') && (showNewTodo(todoView.newValue));
+        },false);
+
+        window.addEventListener('DOMContentLoaded',() =>{
+            (localStorage.list) && (this.store(localStorage.list));
+            (localStorage.list) && (todoView.showNewTodo(localStorage.list));
+        },false);
     }
 }
 
 (function(){
 
-    let settingsTodo = {
-        appID: document.getElementById('todo'),
-        title:'Todo-list'
+    function building(){
+        let settingsTodo = {
+            appID: document.getElementById('todo'),
+            title:'Todo-list'
+        }
+
+        let todoView = new Todo(settingsTodo);
+        todoView.build();
     }
 
-    let todoView = new Todo(settingsTodo);
-    todoView.build();
+    function controllers() {
+        let settingsController = {
+            controllerEnter: document.querySelector('.getTodo'),
+            btn: document.querySelector('.setTodo')
+        }
 
-    let settingsController = {
-        controllerEnter: document.querySelector('.getTodo'),
-        btn: document.querySelector('.setTodo')
+        let controller = new TodoControl(settingsController);
+        controller.setLsitener(todoView);
     }
 
-    let storageData = new Storage();
-    let controller = new todoControl(settingsController);
-    controller.setLsitener();
+    function main() {
+        let storageData = new Storage();
+
+        building();
+        controllers();
+    }
+
+    return todo = { init: main }
 
 })();
+
+todo.init();
 //# sourceMappingURL=app.js.map

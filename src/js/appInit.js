@@ -1,21 +1,35 @@
 
 (function(){
 
-    let settingsTodo = {
-        appID: document.getElementById('todo'),
-        title:'Todo-list'
+    function building(){
+        let settingsTodo = {
+            appID: document.getElementById('todo'),
+            title:'Todo-list'
+        }
+
+        let todoView = new Todo(settingsTodo);
+        todoView.build();
     }
 
-    let todoView = new Todo(settingsTodo);
-    todoView.build();
+    function controllers() {
+        let settingsController = {
+            controllerEnter: document.querySelector('.getTodo'),
+            btn: document.querySelector('.setTodo')
+        }
 
-    let settingsController = {
-        controllerEnter: document.querySelector('.getTodo'),
-        btn: document.querySelector('.setTodo')
+        let controller = new TodoControl(settingsController);
+        controller.setLsitener(todoView);
     }
 
-    let storageData = new Storage();
-    let controller = new todoControl(settingsController);
-    controller.setLsitener();
+    function main() {
+        let storageData = new Storage();
+
+        building();
+        controllers();
+    }
+
+    return todo = { init: main }
 
 })();
+
+todo.init();

@@ -61,4 +61,27 @@ class Todo extends View {
         this.ID.appendChild(wrapper);
     }
 
+    showNewTodo(value){
+    let arrayTodo = value.split(',');
+    let here = document.querySelector('.todoList');
+    let oldTodo = document.querySelectorAll('p');
+
+    if (oldTodo.length){
+        debugger;
+        oldTodo.forEach(element => {
+            element.remove();
+        });;
+    }
+  
+
+    for (let i = 0; i < arrayTodo.length; i++){
+
+    let todoList = document.createElement('p');
+    todoList.dataset.num = i;
+    todoList.innerHTML = arrayTodo[i];
+    here.appendChild(todoList);
+    }
+
+    }
+
 }

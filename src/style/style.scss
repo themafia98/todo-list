@@ -81,6 +81,8 @@ body{
         height: 90%;
         background:	whitesmoke;
         margin: 0 auto;
+        overflow-y: scroll;
+
         .todoList__title{
             font-size: 35px;
             text-align: center;
@@ -88,6 +90,27 @@ body{
             color: brown;
             margin-top: 0;
         }
+        
+        p[data-num]{
+            font-size: 23px;
+            background: lightblue;
+            text-align: center;
+        }
+        p[data-num]:hover {
+            cursor: pointer;
+            background: green;
+            color: red;
+        }
     }
 
 }
+
+::-webkit-scrollbar {
+    width: 15px;
+    background: grey;
+  }
+
+
+  ::-webkit-scrollbar-thumb {
+    background: blue; 
+  }

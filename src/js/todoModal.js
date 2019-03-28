@@ -14,10 +14,20 @@ class Storage extends ListModal{
     }
 
     store(stringTodo){
-        this.arrayList.push(stringTodo);
+        (stringTodo) && (this.arrayList.push(stringTodo));
         localStorage.list = this.arrayList.join();
-        debugger;
         (localStorage.newTodo) && (localStorage.removeItem('newTodo'));
     }
+
+    resetStore(){
+        localStorage.clear();
+    }
+
+    updateStorage(key, current){
+        this.arrayList = [];
+        current.forEach(element => {
+            this.arrayList.push(element.innerHTML);
+        });
+        localStorage[key] = this.arrayList.join();
+    }
 }
-console.log('list');
