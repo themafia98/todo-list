@@ -13,6 +13,6 @@ class Todo extends View {
     }
 
     showList(){
-        console.log('list');
+        document.write('To-do list start');
     }
 }

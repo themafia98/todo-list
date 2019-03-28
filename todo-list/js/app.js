@@ -38,10 +38,15 @@ function (_View) {
   _createClass(Todo, [{
     key: "showList",
     value: function showList() {
-      console.log('list');
+      document.write('To-do list start');
     }
   }]);
 
   return Todo;
 }(View);
+
+(function () {
+  var todoView = new Todo();
+  todoView.showList();
+})();
 //# sourceMappingURL=app.js.map
