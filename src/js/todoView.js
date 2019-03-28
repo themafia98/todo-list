@@ -23,9 +23,16 @@ class Todo extends View {
         let section = document.createElement('div');
         section.classList.add('section');
 
+        let todoList = document.createElement('div');
+        todoList.classList.add('todoList');
+
         let titleName = document.createElement('h1');
         titleName.classList.add('title');
         titleName.innerHTML = this.title;
+
+        let titleTodoList = document.createElement('h3');
+        titleTodoList.classList.add('todoList__title');
+        titleTodoList.innerHTML = 'list'.toLocaleUpperCase();
 
         let todoControllers = document.createElement('div');
         todoControllers.classList.add('controllers');
@@ -41,15 +48,17 @@ class Todo extends View {
         button.setAttribute('value','ADD');
 
         footer.appendChild(titleName);
+
         todoControllers.appendChild(input);
         todoControllers.appendChild(button);
+
+        todoList.appendChild(titleTodoList);
+        section.appendChild(todoList);
 
         wrapper.appendChild(footer);
         wrapper.appendChild(todoControllers);
         wrapper.appendChild(section);
         this.ID.appendChild(wrapper);
-
-
     }
 
 }

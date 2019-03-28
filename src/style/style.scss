@@ -11,7 +11,7 @@
 }
 
 body{
-    background: url('../img/bg.jpg') repeat;
+    background: grey;
     font-family: 'Lobster', cursive;
 }
 
@@ -19,7 +19,7 @@ body{
     position: relative;
     @extend %max;
     @include fullscreen(1140px,800px);
-    background-color: lightblue;
+    background:  url('../img/bg.jpg') repeat;;
 
     .wrapper {
         display: flex;
@@ -31,7 +31,7 @@ body{
 
     .title{
         font-weight: 900;
-        font-size: 40px;
+        font-size: 45px;
         color: darkslateblue;
         text-align: center;
     }
@@ -69,12 +69,25 @@ body{
         }
     }
 
-    
     .section {
         @extend %max;
         display: flex;
         flex-direction: column;
         justify-content: center;
+    }
+
+    .todoList{
+        width: 70%;
+        height: 90%;
+        background:	whitesmoke;
+        margin: 0 auto;
+        .todoList__title{
+            font-size: 35px;
+            text-align: center;
+            font-weight: 600;
+            color: brown;
+            margin-top: 0;
+        }
     }
 
 }

@@ -48,9 +48,14 @@ function (_View) {
       footer.classList.add('footer');
       var section = document.createElement('div');
       section.classList.add('section');
+      var todoList = document.createElement('div');
+      todoList.classList.add('todoList');
       var titleName = document.createElement('h1');
       titleName.classList.add('title');
       titleName.innerHTML = this.title;
+      var titleTodoList = document.createElement('h3');
+      titleTodoList.classList.add('todoList__title');
+      titleTodoList.innerHTML = 'list'.toLocaleUpperCase();
       var todoControllers = document.createElement('div');
       todoControllers.classList.add('controllers');
       var input = document.createElement('input');
@@ -64,6 +69,8 @@ function (_View) {
       footer.appendChild(titleName);
       todoControllers.appendChild(input);
       todoControllers.appendChild(button);
+      todoList.appendChild(titleTodoList);
+      section.appendChild(todoList);
       wrapper.appendChild(footer);
       wrapper.appendChild(todoControllers);
       wrapper.appendChild(section);
