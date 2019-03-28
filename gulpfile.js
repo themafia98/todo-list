@@ -65,7 +65,7 @@
     gulp.task('server:deploy', [], function (){
       return surge({
         project: './todo-list', // Path to your static build directory
-        domain: '' // Your domain or Surge subdomain
+        domain: 'tremendous-carriage.surge.sh' // Your domain or Surge subdomain
       });
     });
 
@@ -73,11 +73,11 @@
     gulp.task('js:build', function (callback){
       gulp
         .src(['src/js/todoModal.js','src/js/todoView.js','src/js/todoController.js', 'src/js/appInit.js'])
+        // .pipe(babel({
+        //   presets: ['@babel/preset-env']
+        // }))
         .pipe(sourcemaps.init())
         .pipe(concat('app.js'))
-        .pipe(babel({
-          presets: ['@babel/preset-env']
-        }))
         .pipe(sourcemaps.write('.'))
         // .pipe(rigger()) //Прогоним через rigger
         .pipe(gulp.dest(path.build.js))
