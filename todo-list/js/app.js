@@ -72,6 +72,7 @@ class Todo extends View {
 
         let input = document.createElement('input');
         input.setAttribute('type','text');
+        input.setAttribute('maxlength', '110');
         input.classList.add('getTodo');
         input.setAttribute('placeholder','What should you do today?');
 
@@ -100,16 +101,16 @@ class Todo extends View {
     let oldTodo = document.querySelectorAll('p');
 
     if (oldTodo.length){
-        debugger;
+
         oldTodo.forEach(element => {
             element.remove();
         });;
     }
-  
 
     for (let i = 0; i < arrayTodo.length; i++){
 
     let todoList = document.createElement('p');
+    todoList.setAttribute('draggable','true');
     todoList.dataset.num = i;
     todoList.innerHTML = arrayTodo[i];
     here.appendChild(todoList);
@@ -120,18 +121,22 @@ class Todo extends View {
 }
 class TodoControl extends Storage{
 
-    constructor({btn,controllerEnter}){
+    constructor({controllerEnter,btn}){
     super();
     this.btnEnter = controllerEnter;
     this.btnAdd = btn;
     }
 
     setLsitener(todoView){
+
         document.addEventListener('click',(e) =>{
-            if (e.target.classList[0] === 'setTodo') {
+            
+            if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
             localStorage.setItem('newTodo',this.btnEnter.value);
             this.store(localStorage.newTodo);
+            console.log(this.btnEnter.value.length);
             todoView.showNewTodo(localStorage.list);
+            this.btnEnter.value = '';
             }
 
             if (e.target.dataset.num) {
@@ -139,7 +144,7 @@ class TodoControl extends Storage{
                let currentTodo = null;
 
                if (splits.some((item) => item === e.target.innerHTML)) {
-                   debugger;
+                   
                 e.target.remove();
                 currentTodo = document.querySelectorAll('[data-num]');
                 this.updateStorage('list',currentTodo);
@@ -148,7 +153,7 @@ class TodoControl extends Storage{
 
         },false);
         window.addEventListener('storage',(v) => {
-            debugger;
+            
             (v.key === 'list') && (showNewTodo(todoView.newValue));
         },false);
 
@@ -161,31 +166,20 @@ class TodoControl extends Storage{
 
 (function(){
 
-    function building(){
-        let settingsTodo = {
-            appID: document.getElementById('todo'),
-            title:'Todo-list'
-        }
+    function main() {
 
+        let settingsTodo = {appID: document.getElementById('todo'),title:'Todo-list'};
+
+        let storageData = new Storage();
         let todoView = new Todo(settingsTodo);
         todoView.build();
-    }
 
-    function controllers() {
-        let settingsController = {
+        let controllerSettings = {
             controllerEnter: document.querySelector('.getTodo'),
             btn: document.querySelector('.setTodo')
         }
-
-        let controller = new TodoControl(settingsController);
+        let controller = new TodoControl(controllerSettings);
         controller.setLsitener(todoView);
-    }
-
-    function main() {
-        let storageData = new Storage();
-
-        building();
-        controllers();
     }
 
     return todo = { init: main }

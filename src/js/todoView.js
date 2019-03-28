@@ -39,6 +39,7 @@ class Todo extends View {
 
         let input = document.createElement('input');
         input.setAttribute('type','text');
+        input.setAttribute('maxlength', '110');
         input.classList.add('getTodo');
         input.setAttribute('placeholder','What should you do today?');
 
@@ -67,16 +68,16 @@ class Todo extends View {
     let oldTodo = document.querySelectorAll('p');
 
     if (oldTodo.length){
-        debugger;
+
         oldTodo.forEach(element => {
             element.remove();
         });;
     }
-  
 
     for (let i = 0; i < arrayTodo.length; i++){
 
     let todoList = document.createElement('p');
+    todoList.setAttribute('draggable','true');
     todoList.dataset.num = i;
     todoList.innerHTML = arrayTodo[i];
     here.appendChild(todoList);

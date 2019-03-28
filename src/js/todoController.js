@@ -1,17 +1,21 @@
 class TodoControl extends Storage{
 
-    constructor({btn,controllerEnter}){
+    constructor({controllerEnter,btn}){
     super();
     this.btnEnter = controllerEnter;
     this.btnAdd = btn;
     }
 
     setLsitener(todoView){
+
         document.addEventListener('click',(e) =>{
-            if (e.target.classList[0] === 'setTodo') {
+            
+            if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
             localStorage.setItem('newTodo',this.btnEnter.value);
             this.store(localStorage.newTodo);
+            console.log(this.btnEnter.value.length);
             todoView.showNewTodo(localStorage.list);
+            this.btnEnter.value = '';
             }
 
             if (e.target.dataset.num) {
@@ -19,7 +23,7 @@ class TodoControl extends Storage{
                let currentTodo = null;
 
                if (splits.some((item) => item === e.target.innerHTML)) {
-                   debugger;
+                   
                 e.target.remove();
                 currentTodo = document.querySelectorAll('[data-num]');
                 this.updateStorage('list',currentTodo);
@@ -28,7 +32,7 @@ class TodoControl extends Storage{
 
         },false);
         window.addEventListener('storage',(v) => {
-            debugger;
+            
             (v.key === 'list') && (showNewTodo(todoView.newValue));
         },false);
 
