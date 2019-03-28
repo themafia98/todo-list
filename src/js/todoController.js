@@ -8,7 +8,7 @@ class TodoControl extends Storage{
 
     setLsitener(todoView){
 
-        document.addEventListener('click',(e) =>{
+        let clickEvent = (e) =>{
             
             if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
             localStorage.setItem('newTodo',this.btnEnter.value);
@@ -30,7 +30,12 @@ class TodoControl extends Storage{
                }
             }
 
-        },false);
+        };
+
+        document.addEventListener('click',clickEvent,false);
+        document.addEventListener('touchend',clickEvent,false);
+
+
         window.addEventListener('storage',(v) => {
             
             (v.key === 'list') && (showNewTodo(todoView.newValue));

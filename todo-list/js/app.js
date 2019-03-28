@@ -161,8 +161,8 @@ function (_View) {
       }
 
       for (var i = 0; i < arrayTodo.length; i++) {
-        var todoList = document.createElement('p'); // todoList.setAttribute('draggable','true');
-
+        var todoList = document.createElement('p');
+        todoList.setAttribute('draggable', 'true');
         todoList.dataset.num = i;
         todoList.innerHTML = arrayTodo[i];
         here.appendChild(todoList);
@@ -224,7 +224,7 @@ function (_Storage) {
     value: function setLsitener(todoView) {
       var _this2 = this;
 
-      document.addEventListener('click', function (e) {
+      var clickEvent = function clickEvent(e) {
         if (e.target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
           localStorage.setItem('newTodo', _this2.btnEnter.value);
 
@@ -248,7 +248,10 @@ function (_Storage) {
             _this2.updateStorage('list', currentTodo);
           }
         }
-      }, false);
+      };
+
+      document.addEventListener('click', clickEvent, false);
+      document.addEventListener('touchend', clickEvent, false);
       window.addEventListener('storage', function (v) {
         v.key === 'list' && showNewTodo(todoView.newValue);
       }, false);
