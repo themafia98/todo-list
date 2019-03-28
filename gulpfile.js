@@ -73,9 +73,9 @@
     gulp.task('js:build', function (callback){
       gulp
         .src(['src/js/todoModal.js','src/js/todoView.js','src/js/todoController.js', 'src/js/appInit.js'])
-        // .pipe(babel({
-        //   presets: ['@babel/preset-env']
-        // }))
+        .pipe(babel({
+          presets: ['@babel/preset-env']
+        }))
         .pipe(sourcemaps.init())
         .pipe(concat('app.js'))
         .pipe(sourcemaps.write('.'))

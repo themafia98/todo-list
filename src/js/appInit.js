@@ -1,5 +1,5 @@
 
-(function(){
+let todoApp = (function(){
 
     function main() {
 
@@ -17,8 +17,7 @@
         controller.setLsitener(todoView);
     }
 
-    return todo = { init: main }
-
+    return { init: main };
 })();
 
-todo.init();
+todoApp.init();
