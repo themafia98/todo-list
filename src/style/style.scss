@@ -1,0 +1,80 @@
+
+@mixin fullscreen($max,$min){
+    max-width: $max;
+    min-height: $min;
+    margin: 0 auto;
+}
+
+%max {
+    width: 100%;
+    height: 100%;
+}
+
+body{
+    background: url('../img/bg.jpg') repeat;
+    font-family: 'Lobster', cursive;
+}
+
+#todo {
+    position: relative;
+    @extend %max;
+    @include fullscreen(1140px,800px);
+    background-color: lightblue;
+
+    .wrapper {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        @extend %max;
+        margin: 0 auto;
+    }
+
+    .title{
+        font-weight: 900;
+        font-size: 40px;
+        color: darkslateblue;
+        text-align: center;
+    }
+
+    .controllers {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        height: 120px;
+        .getTodo{
+            position: absolute;
+            width: 250px;
+            height: 25px;
+            border-radius: 10px;
+            border: 2px solid brown;
+            text-align: center;
+        }
+        .getTodo::placeholder{
+            text-align: center;
+            color: red;
+        }
+
+        .setTodo{
+            position: absolute;
+            width: 100px;
+            height: 35px;
+            border-radius: 25px;
+            border: 2px solid brown;
+            text-align: center;
+            top: 4vh;
+        }
+        .setTodo::placeholder{
+            text-align: center;
+            color: red;
+        }
+    }
+
+    
+    .section {
+        @extend %max;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+    }
+
+}

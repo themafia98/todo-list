@@ -18,10 +18,14 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var View = function View(myApp) {
+var View = function View(_ref) {
+  var appID = _ref.appID,
+      title = _ref.title;
+
   _classCallCheck(this, View);
 
-  this.app = myApp;
+  this.ID = appID;
+  this.title = title;
 };
 
 var Todo =
@@ -29,16 +33,41 @@ var Todo =
 function (_View) {
   _inherits(Todo, _View);
 
-  function Todo() {
+  function Todo(settingsTodo) {
     _classCallCheck(this, Todo);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Todo).call(this));
+    return _possibleConstructorReturn(this, _getPrototypeOf(Todo).call(this, settingsTodo));
   }
 
   _createClass(Todo, [{
-    key: "showList",
-    value: function showList() {
-      document.write('To-do list start');
+    key: "build",
+    value: function build() {
+      var wrapper = document.createElement('div');
+      wrapper.classList.add('wrapper');
+      var footer = document.createElement('div');
+      footer.classList.add('footer');
+      var section = document.createElement('div');
+      section.classList.add('section');
+      var titleName = document.createElement('h1');
+      titleName.classList.add('title');
+      titleName.innerHTML = this.title;
+      var todoControllers = document.createElement('div');
+      todoControllers.classList.add('controllers');
+      var input = document.createElement('input');
+      input.setAttribute('type', 'text');
+      input.classList.add('getTodo');
+      input.setAttribute('placeholder', 'What should you do today?');
+      var button = document.createElement('input');
+      button.setAttribute('type', 'button');
+      button.classList.add('setTodo');
+      button.setAttribute('value', 'ADD');
+      footer.appendChild(titleName);
+      todoControllers.appendChild(input);
+      todoControllers.appendChild(button);
+      wrapper.appendChild(footer);
+      wrapper.appendChild(todoControllers);
+      wrapper.appendChild(section);
+      this.ID.appendChild(wrapper);
     }
   }]);
 
@@ -46,7 +75,11 @@ function (_View) {
 }(View);
 
 (function () {
-  var todoView = new Todo();
-  todoView.showList();
+  var settingsTodo = {
+    appID: document.getElementById('todo'),
+    title: 'Todo-list'
+  };
+  var todoView = new Todo(settingsTodo);
+  todoView.build();
 })();
 //# sourceMappingURL=app.js.map
