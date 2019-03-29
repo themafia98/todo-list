@@ -13,6 +13,7 @@ class Todo extends View {
         super(settingsTodo);
         this.prewDate = [];
         this.prewTime = [];
+        this.arrayTodo = [];
     }
 
     build(){
@@ -73,19 +74,22 @@ class Todo extends View {
         this.ID.appendChild(wrapper);
     }
 
-    showNewTodo(value){
-    let arrayTodo = value.split(',');
+    showNewTodo(fullList,value,ir){
+        
+        (fullList === undefined) && (this.arrayTodo.push(value[ir]));
+        (fullList != undefined) && (this.arrayTodo = fullList);
     let here = document.querySelector('.todoList');
     let oldTodo = document.querySelectorAll('p');
 
     let todoList;
     let dateAdd;
+
     if (oldTodo.length){
         oldTodo.forEach(element => {
             element.remove();
         });;
     }
-    for (let i = 0; i < arrayTodo.length; i++){
+    for (let i = 0; i < this.arrayTodo.length; i++){
 
         todoList = document.createElement('p');
         dateAdd = document.createElement('p');
@@ -93,31 +97,30 @@ class Todo extends View {
         dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable','true');
 
-        if (arrayTodo.length-1 === i) {
+        if ( (this.arrayTodo.length-1 === i) && (localStorage.newDate) ) {
 
             this.prewDate.push(localStorage.newDate);
             this.prewTime.push(localStorage.newTime);
-        } 
+            todoList.dataset.date = this.prewDate[i];
+            todoList.dataset.time = this.prewTime[i];
+            localStorage.prewDate = JSON.stringify(this.prewDate);
+            localStorage.prewTime = JSON.stringify(this.prewTime);
+        } else if ((localStorage.prewDate) && (localStorage.prewTime)){
+            
+            todoList.dataset.date =  JSON.parse(localStorage.prewDate)[i];
+            todoList.dataset.time =  JSON.parse(localStorage.prewTime)[i];
+        }
 
-        todoList.dataset.date = this.prewDate[i];
-        todoList.dataset.time = this.prewTime[i];
         todoList.dataset.num = i;
-        todoList.innerHTML = arrayTodo[i];
+        todoList.innerHTML = this.arrayTodo[i].value;
+
         here.appendChild(todoList);
     } 
-    debugger;
 
-    if (localStorage.newDate) {
-    let ab = Date.now();
-    let ac = new Date(localStorage.newDate.split('.').reverse().join().replace(/\./g,',')).getTime();
-    let seconds = ((ac - ab)/1000.0);
-    let hours = mins/60;
-    let days = hours/24;
-    }
-    localStorage.removeItem('newDate');
     localStorage.removeItem('newTime');
     here.insertBefore(dateAdd,here.children[1]);
 
     }
+
 
 }

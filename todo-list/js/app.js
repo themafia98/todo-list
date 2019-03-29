@@ -36,39 +36,105 @@ function (_ListModal) {
     _classCallCheck(this, Storage);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Storage).call(this));
+    _this.todoStorage = [];
     _this.arrayList = [];
+    _this.timersN = -1;
     return _this;
   }
 
   _createClass(Storage, [{
     key: "store",
-    value: function store(stringTodo) {
-      var date = null;
-      var times = null;
-      stringTodo && this.arrayList.push(stringTodo);
+    value: function store(todo) {
+      todo.value && this.arrayList.push(todo.value);
       localStorage.list = this.arrayList.join();
       localStorage.newTodo && localStorage.removeItem('newTodo');
     }
   }, {
-    key: "resetStore",
-    value: function resetStore() {
-      localStorage.clear();
-    }
-  }, {
     key: "updateStorage",
-    value: function updateStorage(key, current) {
-      var _this2 = this;
+    value: function updateStorage(list, list2, num) {
+      var nums = parseInt(num);
 
-      this.arrayList = [];
-      current.forEach(function (element) {
-        _this2.arrayList.push(element.innerHTML);
-      });
-      localStorage[key] = this.arrayList.join();
+      if (list.some(function (e, i, v) {
+        return e.timer === nums;
+      })) {
+        var newList = list.filter(function (v) {
+          return v.timer != nums;
+        });
+        var newList2 = list2.filter(function (v) {
+          return parseInt(v.timer) != nums;
+        });
+        list.forEach(function (element) {
+          element.timer--;
+        });
+        list2.forEach(function (element) {
+          element.timer--;
+        });
+        localStorage.list = JSON.stringify(newList);
+        localStorage.ar = JSON.stringify(newList2);
+      }
     }
   }]);
 
   return Storage;
 }(ListModal);
+
+var todoOne =
+/*#__PURE__*/
+function () {
+  function todoOne(timerN, value) {
+    _classCallCheck(this, todoOne);
+
+    this.value = value;
+    this.timer = timerN;
+    this.ac = null;
+    this.today = null;
+    this.todaySec = null;
+    this.todayMins = null;
+    this.todayHours = null;
+  }
+
+  _createClass(todoOne, [{
+    key: "startTimer",
+    value: function startTimer(num) {
+      var _that = this;
+
+      var display = document.createElement('span');
+      display.classList.add('timer');
+      display.dataset.timer = num;
+      var here = document.querySelector('.todoList');
+      here.appendChild(display);
+      setInterval(function () {
+        if (num >= 1) {}
+
+        ; // let minutes = parseInt(timer / 60, 10)
+        // let seconds = timer;
+
+        var ab = Date.now();
+        var disp = document.querySelector("[data-timer = \"".concat(num, "\"]"));
+        _that.ac = new Date(localStorage.newDate.split('.').reverse().join().replace(/\./g, ',')).getTime();
+        _that.today = Math.floor((_that.ac - ab) / 1000.0); // разница между текущей датой и др и переводим в секунды
+
+        _that.todaySec = _that.today % 60; // Секунды
+
+        _that.today = Math.floor(_that.today / 60); // перевод в минуты
+
+        _that.todayMins = _that.today % 60; // Минуты
+
+        _that.today = Math.floor(_that.today / 60); // перевод в часы
+
+        _that.todayHours = _that.today % 24; // Часы
+
+        _that.today = Math.floor(_that.today / 24); //  перевод в дни
+
+        disp.innerHTML = "".concat(_that.today, " days ").concat(_that.todayHours, " h ").concat(_that.todayMins, " m ").concat(_that.todaySec, " s"); // if (--timer < 0) {
+        //     timer = duration;
+        // }
+      }, 1000);
+    }
+  }]);
+
+  return todoOne;
+}();
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -112,6 +178,7 @@ function (_View) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Todo).call(this, settingsTodo));
     _this.prewDate = [];
     _this.prewTime = [];
+    _this.arrayTodo = [];
     return _this;
   }
 
@@ -161,8 +228,9 @@ function (_View) {
     }
   }, {
     key: "showNewTodo",
-    value: function showNewTodo(value) {
-      var arrayTodo = value.split(',');
+    value: function showNewTodo(fullList, value, ir) {
+      fullList === undefined && this.arrayTodo.push(value[ir]);
+      fullList != undefined && (this.arrayTodo = fullList);
       var here = document.querySelector('.todoList');
       var oldTodo = document.querySelectorAll('p');
       var todoList;
@@ -175,36 +243,30 @@ function (_View) {
         ;
       }
 
-      for (var i = 0; i < arrayTodo.length; i++) {
+      for (var i = 0; i < this.arrayTodo.length; i++) {
         todoList = document.createElement('p');
         dateAdd = document.createElement('p');
         dateAdd.classList.add('dateAdd');
         dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable', 'true');
 
-        if (arrayTodo.length - 1 === i) {
+        if (this.arrayTodo.length - 1 === i && localStorage.newDate) {
           this.prewDate.push(localStorage.newDate);
           this.prewTime.push(localStorage.newTime);
+          todoList.dataset.date = this.prewDate[i];
+          todoList.dataset.time = this.prewTime[i];
+          localStorage.prewDate = JSON.stringify(this.prewDate);
+          localStorage.prewTime = JSON.stringify(this.prewTime);
+        } else if (localStorage.prewDate && localStorage.prewTime) {
+          todoList.dataset.date = JSON.parse(localStorage.prewDate)[i];
+          todoList.dataset.time = JSON.parse(localStorage.prewTime)[i];
         }
 
-        todoList.dataset.date = this.prewDate[i];
-        todoList.dataset.time = this.prewTime[i];
         todoList.dataset.num = i;
-        todoList.innerHTML = arrayTodo[i];
+        todoList.innerHTML = this.arrayTodo[i].value;
         here.appendChild(todoList);
       }
 
-      debugger;
-
-      if (localStorage.newDate) {
-        var ab = Date.now();
-        var ac = new Date(localStorage.newDate.split('.').reverse().join().replace(/\./g, ',')).getTime();
-        var seconds = (ac - ab) / 1000.0;
-        var hours = mins / 60;
-        var days = hours / 24;
-      }
-
-      localStorage.removeItem('newDate');
       localStorage.removeItem('newTime');
       here.insertBefore(dateAdd, here.children[1]);
     }
@@ -256,6 +318,7 @@ function (_Storage) {
     _this = _possibleConstructorReturn(this, _getPrototypeOf(TodoControl).call(this));
     _this.btnEnter = controllerEnter;
     _this.btnAdd = btn;
+    _this.ar = [];
     return _this;
   }
 
@@ -266,29 +329,47 @@ function (_Storage) {
 
       var clickEvent = function clickEvent(e) {
         if (e.target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
+          var number;
+          !localStorage.timersN && (localStorage.timersN = -1);
+          localStorage.timersN && (localStorage.timersN = ++localStorage.timersN);
+          number = localStorage.timersN ? parseInt(localStorage.timersN) : 0;
           localStorage.setItem('newTodo', _this2.btnEnter.value);
+          var todo = new todoOne(number, localStorage.newTodo);
+          localStorage.ar && (_this2.ar = JSON.parse(localStorage.ar));
 
-          _this2.store(localStorage.newTodo);
+          _this2.ar.push(todo);
 
-          localStorage.setItem('timeAdd', new Date().toLocaleString());
-          localStorage.setItem('newDate', e.target.previousSibling.value.slice(0, 10).split('-').reverse().join().replace(/\,/g, '.'));
-          localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
-          console.log(_this2.btnEnter.value.length);
-          todoView.showNewTodo(localStorage.list, localStorage.timeAdd);
+          localStorage.ar = JSON.stringify(_this2.ar);
+          !localStorage.ar && (localStorage.list = JSON.stringify(_this2.ar));
+          localStorage.ar && (localStorage.list = JSON.stringify(JSON.parse(localStorage.ar))); // this.store(todo);
+
+          localStorage.setItem('timeAdd', new Date().toLocaleString()); // (!(localStorage.newDate)) &&
+          // (localStorage.setItem('newDate', JSON.stringify([e.target.previousSibling.value.slice(0,10).split('-').reverse().join().replace(/\,/g,'.')])));
+          // localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
+          // (localStorage.newDate) && (this.dateArray.push(localStorage.newDate));
+          // (localStorage.newDate) && (localStorage.newDate = this.dateArray);
+
+          todoView.showNewTodo(undefined, JSON.parse(localStorage.list), number); // todo.startTimer(todo.timer);
+
           _this2.btnEnter.value = '';
         }
 
         if (e.target.dataset.num) {
-          var splits = localStorage.list.split(',');
+          var splits = JSON.parse(localStorage.list);
           var currentTodo = null;
 
           if (splits.some(function (item) {
-            return item === e.target.innerHTML;
+            return item.value === e.target.innerHTML;
           })) {
-            e.target.remove();
+            var filter = splits.filter(function (v, i, a) {
+              return v.value === e.target.innerHTML;
+            });
             currentTodo = document.querySelectorAll('[data-num]');
 
-            _this2.updateStorage('list', currentTodo);
+            _this2.updateStorage(JSON.parse(localStorage.list), JSON.parse(localStorage.ar), filter[0].timer);
+
+            e.target.remove();
+            localStorage.timersN = --localStorage.timersN;
           }
         }
       };
@@ -296,8 +377,7 @@ function (_Storage) {
       document.addEventListener('click', clickEvent, false);
       document.addEventListener('touchend', clickEvent, false);
       window.addEventListener('DOMContentLoaded', function () {
-        localStorage.list && _this2.store(localStorage.list);
-        localStorage.list && todoView.showNewTodo(localStorage.list);
+        localStorage.list && todoView.showNewTodo(JSON.parse(localStorage.list));
       }, false);
     }
   }]);

@@ -15,7 +15,10 @@ let todoApp = (function(){
         }
         let controller = new TodoControl(controllerSettings);
         controller.setLsitener(todoView);
+
     }
+
+
 
     return { init: main };
 })();
