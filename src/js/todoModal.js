@@ -11,7 +11,6 @@ class Storage extends ListModal{
     constructor(){
         super();
         this.arrayList = [];
-        this.TIMES = [];
     }
 
     store(stringTodo,...spread){

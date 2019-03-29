@@ -9,21 +9,24 @@ class TodoControl extends Storage{
     setLsitener(todoView){
 
         let clickEvent = (e) =>{
-            
+
             if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
             localStorage.setItem('newTodo',this.btnEnter.value);
+                
+            this.store(localStorage.newTodo);
+            localStorage.setItem('timeAdd', new Date().toLocaleString());
             
-            this.store(localStorage.newTodo,e.target.previousSibling);
-            localStorage.setItem('newTIME', new Date().toLocaleString());
+            localStorage.setItem('newDate', e.target.previousSibling.value.slice(0,10).split('-').reverse().join().replace(/\,/g,'.'));
+            localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
             console.log(this.btnEnter.value.length);
-            todoView.showNewTodo(localStorage.list,localStorage.newTIME);
+            todoView.showNewTodo(localStorage.list,localStorage.timeAdd);
             this.btnEnter.value = '';
             }
 
             if (e.target.dataset.num) {
                let splits = localStorage.list.split(',');
                let currentTodo = null;
-                debugger;
+                
                if (splits.some((item) => item === e.target.innerHTML)) {
                    
                 e.target.remove();

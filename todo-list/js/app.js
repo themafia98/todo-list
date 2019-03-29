@@ -37,7 +37,6 @@ function (_ListModal) {
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Storage).call(this));
     _this.arrayList = [];
-    _this.TIMES = [];
     return _this;
   }
 
@@ -106,9 +105,14 @@ function (_View) {
   _inherits(Todo, _View);
 
   function Todo(settingsTodo) {
+    var _this;
+
     _classCallCheck(this, Todo);
 
-    return _possibleConstructorReturn(this, _getPrototypeOf(Todo).call(this, settingsTodo));
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(Todo).call(this, settingsTodo));
+    _this.prewDate = [];
+    _this.prewTime = [];
+    return _this;
   }
 
   _createClass(Todo, [{
@@ -175,14 +179,33 @@ function (_View) {
         todoList = document.createElement('p');
         dateAdd = document.createElement('p');
         dateAdd.classList.add('dateAdd');
-        dateAdd.innerHTML = 'Last add: ' + localStorage.newTIME;
+        dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable', 'true');
-        todoList.dataset.dateAdd = new Date().toLocaleDateString();
+
+        if (arrayTodo.length - 1 === i) {
+          this.prewDate.push(localStorage.newDate);
+          this.prewTime.push(localStorage.newTime);
+        }
+
+        todoList.dataset.date = this.prewDate[i];
+        todoList.dataset.time = this.prewTime[i];
         todoList.dataset.num = i;
         todoList.innerHTML = arrayTodo[i];
         here.appendChild(todoList);
       }
 
+      debugger;
+
+      if (localStorage.newDate) {
+        var ab = Date.now();
+        var ac = new Date(localStorage.newDate.split('.').reverse().join().replace(/\./g, ',')).getTime();
+        var seconds = (ac - ab) / 1000.0;
+        var hours = mins / 60;
+        var days = hours / 24;
+      }
+
+      localStorage.removeItem('newDate');
+      localStorage.removeItem('newTime');
       here.insertBefore(dateAdd, here.children[1]);
     }
   }]);
@@ -245,18 +268,19 @@ function (_Storage) {
         if (e.target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
           localStorage.setItem('newTodo', _this2.btnEnter.value);
 
-          _this2.store(localStorage.newTodo, e.target.previousSibling);
+          _this2.store(localStorage.newTodo);
 
-          localStorage.setItem('newTIME', new Date().toLocaleString());
+          localStorage.setItem('timeAdd', new Date().toLocaleString());
+          localStorage.setItem('newDate', e.target.previousSibling.value.slice(0, 10).split('-').reverse().join().replace(/\,/g, '.'));
+          localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
           console.log(_this2.btnEnter.value.length);
-          todoView.showNewTodo(localStorage.list, localStorage.newTIME);
+          todoView.showNewTodo(localStorage.list, localStorage.timeAdd);
           _this2.btnEnter.value = '';
         }
 
         if (e.target.dataset.num) {
           var splits = localStorage.list.split(',');
           var currentTodo = null;
-          debugger;
 
           if (splits.some(function (item) {
             return item === e.target.innerHTML;

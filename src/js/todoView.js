@@ -11,6 +11,8 @@ class Todo extends View {
 
     constructor(settingsTodo){
         super(settingsTodo);
+        this.prewDate = [];
+        this.prewTime = [];
     }
 
     build(){
@@ -79,7 +81,6 @@ class Todo extends View {
     let todoList;
     let dateAdd;
     if (oldTodo.length){
-
         oldTodo.forEach(element => {
             element.remove();
         });;
@@ -89,14 +90,32 @@ class Todo extends View {
         todoList = document.createElement('p');
         dateAdd = document.createElement('p');
         dateAdd.classList.add('dateAdd');
-        dateAdd.innerHTML = 'Last add: ' + localStorage.newTIME;
+        dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable','true');
-        todoList.dataset.dateAdd = new Date().toLocaleDateString();
+
+        if (arrayTodo.length-1 === i) {
+
+            this.prewDate.push(localStorage.newDate);
+            this.prewTime.push(localStorage.newTime);
+        } 
+
+        todoList.dataset.date = this.prewDate[i];
+        todoList.dataset.time = this.prewTime[i];
         todoList.dataset.num = i;
         todoList.innerHTML = arrayTodo[i];
         here.appendChild(todoList);
-    }
+    } 
+    debugger;
 
+    if (localStorage.newDate) {
+    let ab = Date.now();
+    let ac = new Date(localStorage.newDate.split('.').reverse().join().replace(/\./g,',')).getTime();
+    let seconds = ((ac - ab)/1000.0);
+    let hours = mins/60;
+    let days = hours/24;
+    }
+    localStorage.removeItem('newDate');
+    localStorage.removeItem('newTime');
     here.insertBefore(dateAdd,here.children[1]);
 
     }
