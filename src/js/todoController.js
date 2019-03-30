@@ -9,9 +9,9 @@ class TodoControl extends Storage{
     setLsitener(todoView){
 
         let clickEvent = (e) =>{
-            
+
             if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
-                
+                debugger;
                 
             this.number = this.localeStorageUpdate();
             // (!(localStorage.newDate)) &&
@@ -19,8 +19,8 @@ class TodoControl extends Storage{
             // localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
             // (localStorage.newDate) && (this.dateArray.push(localStorage.newDate));
             // (localStorage.newDate) && (localStorage.newDate = this.dateArray);
-            
-            todoView.showNewTodo(undefined,JSON.parse(localStorage.list),this.number);
+                debugger;
+            todoView.showNewTodo(JSON.parse(localStorage.list));
                 
             // todo.startTimer(todo.timer);
             this.btnEnter.value = '';

@@ -19,7 +19,7 @@ body{
     position: relative;
     @extend %max;
     @include fullscreen(1140px,800px);
-    background:  url('../img/bg.jpg') repeat;;
+    background:  url('../img/bg.jpg') repeat;
 
     .wrapper {
         display: flex;
@@ -99,6 +99,8 @@ body{
         margin: 0 auto;
         overflow-y: auto;
         overflow-x: hidden;
+        border: 2px solid black;
+        box-shadow: 0 0 10px;
 
         .todoList__title{
             border-bottom: 4px solid powderblue;

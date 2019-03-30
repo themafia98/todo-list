@@ -74,10 +74,8 @@ class Todo extends View {
         this.ID.appendChild(wrapper);
     }
 
-    showNewTodo(fullList,value,ir){
+    showNewTodo(value){
         
-        (fullList === undefined) && (this.arrayTodo.push(value[ir]));
-        (fullList != undefined) && (this.arrayTodo = fullList);
     let here = document.querySelector('.todoList');
     let oldTodo = document.querySelectorAll('p');
 
@@ -89,7 +87,7 @@ class Todo extends View {
             element.remove();
         });;
     }
-    for (let i = 0; i < this.arrayTodo.length; i++){
+    for (let i = 0; i < value.length; i++){
 
         todoList = document.createElement('p');
         dateAdd = document.createElement('p');
@@ -97,7 +95,7 @@ class Todo extends View {
         dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable','true');
 
-        if ( (this.arrayTodo.length-1 === i) && (localStorage.newDate) ) {
+        if ( (value.length-1 === i) && (localStorage.newDate) ) {
 
             this.prewDate.push(localStorage.newDate);
             this.prewTime.push(localStorage.newTime);
@@ -112,7 +110,7 @@ class Todo extends View {
         }
 
         todoList.dataset.num = i;
-        todoList.innerHTML = this.arrayTodo[i].value;
+        todoList.innerHTML = value[i].value;
 
         here.appendChild(todoList);
     } 

@@ -234,9 +234,7 @@ function (_View) {
     }
   }, {
     key: "showNewTodo",
-    value: function showNewTodo(fullList, value, ir) {
-      fullList === undefined && this.arrayTodo.push(value[ir]);
-      fullList != undefined && (this.arrayTodo = fullList);
+    value: function showNewTodo(value) {
       var here = document.querySelector('.todoList');
       var oldTodo = document.querySelectorAll('p');
       var todoList;
@@ -249,14 +247,14 @@ function (_View) {
         ;
       }
 
-      for (var i = 0; i < this.arrayTodo.length; i++) {
+      for (var i = 0; i < value.length; i++) {
         todoList = document.createElement('p');
         dateAdd = document.createElement('p');
         dateAdd.classList.add('dateAdd');
         dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable', 'true');
 
-        if (this.arrayTodo.length - 1 === i && localStorage.newDate) {
+        if (value.length - 1 === i && localStorage.newDate) {
           this.prewDate.push(localStorage.newDate);
           this.prewTime.push(localStorage.newTime);
           todoList.dataset.date = this.prewDate[i];
@@ -269,7 +267,7 @@ function (_View) {
         }
 
         todoList.dataset.num = i;
-        todoList.innerHTML = this.arrayTodo[i].value;
+        todoList.innerHTML = value[i].value;
         here.appendChild(todoList);
       }
 
@@ -334,13 +332,15 @@ function (_Storage) {
 
       var clickEvent = function clickEvent(e) {
         if (e.target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
+          debugger;
           _this2.number = _this2.localeStorageUpdate(); // (!(localStorage.newDate)) &&
           // (localStorage.setItem('newDate', JSON.stringify([e.target.previousSibling.value.slice(0,10).split('-').reverse().join().replace(/\,/g,'.')])));
           // localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
           // (localStorage.newDate) && (this.dateArray.push(localStorage.newDate));
           // (localStorage.newDate) && (localStorage.newDate = this.dateArray);
 
-          todoView.showNewTodo(undefined, JSON.parse(localStorage.list), _this2.number); // todo.startTimer(todo.timer);
+          debugger;
+          todoView.showNewTodo(JSON.parse(localStorage.list)); // todo.startTimer(todo.timer);
 
           _this2.btnEnter.value = '';
         }
