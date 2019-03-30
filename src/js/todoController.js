@@ -11,15 +11,15 @@ class TodoControl extends Storage{
         let clickEvent = (e) =>{
 
             if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
-                debugger;
+                
             this.buffer = [];
             this.number = this.localeStorageUpdate();
             let len = this.lists.length-1;
 
             this.dataParser(e.target);
             todoView.showNewTodo(JSON.parse(localStorage.list));
-            debugger;
-            this.lists[len].startTimer(this.lists[len].timers);
+            
+            this.lists[len].startTimer();
             this.btnEnter.value = '';
             }
 
@@ -50,9 +50,9 @@ class TodoControl extends Storage{
 
         window.addEventListener('DOMContentLoaded',() =>{
 
-            
             (localStorage.list) && (todoView.showNewTodo(JSON.parse(localStorage.list)));
-
+            this.lists = JSON.parse(localStorage.list);
+            debugger;
         },false);
     }
 }

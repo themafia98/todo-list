@@ -43,19 +43,22 @@ class Storage extends ListModal{
         this.number  = (localStorage.timersN) ? parseInt(localStorage.timersN) : -1;
 
         localStorage.setItem('newTodo',this.btnEnter.value);
+        
         let todo = new todoOne(this.number,localStorage.newTodo);
 
         (localStorage.list) && (this.lists = JSON.parse(localStorage.list));
         this.lists.push(todo);
+        debugger;
+        debugger;
         localStorage.list = JSON.stringify(this.lists);
-
+        debugger;
         localStorage.setItem('timeAdd', new Date().toLocaleString());
 
         return this.number;
     }
 
     dataParser(target){
-        debugger;
+       
         (localStorage.date) && (this.buffer = JSON.parse(localStorage.date));
         let valueButton = target.previousSibling.value.slice(0,10).split('-').reverse()
                         .join().replace(/\,/g,'.');
@@ -81,39 +84,43 @@ class todoOne {
     constructor(timerN,value){
         this.value = value;
         this.timer = timerN;
+        this.save = false;
 
         this.timers = {
             ac: null,
             today: null,
             todaySec: null,
             todayMins: null,
-            todayHours: null
+            todayHours: null,
+            thisNum: null
         }
     }
 
-    startTimer(num) {
+    startTimer() {
 
         let _that = this;
         
         let display = document.createElement('span');
         display.classList.add('timer');
-        display.dataset.timer = num;
+        
+        display.dataset.timer = parseInt(localStorage.timersN);
+        _that.timers.thisNum = parseInt(localStorage.timersN);
         let here = document.querySelector('.todoList');
         here.appendChild(display);
 
 
-        let timeGo = setTimeout(function tick() {
-            debugger;
-            if(num >= 1) {};
+        _that.timeGo = setTimeout(function tick() {
+           
+            if(parseInt(localStorage.timersN) >= 1) { };
             // let minutes = parseInt(timer / 60, 10)
             // let seconds = timer;
             let ab = Date.now();
-            let disp = document.querySelector(`[data-timer = "${num}"]`);
+            let disp = document.querySelector(`[data-timer = "${_that.timers.thisNum}"]`);
+            
+            let dateNow = JSON.parse(localStorage.date)[_that.timers.thisNum];
+            _that.timers.ac = new Date(dateNow.split('.').reverse().join().replace(/\./g,',')).getTime();
 
-            _that.timers.ac = new Date(localStorage.newDate.split('.').reverse().join()
-                                            .replace(/\./g,',')).getTime();
-
-     
+            
             _that.timers.today = Math.floor((_that.timers.ac - ab)/1000.0); // разница между текущей датой и др и переводим в секунды
             _that.timers.todaySec =_that.timers.today % 60;  // Секунды
             _that.timers.today = Math.floor(_that.timers.today/60); // перевод в минуты
@@ -122,15 +129,27 @@ class todoOne {
             _that.timers.todayHours = _that.timers.today % 24; // Часы
             _that.timers.today = Math.floor(_that.timers.today/24); //  перевод в дни
 
-    
+
+  
             disp.innerHTML = `${_that.timers.today} days ${_that.timers.todayHours} h 
                             ${ _that.timers.todayMins} m ${ _that.timers.todaySec} s`;
 
-            // if (--timer < 0) {
-            //     timer = duration;
-            // }
-            timeGo = setTimeout(tick,1000);
-        }, 1000);
+            if (_that.timers.today < 0) {
+                
+                clearTimeout(_that.timeGo);
+                let prew = document.querySelector(`[data-num="${_that.timers.thisNum}"]`);
+                let timerSpan = document.querySelector(`[data-timer="${_that.timers.thisNum}"]`);
+                prew.classList.add('unactive');
+                
+                timerSpan.remove();
+                let listParse = JSON.parse(localStorage.list);
+                
+                listParse[_that.timers.thisNum].save = true;
+                localStorage.list = JSON.stringify(listParse);
+
+            } else _that.timeGo = setTimeout(tick,0);
+            
+        }, 0);
 
     }
 }

@@ -15,6 +15,7 @@ class Todo extends View {
         this.prewTime = [];
         this.arrayTodo = [];
         this.arrayJSON = [];
+        this.saveP = [];
     }
 
     build(){
@@ -79,21 +80,34 @@ class Todo extends View {
         
     let here = document.querySelector('.todoList');
     let oldTodo = document.querySelectorAll('p');
-
     let todoList;
     let dateAdd;
-
+    this.saveP = [];
     if (oldTodo.length){
-        oldTodo.forEach(element => {
+        oldTodo.forEach( (element,i) => {
+            
+            if(element.classList[0] === 'unactive') { value[i].save = true; this.saveP.push(oldTodo[i])}
             element.remove();
         });;
     }
     for (let i = 0; i < value.length; i++){
 
-        todoList = document.createElement('p');
-        dateAdd = document.createElement('p');
-        dateAdd.classList.add('dateAdd');
-        dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
+
+
+
+        if( (value[i].save) && ((this.saveP[i]) &&  (this.saveP[i].classList[0] === 'unactive'))){
+            todoList = this.saveP[i];
+        } else  {
+            todoList = document.createElement('p');
+            if(value[i].save) {
+                
+                todoList.classList.add('unactive');
+            }
+        }
+
+        // dateAdd = document.createElement('p');
+        // dateAdd.classList.add('dateAdd');
+        // dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable','true');
         
         if (localStorage.date) {
@@ -116,7 +130,7 @@ class Todo extends View {
 
     localStorage.removeItem('newTime');
     localStorage.removeItem('newTodo');
-    debugger;
+    
     (dateAdd) && (here.insertBefore(dateAdd,here.children[1]));
 
     }
