@@ -12,7 +12,9 @@ class Storage extends ListModal{
         super();
         this.todoStorage = [];
         this.arrayList = [];
+        this.lists = [];
         this.timersN = -1;
+        this.number = 0;
     }
 
     store(todo){
@@ -22,23 +24,37 @@ class Storage extends ListModal{
         (localStorage.newTodo) && (localStorage.removeItem('newTodo'));
     }
 
-    updateStorage(list, list2 , num){
+    updateStorage(list,num){
         
         let nums = parseInt(num);
-        if (list.some((e,i,v)=> e.timer === nums)) {
+        let newList = list.filter( (v) => { return v.timer != nums;});
 
-           let newList = list.filter( (v) => { return v.timer != nums;});
-           let newList2 = list2.filter((v)=>{ return parseInt(v.timer) != nums;});
+        localStorage.list = JSON.stringify(newList);
 
-            list.forEach(element => { element.timer--;});
-            list2.forEach(element => { element.timer--;});
-
-           localStorage.list = JSON.stringify(newList);
-            localStorage.ar = JSON.stringify(newList2);
-        }
-
-
+        return true;
     }
+
+    localeStorageUpdate(){
+
+        
+        (!(localStorage.timersN)) && (localStorage.timersN = -1);
+        (localStorage.timersN) && (localStorage.timersN = ++localStorage.timersN);
+        this.number  = (localStorage.timersN) ? parseInt(localStorage.timersN) : -1;
+
+        localStorage.setItem('newTodo',this.btnEnter.value);
+        let todo = new todoOne(this.number,localStorage.newTodo);
+
+        (localStorage.list) && (this.lists = JSON.parse(localStorage.list));
+        this.lists.push(todo);
+        localStorage.list = JSON.stringify(this.lists);
+
+        localStorage.setItem('timeAdd', new Date().toLocaleString());
+
+        return this.number;
+    }
+
+
+    
 }
 
 
@@ -49,11 +65,13 @@ class todoOne {
         this.value = value;
         this.timer = timerN;
 
-        this.ac = null;
-        this.today = null;
-        this.todaySec = null;
-        this.todayMins = null;
-        this.todayHours = null;
+        this.timers = {
+            ac: null,
+            today: null,
+            todaySec: null,
+            todayMins: null,
+            todayHours: null
+        }
     }
 
     startTimer(num) {
@@ -67,30 +85,33 @@ class todoOne {
         here.appendChild(display);
 
 
-        setInterval(function () {
+        let timeGo = setTimeout(function tick() {
             if(num >= 1) {};
             // let minutes = parseInt(timer / 60, 10)
             // let seconds = timer;
             let ab = Date.now();
             let disp = document.querySelector(`[data-timer = "${num}"]`);
 
-            _that.ac = new Date(localStorage.newDate.split('.').reverse().join().replace(/\./g,',')).getTime();
+            _that.this.timers.ac = new Date(localStorage.newDate.split('.').reverse().join()
+                                            .replace(/\./g,',')).getTime();
 
      
-            _that.today = Math.floor((_that.ac - ab)/1000.0); // разница между текущей датой и др и переводим в секунды
-            _that.todaySec =_that.today % 60;  // Секунды
-            _that.today = Math.floor(_that.today/60); // перевод в минуты
-            _that.todayMins = _that.today % 60;  // Минуты
-            _that.today=Math.floor(_that.today/60); // перевод в часы
-            _that.todayHours = _that.today % 24; // Часы
-            _that.today = Math.floor(_that.today/24); //  перевод в дни
+            _that.this.timers.today = Math.floor((_that.this.timers.ac - ab)/1000.0); // разница между текущей датой и др и переводим в секунды
+            _that.this.timers.todaySec =_that.today % 60;  // Секунды
+            _that.this.timers.today = Math.floor(_that.this.timers.today/60); // перевод в минуты
+            _that.this.timers.todayMins = _that.this.timers.today % 60;  // Минуты
+            _that.this.timers.today=Math.floor(_that.this.timers.today/60); // перевод в часы
+            _that.this.timers.todayHours = _that.this.timers.today % 24; // Часы
+            _that.this.timers.today = Math.floor(_that.this.timers.today/24); //  перевод в дни
 
     
-            disp.innerHTML = `${_that.today} days ${_that.todayHours} h ${ _that.todayMins} m ${ _that.todaySec} s`;
+            disp.innerHTML = `${_that.this.timers.today} days ${_that.this.timers.todayHours} h 
+                            ${ _that.this.timers.todayMins} m ${ _that.todaySec} s`;
 
             // if (--timer < 0) {
             //     timer = duration;
             // }
+            timeGo = setTimeout(tick,1000);
         }, 1000);
 
     }
