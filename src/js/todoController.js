@@ -12,24 +12,29 @@ class TodoControl extends Storage{
 
             if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
                 debugger;
-                
+            this.buffer = [];
             this.number = this.localeStorageUpdate();
-            // (!(localStorage.newDate)) &&
-            // (localStorage.setItem('newDate', JSON.stringify([e.target.previousSibling.value.slice(0,10).split('-').reverse().join().replace(/\,/g,'.')])));
-            // localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
-            // (localStorage.newDate) && (this.dateArray.push(localStorage.newDate));
-            // (localStorage.newDate) && (localStorage.newDate = this.dateArray);
-                debugger;
+            let len = this.lists.length-1;
+
+            this.dataParser(e.target);
             todoView.showNewTodo(JSON.parse(localStorage.list));
-                
-            // todo.startTimer(todo.timer);
+            debugger;
+            this.lists[len].startTimer(this.lists[len].timers);
             this.btnEnter.value = '';
             }
 
             if (e.target.dataset.num) {
-                
+                    
                 let splits = JSON.parse(localStorage.list);
+                let date = JSON.parse(localStorage.date);
 
+                let count = () => {
+                    splits.forEach( (element,i) => {
+                       if (element.timer === parseInt(e.target.dataset.num)) return i;
+                    });
+                }
+                date.splice(count(),1);
+                localStorage.date = JSON.stringify(date);
                 if (splits.some((item) => item.value === e.target.innerHTML)) {
 
                     let filter = splits.filter((v) => v.value === e.target.innerHTML);

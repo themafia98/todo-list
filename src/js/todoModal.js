@@ -10,9 +10,10 @@ class ListModal{
 class Storage extends ListModal{
     constructor(){
         super();
-        this.todoStorage = [];
         this.arrayList = [];
         this.lists = [];
+        this.dateArray = [];
+        this.buffer = {};
         this.timersN = -1;
         this.number = 0;
     }
@@ -53,6 +54,22 @@ class Storage extends ListModal{
         return this.number;
     }
 
+    dataParser(target){
+        debugger;
+        (localStorage.date) && (this.buffer = JSON.parse(localStorage.date));
+        let valueButton = target.previousSibling.value.slice(0,10).split('-').reverse()
+                        .join().replace(/\,/g,'.');
+
+        localStorage.newDate = JSON.stringify(valueButton);
+
+
+        (!(localStorage.date)) && (localStorage.date = JSON.stringify([valueButton]));
+        (localStorage.date) && (this.buffer.push(valueButton));
+        (localStorage.date) && (localStorage.date = JSON.stringify(this.buffer));
+
+          // localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
+    }
+
 
     
 }
@@ -86,27 +103,28 @@ class todoOne {
 
 
         let timeGo = setTimeout(function tick() {
+            debugger;
             if(num >= 1) {};
             // let minutes = parseInt(timer / 60, 10)
             // let seconds = timer;
             let ab = Date.now();
             let disp = document.querySelector(`[data-timer = "${num}"]`);
 
-            _that.this.timers.ac = new Date(localStorage.newDate.split('.').reverse().join()
+            _that.timers.ac = new Date(localStorage.newDate.split('.').reverse().join()
                                             .replace(/\./g,',')).getTime();
 
      
-            _that.this.timers.today = Math.floor((_that.this.timers.ac - ab)/1000.0); // разница между текущей датой и др и переводим в секунды
-            _that.this.timers.todaySec =_that.today % 60;  // Секунды
-            _that.this.timers.today = Math.floor(_that.this.timers.today/60); // перевод в минуты
-            _that.this.timers.todayMins = _that.this.timers.today % 60;  // Минуты
-            _that.this.timers.today=Math.floor(_that.this.timers.today/60); // перевод в часы
-            _that.this.timers.todayHours = _that.this.timers.today % 24; // Часы
-            _that.this.timers.today = Math.floor(_that.this.timers.today/24); //  перевод в дни
+            _that.timers.today = Math.floor((_that.timers.ac - ab)/1000.0); // разница между текущей датой и др и переводим в секунды
+            _that.timers.todaySec =_that.timers.today % 60;  // Секунды
+            _that.timers.today = Math.floor(_that.timers.today/60); // перевод в минуты
+            _that.timers.todayMins = _that.timers.today % 60;  // Минуты
+            _that.timers.today=Math.floor(_that.timers.today/60); // перевод в часы
+            _that.timers.todayHours = _that.timers.today % 24; // Часы
+            _that.timers.today = Math.floor(_that.timers.today/24); //  перевод в дни
 
     
-            disp.innerHTML = `${_that.this.timers.today} days ${_that.this.timers.todayHours} h 
-                            ${ _that.this.timers.todayMins} m ${ _that.todaySec} s`;
+            disp.innerHTML = `${_that.timers.today} days ${_that.timers.todayHours} h 
+                            ${ _that.timers.todayMins} m ${ _that.timers.todaySec} s`;
 
             // if (--timer < 0) {
             //     timer = duration;

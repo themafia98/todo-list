@@ -36,9 +36,10 @@ function (_ListModal) {
     _classCallCheck(this, Storage);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Storage).call(this));
-    _this.todoStorage = [];
     _this.arrayList = [];
     _this.lists = [];
+    _this.dateArray = [];
+    _this.buffer = {};
     _this.timersN = -1;
     _this.number = 0;
     return _this;
@@ -75,6 +76,17 @@ function (_ListModal) {
       localStorage.setItem('timeAdd', new Date().toLocaleString());
       return this.number;
     }
+  }, {
+    key: "dataParser",
+    value: function dataParser(target) {
+      debugger;
+      localStorage.date && (this.buffer = JSON.parse(localStorage.date));
+      var valueButton = target.previousSibling.value.slice(0, 10).split('-').reverse().join().replace(/\,/g, '.');
+      localStorage.newDate = JSON.stringify(valueButton);
+      !localStorage.date && (localStorage.date = JSON.stringify([valueButton]));
+      localStorage.date && this.buffer.push(valueButton);
+      localStorage.date && (localStorage.date = JSON.stringify(this.buffer)); // localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
+    }
   }]);
 
   return Storage;
@@ -108,6 +120,8 @@ function () {
       var here = document.querySelector('.todoList');
       here.appendChild(display);
       var timeGo = setTimeout(function tick() {
+        debugger;
+
         if (num >= 1) {}
 
         ; // let minutes = parseInt(timer / 60, 10)
@@ -115,22 +129,22 @@ function () {
 
         var ab = Date.now();
         var disp = document.querySelector("[data-timer = \"".concat(num, "\"]"));
-        _that.this.timers.ac = new Date(localStorage.newDate.split('.').reverse().join().replace(/\./g, ',')).getTime();
-        _that.this.timers.today = Math.floor((_that.this.timers.ac - ab) / 1000.0); // разница между текущей датой и др и переводим в секунды
+        _that.timers.ac = new Date(localStorage.newDate.split('.').reverse().join().replace(/\./g, ',')).getTime();
+        _that.timers.today = Math.floor((_that.timers.ac - ab) / 1000.0); // разница между текущей датой и др и переводим в секунды
 
-        _that.this.timers.todaySec = _that.today % 60; // Секунды
+        _that.timers.todaySec = _that.timers.today % 60; // Секунды
 
-        _that.this.timers.today = Math.floor(_that.this.timers.today / 60); // перевод в минуты
+        _that.timers.today = Math.floor(_that.timers.today / 60); // перевод в минуты
 
-        _that.this.timers.todayMins = _that.this.timers.today % 60; // Минуты
+        _that.timers.todayMins = _that.timers.today % 60; // Минуты
 
-        _that.this.timers.today = Math.floor(_that.this.timers.today / 60); // перевод в часы
+        _that.timers.today = Math.floor(_that.timers.today / 60); // перевод в часы
 
-        _that.this.timers.todayHours = _that.this.timers.today % 24; // Часы
+        _that.timers.todayHours = _that.timers.today % 24; // Часы
 
-        _that.this.timers.today = Math.floor(_that.this.timers.today / 24); //  перевод в дни
+        _that.timers.today = Math.floor(_that.timers.today / 24); //  перевод в дни
 
-        disp.innerHTML = "".concat(_that.this.timers.today, " days ").concat(_that.this.timers.todayHours, " h \n                            ").concat(_that.this.timers.todayMins, " m ").concat(_that.todaySec, " s"); // if (--timer < 0) {
+        disp.innerHTML = "".concat(_that.timers.today, " days ").concat(_that.timers.todayHours, " h \n                            ").concat(_that.timers.todayMins, " m ").concat(_that.timers.todaySec, " s"); // if (--timer < 0) {
         //     timer = duration;
         // }
 
@@ -185,6 +199,7 @@ function (_View) {
     _this.prewDate = [];
     _this.prewTime = [];
     _this.arrayTodo = [];
+    _this.arrayJSON = [];
     return _this;
   }
 
@@ -254,13 +269,10 @@ function (_View) {
         dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable', 'true');
 
-        if (value.length - 1 === i && localStorage.newDate) {
-          this.prewDate.push(localStorage.newDate);
-          this.prewTime.push(localStorage.newTime);
-          todoList.dataset.date = this.prewDate[i];
-          todoList.dataset.time = this.prewTime[i];
-          localStorage.prewDate = JSON.stringify(this.prewDate);
-          localStorage.prewTime = JSON.stringify(this.prewTime);
+        if (localStorage.date) {
+          this.arrayJSON = JSON.parse(localStorage.date);
+          todoList.dataset.date = this.arrayJSON[i]; // todoList.dataset.time = this.prewTime[i];
+          // localStorage.prewTime = JSON.stringify(this.prewTime);
         } else if (localStorage.prewDate && localStorage.prewTime) {
           todoList.dataset.date = JSON.parse(localStorage.prewDate)[i];
           todoList.dataset.time = JSON.parse(localStorage.prewTime)[i];
@@ -272,7 +284,9 @@ function (_View) {
       }
 
       localStorage.removeItem('newTime');
-      here.insertBefore(dateAdd, here.children[1]);
+      localStorage.removeItem('newTodo');
+      debugger;
+      dateAdd && here.insertBefore(dateAdd, here.children[1]);
     }
   }]);
 
@@ -333,20 +347,32 @@ function (_Storage) {
       var clickEvent = function clickEvent(e) {
         if (e.target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
           debugger;
-          _this2.number = _this2.localeStorageUpdate(); // (!(localStorage.newDate)) &&
-          // (localStorage.setItem('newDate', JSON.stringify([e.target.previousSibling.value.slice(0,10).split('-').reverse().join().replace(/\,/g,'.')])));
-          // localStorage.setItem('newTime', e.target.previousSibling.value.slice(11));
-          // (localStorage.newDate) && (this.dateArray.push(localStorage.newDate));
-          // (localStorage.newDate) && (localStorage.newDate = this.dateArray);
+          _this2.buffer = [];
+          _this2.number = _this2.localeStorageUpdate();
+          var len = _this2.lists.length - 1;
 
+          _this2.dataParser(e.target);
+
+          todoView.showNewTodo(JSON.parse(localStorage.list));
           debugger;
-          todoView.showNewTodo(JSON.parse(localStorage.list)); // todo.startTimer(todo.timer);
+
+          _this2.lists[len].startTimer(_this2.lists[len].timers);
 
           _this2.btnEnter.value = '';
         }
 
         if (e.target.dataset.num) {
           var splits = JSON.parse(localStorage.list);
+          var date = JSON.parse(localStorage.date);
+
+          var count = function count() {
+            splits.forEach(function (element, i) {
+              if (element.timer === parseInt(e.target.dataset.num)) return i;
+            });
+          };
+
+          date.splice(count(), 1);
+          localStorage.date = JSON.stringify(date);
 
           if (splits.some(function (item) {
             return item.value === e.target.innerHTML;
