@@ -8,7 +8,10 @@ class TodoControl extends Storage{
 
     setLsitener(todoView){
 
+        let parentDnD = document.getElementsByClassName('todoList')[0];
+
         let clickEvent = (e) =>{
+
 
             if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
 
@@ -44,6 +47,56 @@ class TodoControl extends Storage{
 
         document.addEventListener('click',clickEvent,false);
         document.addEventListener('touchend',clickEvent,false);
+
+        let drag = null;
+
+        document.addEventListener('dragstart', (e) => {
+            drag = e.target;
+        });
+
+
+        parentDnD.addEventListener('dragover', function(e) {
+
+            e.preventDefault();
+            let target = e.target;
+            let bounding = target.getBoundingClientRect();
+            let offset = bounding.y + (bounding.height/2);
+
+            if (target.classList[0] != 'todoList'){
+                if ( e.clientY - offset > 0 ) {
+                    target.style['border-bottom'] = 'solid 4px blue';
+                    target.style['border-top'] = '';
+                } else {
+                    target.style['border-top'] = 'solid 4px blue';
+                    target.style['border-bottom'] = '';
+                }
+        }
+
+        });
+
+        parentDnD.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            console.log('dragleave...');
+        });
+
+        parentDnD.addEventListener('dragleave', function(e) {
+            e.target.style['border-bottom'] = '';
+            e.target.style['border-top'] = '';
+        });
+
+        parentDnD.addEventListener('drop', function(e) {
+            let target = e.target;
+
+            if ( target.style['border-bottom'] !== '' ) {
+                target.style['border-bottom'] = '';
+                this.insertBefore(drag, target.nextSibling);
+            } else {
+                target.style['border-top'] = '';
+                this.insertBefore(drag, target);
+            }
+    
+            // this.insertBefore(target,target.previousSibling);
+        });
 
         window.addEventListener('DOMContentLoaded',() =>{
 

@@ -175,10 +175,12 @@ function (_View) {
       todoList.classList.add('todoList');
       var titleName = document.createElement('h1');
       titleName.classList.add('title');
-      titleName.innerHTML = this.title;
-      var titleTodoList = document.createElement('h3');
-      titleTodoList.classList.add('todoList__title');
-      titleTodoList.innerHTML = 'list'.toLocaleUpperCase();
+      titleName.innerHTML = this.title; // let titleTodoList = document.createElement('h3');
+      // titleTodoList.classList.add('todoList__title');
+      // titleTodoList.innerHTML = 'list'.toLocaleUpperCase();
+      // let todoWrapperTitlte = document.createElement('div');
+      // todoWrapperTitlte.classList.add('title');
+
       var todoControllers = document.createElement('div');
       todoControllers.classList.add('controllers');
       var input = document.createElement('input');
@@ -197,8 +199,9 @@ function (_View) {
       footer.appendChild(titleName);
       todoControllers.appendChild(input);
       todoControllers.appendChild(datePick);
-      todoControllers.appendChild(button);
-      todoList.appendChild(titleTodoList);
+      todoControllers.appendChild(button); // todoWrapperTitlte.appendChild(titleTodoList);
+      // todoList.appendChild(todoWrapperTitlte);
+
       section.appendChild(todoList);
       wrapper.appendChild(footer);
       wrapper.appendChild(todoControllers);
@@ -321,6 +324,8 @@ function (_Storage) {
     value: function setLsitener(todoView) {
       var _this2 = this;
 
+      var parentDnD = document.getElementsByClassName('todoList')[0];
+
       var clickEvent = function clickEvent(e) {
         if (e.target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
           _this2.buffer = [];
@@ -362,6 +367,46 @@ function (_Storage) {
 
       document.addEventListener('click', clickEvent, false);
       document.addEventListener('touchend', clickEvent, false);
+      var drag = null;
+      document.addEventListener('dragstart', function (e) {
+        drag = e.target;
+      });
+      parentDnD.addEventListener('dragover', function (e) {
+        e.preventDefault();
+        var target = e.target;
+        var bounding = target.getBoundingClientRect();
+        var offset = bounding.y + bounding.height / 2;
+
+        if (target.classList[0] != 'todoList') {
+          if (e.clientY - offset > 0) {
+            target.style['border-bottom'] = 'solid 4px blue';
+            target.style['border-top'] = '';
+          } else {
+            target.style['border-top'] = 'solid 4px blue';
+            target.style['border-bottom'] = '';
+          }
+        }
+      });
+      parentDnD.addEventListener('dragleave', function (e) {
+        e.preventDefault();
+        console.log('dragleave...');
+      });
+      parentDnD.addEventListener('dragleave', function (e) {
+        e.target.style['border-bottom'] = '';
+        e.target.style['border-top'] = '';
+      });
+      parentDnD.addEventListener('drop', function (e) {
+        var target = e.target;
+
+        if (target.style['border-bottom'] !== '') {
+          target.style['border-bottom'] = '';
+          this.insertBefore(drag, target.nextSibling);
+        } else {
+          target.style['border-top'] = '';
+          this.insertBefore(drag, target);
+        } // this.insertBefore(target,target.previousSibling);
+
+      });
       window.addEventListener('DOMContentLoaded', function () {
         localStorage.list && todoView.showNewTodo(JSON.parse(localStorage.list));
       }, false);
