@@ -83,10 +83,12 @@ class Todo extends View {
     let todoList;
     let dateAdd;
     this.saveP = [];
+        
     if (oldTodo.length){
         oldTodo.forEach( (element,i) => {
             
-            if(element.classList[0] === 'unactive') { value[i].save = true; this.saveP.push(oldTodo[i])}
+            if(element.classList[0] === 'unactive') { 
+                value[i].save = true; this.saveP.push(oldTodo[i])}
             element.remove();
         });;
     }
@@ -105,19 +107,21 @@ class Todo extends View {
             }
         }
 
-        // dateAdd = document.createElement('p');
-        // dateAdd.classList.add('dateAdd');
-        // dateAdd.innerHTML = 'Last add: ' + localStorage.timeAdd;
         todoList.setAttribute('draggable','true');
         
         if (localStorage.date) {
             
             this.arrayJSON = JSON.parse(localStorage.date);
-            todoList.dataset.date = this.arrayJSON[i];
-            // todoList.dataset.time = this.prewTime[i];
-            // localStorage.prewTime = JSON.stringify(this.prewTime);
-        } else if ((localStorage.prewDate) && (localStorage.prewTime)){
             
+            todoList.dataset.date = this.arrayJSON[i];
+
+            let dateNow = JSON.parse(localStorage.date)[i];
+            let todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g,',')).getTime();
+
+            if (todoDay < Date.now()) { todoList.classList.add('unactive');  }
+
+        } else if ((localStorage.prewDate) && (localStorage.prewTime)){
+
             todoList.dataset.date =  JSON.parse(localStorage.prewDate)[i];
             todoList.dataset.time =  JSON.parse(localStorage.prewTime)[i];
         }
