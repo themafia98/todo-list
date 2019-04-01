@@ -379,11 +379,10 @@ function (_Storage) {
 
         if (target.classList[0] != 'todoList') {
           if (e.clientY - offset > 0) {
-            target.style['border-bottom'] = 'solid 4px blue';
+            target.style['border-bottom'] = 'solid 4px red';
             target.style['border-top'] = '';
-          } else {
-            target.style['border-top'] = 'solid 4px blue';
-            target.style['border-bottom'] = '';
+          } else {// target.style['border-top'] = 'solid 4px red';
+            // target.style['border-bottom'] = '';
           }
         }
       });
@@ -397,13 +396,59 @@ function (_Storage) {
       });
       parentDnD.addEventListener('drop', function (e) {
         var target = e.target;
+        var swapeDate = JSON.parse(localStorage.date);
+        var swapeList = JSON.parse(localStorage.list);
 
         if (target.style['border-bottom'] !== '') {
           target.style['border-bottom'] = '';
-          this.insertBefore(drag, target.nextSibling);
+          var dragNum = parseInt(drag.dataset.num);
+          var targetNum = parseInt(target.dataset.num);
+
+          if (dragNum < targetNum) {
+            var swapDate1 = swapeDate.splice(targetNum, 1, swapeDate[dragNum])[0];
+            var swapDate2 = swapeDate[dragNum];
+            swapeDate.splice(targetNum, 0, swapDate1);
+            swapeDate.splice(dragNum, 1);
+            var swapList1 = swapeList.splice(targetNum, 1, swapeList[dragNum])[0];
+            var swapList2 = swapeList[dragNum];
+            swapeList.splice(targetNum, 0, swapList1);
+            swapeList.splice(dragNum, 1);
+            this.insertBefore(drag, target.nextSibling);
+          } else {
+            var _swapDate = swapeDate.splice(targetNum, 1, swapeDate[dragNum])[0];
+            var _swapDate2 = swapeDate[dragNum];
+            swapeDate.splice(targetNum, 0, _swapDate);
+            swapeDate.splice(dragNum + 1, 1);
+            var _swapList = swapeList.splice(targetNum, 1, swapeList[dragNum])[0];
+            var _swapList2 = swapeList[dragNum];
+            swapeList.splice(targetNum, 0, _swapList);
+            swapeList.splice(dragNum + 1, 1);
+            this.insertBefore(drag, target.nextSibling);
+          }
+
+          var todos = document.querySelectorAll('[data-date]');
+
+          for (var i = 0; i < todos.length; i++) {
+            todos[i].dataset.num && (todos[i].dataset.num = i);
+          }
+
+          localStorage.date = JSON.stringify(swapeDate);
+          localStorage.list = JSON.stringify(swapeList);
         } else {
           target.style['border-top'] = '';
-          this.insertBefore(drag, target);
+          debugger; // let dragNum = parseInt(drag.dataset.num);
+          // let targetNum = parseInt(target.dataset.num);
+          // let swapDate1 = swapeDate.splice(dragNum,1,swapeDate[targetNum-1])[0];
+          // swapeDate.splice(targetNum-1,1,swapDate1);
+          // let swapList1 = swapeList.splice(dragNum,1,swapeList[targetNum-1])[0];
+          // swapeList.splice(targetNum-1,1,swapList1)[0];
+          // this.insertBefore(drag, target);
+          // let todos = document.querySelectorAll('[data-num]');
+          // // for (let i = 0; i < todos.length; i++){
+          // //     (todos[i].dataset.num) && (todos[i].dataset.num = i);
+          // // }
+          // localStorage.date = JSON.stringify(swapeDate);
+          // localStorage.list = JSON.stringify(swapeList);
         } // this.insertBefore(target,target.previousSibling);
 
       });

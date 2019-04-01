@@ -64,11 +64,11 @@ class TodoControl extends Storage{
 
             if (target.classList[0] != 'todoList'){
                 if ( e.clientY - offset > 0 ) {
-                    target.style['border-bottom'] = 'solid 4px blue';
+                    target.style['border-bottom'] = 'solid 4px red';
                     target.style['border-top'] = '';
                 } else {
-                    target.style['border-top'] = 'solid 4px blue';
-                    target.style['border-bottom'] = '';
+                    // target.style['border-top'] = 'solid 4px red';
+                    // target.style['border-bottom'] = '';
                 }
         }
 
@@ -87,12 +87,79 @@ class TodoControl extends Storage{
         parentDnD.addEventListener('drop', function(e) {
             let target = e.target;
 
+            let swapeDate = JSON.parse(localStorage.date);
+            let swapeList = JSON.parse(localStorage.list);
+
             if ( target.style['border-bottom'] !== '' ) {
                 target.style['border-bottom'] = '';
+
+                let dragNum = parseInt(drag.dataset.num);
+                let targetNum = parseInt(target.dataset.num);
+
+
+                if (dragNum < targetNum){
+
+                let swapDate1 = swapeDate.splice(targetNum,1,swapeDate[dragNum])[0];
+                let swapDate2 = swapeDate[dragNum];
+                swapeDate.splice(targetNum,0,swapDate1);
+                swapeDate.splice(dragNum,1);
+                let swapList1 = swapeList.splice(targetNum,1,swapeList[dragNum])[0];
+                let swapList2 = swapeList[dragNum];
+                swapeList.splice(targetNum,0,swapList1);
+                swapeList.splice(dragNum,1);
+
                 this.insertBefore(drag, target.nextSibling);
+                } else {
+
+                let swapDate1 = swapeDate.splice(targetNum,1,swapeDate[dragNum])[0];
+                let swapDate2 = swapeDate[dragNum];
+                swapeDate.splice(targetNum,0,swapDate1);
+                swapeDate.splice(dragNum+1,1);
+                let swapList1 = swapeList.splice(targetNum,1,swapeList[dragNum])[0];
+                let swapList2 = swapeList[dragNum];
+                swapeList.splice(targetNum,0,swapList1);
+                swapeList.splice(dragNum+1,1);
+                this.insertBefore(drag, target.nextSibling);
+                }
+
+
+
+                let todos = document.querySelectorAll('[data-date]');
+                for (let i = 0; i < todos.length; i++){
+
+                     (todos[i].dataset.num) && (todos[i].dataset.num = i);
+                 }
+
+                localStorage.date = JSON.stringify(swapeDate);
+                localStorage.list = JSON.stringify(swapeList);
+
             } else {
                 target.style['border-top'] = '';
-                this.insertBefore(drag, target);
+
+                debugger;
+
+                // let dragNum = parseInt(drag.dataset.num);
+                // let targetNum = parseInt(target.dataset.num);
+
+                // let swapDate1 = swapeDate.splice(dragNum,1,swapeDate[targetNum-1])[0];
+                // swapeDate.splice(targetNum-1,1,swapDate1);
+ 
+                // let swapList1 = swapeList.splice(dragNum,1,swapeList[targetNum-1])[0];
+                // swapeList.splice(targetNum-1,1,swapList1)[0];
+
+
+                // this.insertBefore(drag, target);
+
+                // let todos = document.querySelectorAll('[data-num]');
+                // // for (let i = 0; i < todos.length; i++){
+
+                // //     (todos[i].dataset.num) && (todos[i].dataset.num = i);
+                // // }
+
+                // localStorage.date = JSON.stringify(swapeDate);
+                // localStorage.list = JSON.stringify(swapeList);
+
+
             }
     
             // this.insertBefore(target,target.previousSibling);
