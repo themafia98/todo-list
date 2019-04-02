@@ -48,17 +48,13 @@ class ListModal{
             this.weatherHistory = {};
             response.list.forEach(element => {
 
+
                 let date = element.dt_txt.split(' ')[0].split('-').reverse().join().replace(/\,/g,'.');
                 let time = element.dt_txt.split(' ')[1];
                 if (date === target.dataset.date){
-                    
-                    
+
                     this.weatherHistory[`${time}`]= `${Math.floor((element.main.temp - 273.15))} C°`;
                 }
-                // } else {
-
-                //     this.weatherHistory['key'] = 'not found';
-                // }
             });
 
         })

@@ -78,10 +78,7 @@ function () {
 
           if (date === target.dataset.date) {
             _this.weatherHistory["".concat(time)] = "".concat(Math.floor(element.main.temp - 273.15), " C\xB0");
-          } // } else {
-          //     this.weatherHistory['key'] = 'not found';
-          // }
-
+          }
         });
       }).then(function () {
         for (var key in _this.weatherHistory) {
