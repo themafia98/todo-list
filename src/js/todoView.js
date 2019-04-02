@@ -28,7 +28,7 @@ class Todo extends View {
     }
 
     static checkEmpty(modal){
-        debugger;
+        
         let checkP = document.querySelectorAll('.weather');
         if (checkP.length === 0){
         let weatherView = document.createElement('p');

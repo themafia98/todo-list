@@ -59,10 +59,10 @@ class ListModal{
 
 
                 let date = element.dt_txt.split(' ')[0].split('-').reverse().join().replace(/\,/g,'.');
-                let time = element.dt_txt.split(' ')[1];
+                let time = element.dt_txt.split(' ')[1].slice(0,5);
                 if (date === target.dataset.date){
 
-                    this.weatherHistory[`${time}`]= `${Math.floor((element.main.temp - 273.15))} C°`;
+                    this.weatherHistory[`${time}`]= `<span class ='important'>${Math.floor((element.main.temp - 273.15))} C°</span>`;
                 }
             });
 

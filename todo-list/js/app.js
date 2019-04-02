@@ -79,10 +79,10 @@ function () {
         _this.weatherHistory = {};
         response.list.forEach(function (element) {
           var date = element.dt_txt.split(' ')[0].split('-').reverse().join().replace(/\,/g, '.');
-          var time = element.dt_txt.split(' ')[1];
+          var time = element.dt_txt.split(' ')[1].slice(0, 5);
 
           if (date === target.dataset.date) {
-            _this.weatherHistory["".concat(time)] = "".concat(Math.floor(element.main.temp - 273.15), " C\xB0");
+            _this.weatherHistory["".concat(time)] = "<span class ='important'>".concat(Math.floor(element.main.temp - 273.15), " C\xB0</span>");
           }
         });
       }).then(function () {
@@ -411,7 +411,6 @@ function (_View) {
   }], [{
     key: "checkEmpty",
     value: function checkEmpty(modal) {
-      debugger;
       var checkP = document.querySelectorAll('.weather');
 
       if (checkP.length === 0) {
