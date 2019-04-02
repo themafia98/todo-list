@@ -263,7 +263,8 @@ function (_View) {
       var datePick = document.createElement('input');
       datePick.classList.add('date');
       datePick.setAttribute('type', 'date');
-      datePick.setAttribute('value', time + "T".concat(new Date().toLocaleTimeString()));
+      datePick.setAttribute('value', time); // + `T${new Date().toLocaleTimeString()}`
+
       footer.appendChild(titleName);
       todoControllers.appendChild(input);
       todoControllers.appendChild(datePick);
