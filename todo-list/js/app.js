@@ -2,10 +2,6 @@
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
-
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
-
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -18,35 +14,51 @@ function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || func
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var ListModal = function ListModal(num, string) {
-  _classCallCheck(this, ListModal);
+function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-  this.number = num;
-  this.todo = string;
-  this.states = {
-    main: true,
-    modal: true
-  };
-};
+function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
+
+var ListModal =
+/*#__PURE__*/
+function () {
+  function ListModal() {
+    _classCallCheck(this, ListModal);
+
+    this.states = {
+      main: false,
+      modal: false
+    };
+  }
+
+  _createClass(ListModal, [{
+    key: "setState",
+    value: function setState(bind, what) {
+      bind === 'main' && (this.states.main = what);
+      bind === 'modal' && (this.states.modal = what);
+    }
+  }, {
+    key: "getState",
+    value: function getState(bind) {
+      if (bind === 'main') return this.states.main;
+      if (bind === 'modal') return this.states.modal;
+    }
+  }]);
+
+  return ListModal;
+}();
 
 var Storage =
 /*#__PURE__*/
-function (_ListModal) {
-  _inherits(Storage, _ListModal);
-
+function () {
   function Storage() {
-    var _this;
-
     _classCallCheck(this, Storage);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(Storage).call(this));
-    _this.arrayList = [];
-    _this.lists = [];
-    _this.dateArray = [];
-    _this.buffer = {};
-    _this.timersN = -1;
-    _this.number = 0;
-    return _this;
+    this.arrayList = [];
+    this.lists = [];
+    this.dateArray = [];
+    this.buffer = {};
+    this.timersN = -1;
+    this.number = 0;
   }
 
   _createClass(Storage, [{
@@ -76,7 +88,7 @@ function (_ListModal) {
       var todo = new todoOne(this.number, localStorage.newTodo);
       localStorage.list && (this.lists = JSON.parse(localStorage.list));
       this.lists.push(todo);
-      localStorage.list = JSON.stringify(this.lists);
+      localStorage.list = JSON.stringify(this.lists, null, '\t');
       return this.number;
     }
   }, {
@@ -91,23 +103,23 @@ function (_ListModal) {
   }]);
 
   return Storage;
-}(ListModal);
+}();
 
 var todoOne =
 /*#__PURE__*/
-function (_ListModal2) {
-  _inherits(todoOne, _ListModal2);
+function (_ListModal) {
+  _inherits(todoOne, _ListModal);
 
   function todoOne(timerN, value) {
-    var _this2;
+    var _this;
 
     _classCallCheck(this, todoOne);
 
-    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(todoOne).call(this));
-    _this2.value = value;
-    _this2.timer = timerN;
-    _this2.save = false;
-    return _this2;
+    _this = _possibleConstructorReturn(this, _getPrototypeOf(todoOne).call(this));
+    _this.value = value;
+    _this.timer = timerN;
+    _this.save = false;
+    return _this;
   }
 
   return todoOne;
@@ -268,6 +280,32 @@ function (_View) {
       localStorage.removeItem('newTodo');
       dateAdd && here.insertBefore(dateAdd, here.children[1]);
     }
+  }, {
+    key: "showModal",
+    value: function showModal() {
+      var getList = document.getElementById('todo');
+      var modalBg = document.createElement('div');
+      modalBg.classList.add('background-modal');
+      var modal = document.createElement('div');
+      modal.classList.add('modal-window');
+      modal.dataset.modalNum = this.dataset.num;
+      var closeBtn = document.createElement('input');
+      closeBtn.setAttribute('type', 'button');
+      closeBtn.setAttribute('value', 'X');
+      closeBtn.classList.add('close');
+      var deleteBtn = document.createElement('input');
+      deleteBtn.setAttribute('type', 'button');
+      deleteBtn.setAttribute('value', 'Delete todo');
+      deleteBtn.classList.add('delete');
+      var showTodoDate = document.createElement('p');
+      showTodoDate.classList.add('modal-date');
+      showTodoDate.innerHTML = this.dataset.date;
+      modal.appendChild(closeBtn);
+      modal.appendChild(showTodoDate);
+      modal.appendChild(deleteBtn);
+      modalBg.appendChild(modal);
+      getList.appendChild(modalBg);
+    }
   }]);
 
   return Todo;
@@ -321,48 +359,99 @@ function (_Storage) {
 
   _createClass(TodoControl, [{
     key: "setLsitener",
-    value: function setLsitener(todoView) {
+    value: function setLsitener(todoView, todoState) {
       var _this2 = this;
 
       var parentDnD = document.getElementsByClassName('todoList')[0];
 
       var clickEvent = function clickEvent(e) {
-        if (e.target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
-          _this2.buffer = [];
-          _this2.number = _this2.localeStorageUpdate();
+        var target = e.target;
+        var modalWindow = target.parentNode.parentNode;
 
-          _this2.dataParser(e.target);
+        if (todoState.getState('main')) {
+          if (target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
+            _this2.buffer = [];
+            _this2.number = _this2.localeStorageUpdate();
 
-          todoView.showNewTodo(JSON.parse(localStorage.list));
-          _this2.btnEnter.value = '';
-        }
+            _this2.dataParser(target);
 
-        if (e.target.dataset.num) {
-          var splits = JSON.parse(localStorage.list);
-          var date = JSON.parse(localStorage.date);
+            todoView.showNewTodo(JSON.parse(localStorage.list));
+            _this2.btnEnter.value = '';
+          }
 
-          var count = function count() {
-            splits.forEach(function (element, i) {
-              if (element.timer === parseInt(e.target.dataset.num)) return i;
-            });
-          };
-
-          date.splice(count(), 1);
-          localStorage.date = JSON.stringify(date);
-
-          if (splits.some(function (item) {
-            return item.value === e.target.innerHTML;
-          })) {
-            var filter = splits.filter(function (v) {
-              return v.value === e.target.innerHTML;
-            });
-
-            _this2.updateStorage(JSON.parse(localStorage.list), filter[0].timer);
-
-            e.target.remove();
-            localStorage.timersN = --localStorage.timersN;
+          if (target.dataset.num) {
+            todoView.showModal.call(target);
+            todoState.setState('main', false);
+            todoState.setState('modal', true);
           }
         }
+
+        if (todoState.getState('modal')) {
+          if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
+            todoState.setState('main', true);
+            todoState.setState('modal', false);
+          }
+
+          target.classList[0] === 'close' && modalWindow.remove();
+          target.classList[0] === 'background-modal' && target.remove();
+
+          if (target.classList[0] === 'delete') {
+            debugger;
+            var parent = target.parentNode;
+            var todoDelete = document.querySelector("[data-num=\"".concat(parent.dataset.modalNum, "\"]"));
+            var splits = JSON.parse(localStorage.list);
+            var date = JSON.parse(localStorage.date);
+
+            var count = function count() {
+              splits.forEach(function (element, i) {
+                if (element.timer === parseInt(todoDelete.dataset.num)) return i;
+              });
+            };
+
+            date.splice(count(), 1);
+            localStorage.date = JSON.stringify(date);
+
+            if (splits.some(function (item) {
+              return item.value === todoDelete.innerHTML;
+            })) {
+              var filter = splits.filter(function (v) {
+                return v.value === todoDelete.innerHTML;
+              });
+
+              _this2.updateStorage(JSON.parse(localStorage.list), filter[0].timer);
+
+              todoDelete.remove();
+              todoState.setState('main', true);
+              todoState.setState('modal', false);
+              modalWindow.remove();
+              localStorage.timersN = --localStorage.timersN;
+            }
+
+            debugger;
+            var todos = document.querySelectorAll('[data-date]');
+
+            for (var i = 0; i < todos.length; i++) {
+              todos[i].dataset.num && (todos[i].dataset.num = i);
+            }
+          }
+        } // if (e.target.dataset.num) {
+        //     let splits = JSON.parse(localStorage.list);
+        //     let date = JSON.parse(localStorage.date);
+        //     let count = () => {
+        //         splits.forEach((element,i) => {
+        //         if (element.timer === parseInt(e.target.dataset.num)) return i;
+        //     });
+        //     }
+        //     date.splice(count(),1);
+        //     localStorage.date = JSON.stringify(date);
+        //     if (splits.some((item) => item.value === e.target.innerHTML)) {
+        //         let filter = splits.filter((v) => v.value === e.target.innerHTML);
+        //         this.updateStorage(JSON.parse(localStorage.list),filter[0].timer);
+        //         e.target.remove();
+        //         localStorage.timersN = --localStorage.timersN;
+        //     }
+        // }
+
       };
 
       document.addEventListener('click', clickEvent, false);
@@ -388,9 +477,6 @@ function (_Storage) {
       });
       parentDnD.addEventListener('dragleave', function (e) {
         e.preventDefault();
-        console.log('dragleave...');
-      });
-      parentDnD.addEventListener('dragleave', function (e) {
         e.target.style['border-bottom'] = '';
         e.target.style['border-top'] = '';
       });
@@ -435,8 +521,7 @@ function (_Storage) {
           localStorage.date = JSON.stringify(swapeDate);
           localStorage.list = JSON.stringify(swapeList);
         } else {
-          target.style['border-top'] = '';
-          debugger; // let dragNum = parseInt(drag.dataset.num);
+          target.style['border-top'] = ''; // let dragNum = parseInt(drag.dataset.num);
           // let targetNum = parseInt(target.dataset.num);
           // let swapDate1 = swapeDate.splice(dragNum,1,swapeDate[targetNum-1])[0];
           // swapeDate.splice(targetNum-1,1,swapDate1);
@@ -468,6 +553,8 @@ var todoApp = function () {
       appID: document.getElementById('todo'),
       title: 'Todo-list'
     };
+    var todoState = new ListModal();
+    todoState.setState('main', true);
     var storageData = new Storage();
     var todoView = new Todo(settingsTodo);
     todoView.build();
@@ -476,7 +563,7 @@ var todoApp = function () {
       btn: document.querySelector('.setTodo')
     };
     var controller = new TodoControl(controllerSettings);
-    controller.setLsitener(todoView);
+    controller.setLsitener(todoView, todoState);
   }
 
   return {

@@ -143,5 +143,38 @@ class Todo extends View {
 
     }
 
+    showModal(){
 
+        let getList = document.getElementById('todo');
+
+        let modalBg = document.createElement('div');
+        modalBg.classList.add('background-modal');
+
+        let modal = document.createElement('div');
+        modal.classList.add('modal-window');
+        modal.dataset.modalNum = this.dataset.num;
+
+        let closeBtn = document.createElement('input');
+        closeBtn.setAttribute('type','button');
+        closeBtn.setAttribute('value','X');
+        closeBtn.classList.add('close');
+
+        let deleteBtn = document.createElement('input');
+        deleteBtn.setAttribute('type','button');
+        deleteBtn.setAttribute('value','Delete todo');
+        deleteBtn.classList.add('delete');
+
+
+        
+        let showTodoDate = document.createElement('p');
+        showTodoDate.classList.add('modal-date');
+        showTodoDate.innerHTML = this.dataset.date;
+
+        modal.appendChild(closeBtn);
+        modal.appendChild(showTodoDate);
+        modal.appendChild(deleteBtn);
+        modalBg.appendChild(modal);
+        getList.appendChild(modalBg);
+
+    }
 }

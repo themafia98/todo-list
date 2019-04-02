@@ -6,43 +6,102 @@ class TodoControl extends Storage{
     this.btnAdd = btn;
     }
 
-    setLsitener(todoView){
+    setLsitener(todoView,todoState){
 
         let parentDnD = document.getElementsByClassName('todoList')[0];
 
         let clickEvent = (e) =>{
 
+            let target = e.target;
+            let modalWindow = target.parentNode.parentNode;
+            
+            if (todoState.getState('main')){
+                if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
 
-            if ((e.target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
+                    this.buffer = [];
+                    this.number = this.localeStorageUpdate();
+                    this.dataParser(target);
+                    todoView.showNewTodo(JSON.parse(localStorage.list));
+                    this.btnEnter.value = '';
+                }
 
-                this.buffer = [];
-                this.number = this.localeStorageUpdate();
-                this.dataParser(e.target);
-                todoView.showNewTodo(JSON.parse(localStorage.list));
-                this.btnEnter.value = '';
+                if(target.dataset.num){
+
+                    todoView.showModal.call(target);
+                    todoState.setState('main',false);
+                    todoState.setState('modal',true);
+
+                }
             }
 
-            if (e.target.dataset.num) {
+            if (todoState.getState('modal')){
+
+                if (target.classList[0] === 'close' ||target.classList[0] === 'background-modal'){
+                    todoState.setState('main',true);
+                    todoState.setState('modal',false);
+                }
+                ((target.classList[0] === 'close')  && (modalWindow.remove()));
+                (target.classList[0] === 'background-modal') && (target.remove());
+
+                if(target.classList[0] === 'delete'){
+                    debugger;
+                    let parent = target.parentNode;
+                    let todoDelete = document.querySelector(`[data-num="${parent.dataset.modalNum}"]`);
 
                 let splits = JSON.parse(localStorage.list);
                 let date = JSON.parse(localStorage.date);
                 let count = () => {
                     splits.forEach((element,i) => {
-                    if (element.timer === parseInt(e.target.dataset.num)) return i;
+                    if (element.timer === parseInt(todoDelete.dataset.num)) return i;
                 });
                 }
-
+                
                 date.splice(count(),1);
                 localStorage.date = JSON.stringify(date);
     
-                if (splits.some((item) => item.value === e.target.innerHTML)) {
+                if (splits.some((item) => item.value === todoDelete.innerHTML)) {
 
-                    let filter = splits.filter((v) => v.value === e.target.innerHTML);
+                    let filter = splits.filter((v) => v.value === todoDelete.innerHTML);
                     this.updateStorage(JSON.parse(localStorage.list),filter[0].timer);
-                    e.target.remove();
+                    todoDelete.remove();
+                    todoState.setState('main',true);
+                    todoState.setState('modal',false);
+                    modalWindow.remove();
                     localStorage.timersN = --localStorage.timersN;
                 }
+
+debugger;
+                let todos = document.querySelectorAll('[data-date]');
+                      for (let i = 0; i < todos.length; i++){
+
+                    (todos[i].dataset.num) && (todos[i].dataset.num = i);
+                }
+                }
+
             }
+
+
+            // if (e.target.dataset.num) {
+
+            //     let splits = JSON.parse(localStorage.list);
+            //     let date = JSON.parse(localStorage.date);
+            //     let count = () => {
+            //         splits.forEach((element,i) => {
+            //         if (element.timer === parseInt(e.target.dataset.num)) return i;
+            //     });
+            //     }
+
+            //     date.splice(count(),1);
+            //     localStorage.date = JSON.stringify(date);
+    
+            //     if (splits.some((item) => item.value === e.target.innerHTML)) {
+
+            //         let filter = splits.filter((v) => v.value === e.target.innerHTML);
+            //         this.updateStorage(JSON.parse(localStorage.list),filter[0].timer);
+            //         e.target.remove();
+            //         localStorage.timersN = --localStorage.timersN;
+            //     }
+            // }
         };
 
         document.addEventListener('click',clickEvent,false);
@@ -76,10 +135,6 @@ class TodoControl extends Storage{
 
         parentDnD.addEventListener('dragleave', function(e) {
             e.preventDefault();
-            console.log('dragleave...');
-        });
-
-        parentDnD.addEventListener('dragleave', function(e) {
             e.target.style['border-bottom'] = '';
             e.target.style['border-top'] = '';
         });
@@ -136,7 +191,7 @@ class TodoControl extends Storage{
             } else {
                 target.style['border-top'] = '';
 
-                debugger;
+                
 
                 // let dragNum = parseInt(drag.dataset.num);
                 // let targetNum = parseInt(target.dataset.num);
@@ -168,6 +223,7 @@ class TodoControl extends Storage{
         window.addEventListener('DOMContentLoaded',() =>{
 
             (localStorage.list) && (todoView.showNewTodo(JSON.parse(localStorage.list)));
+
         },false);
     }
 }

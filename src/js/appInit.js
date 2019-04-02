@@ -5,6 +5,10 @@ let todoApp = (function(){
 
         let settingsTodo = {appID: document.getElementById('todo'),title:'Todo-list'};
 
+        let todoState = new ListModal();
+
+        todoState.setState('main',true);
+
         let storageData = new Storage();
         let todoView = new Todo(settingsTodo);
         todoView.build();
@@ -14,7 +18,7 @@ let todoApp = (function(){
             btn: document.querySelector('.setTodo')
         }
         let controller = new TodoControl(controllerSettings);
-        controller.setLsitener(todoView);
+        controller.setLsitener(todoView,todoState);
 
     }
 

@@ -1,20 +1,30 @@
 
 class ListModal{
 
-    constructor(num,string){
-        this.number = num;
-        this.todo = string;
+    constructor(){
 
         this.states = {
-            main: true,
-            modal: true
+            main: false,
+            modal: false
         };
     }
+
+    setState(bind,what){
+
+        (bind === 'main') && (this.states.main = what);
+        (bind === 'modal') && (this.states.modal = what);
+    }
+
+    getState(bind){
+        if (bind === 'main') return this.states.main;
+        if (bind === 'modal') return this.states.modal;
+    }
+
+
 }
 
-class Storage extends ListModal{
+class Storage{
     constructor(){
-        super();
         this.arrayList = [];
         this.lists = [];
         this.dateArray = [];
@@ -53,7 +63,8 @@ class Storage extends ListModal{
 
         (localStorage.list) && (this.lists = JSON.parse(localStorage.list));
         this.lists.push(todo);
-        localStorage.list = JSON.stringify(this.lists);
+
+        localStorage.list = JSON.stringify(this.lists,null, '\t');
 
         return this.number;
     }
@@ -83,3 +94,5 @@ class todoOne extends ListModal {
         this.save = false;
     }
 }
+
+
