@@ -4,6 +4,7 @@ class ListModal{
 
     constructor(){
         this.weatherHistory = {};
+        this.weathersArray = [];
         this.states = {
             main: false,
             modal: false
@@ -27,10 +28,11 @@ class ListModal{
 
     getCoords(){
 
+
         fetch('https://get.geojs.io/v1/ip/geo.json')
         .then( (response) => response.json())
         .then( (response) =>{
-            console.log(response);
+
             let coords = {
                 latitude: response.latitude,
                 longitude: response.longitude
@@ -39,12 +41,19 @@ class ListModal{
         })
     }
     
-    getWeather(target,modal) {
+    getWeather(target,modal,load) {
 
         let coords = JSON.parse(localStorage.coords);
+
+        let weatherBox = document.createElement('div');
+        weatherBox.classList.add('weather-box');
+        load.classList.add('center');
+        modal.appendChild(weatherBox);
+        weatherBox.appendChild(load);
+        
         fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${coords.latitude}&lon=${coords.longitude}&APPID=${this.getKey()}`)
-        .then( (response) => response.json())
-        .then( (response) =>{
+        .then((response) => response.json())
+        .then((response) =>{
             this.weatherHistory = {};
             response.list.forEach(element => {
 
@@ -62,24 +71,40 @@ class ListModal{
         .then ( ()=> {
 
             
-        
             for (let key in this.weatherHistory){
                 if (this.weatherHistory != {}){
             let weatherView = document.createElement('p');
             weatherView.classList.add('weather');
             weatherView.innerHTML = `${key} : ${this.weatherHistory[key]}`;
-            modal.appendChild(weatherView);
-                } else {
-                    let weatherView = document.createElement('p');
-                    weatherView.classList.add('weather');
-                    weatherView.innerHTML = `Not found`;
-                    modal.appendChild(weatherView);
+            this.weathersArray.push(weatherView);
+            weatherBox.appendChild(weatherView);
                 }
             }
-        });
+            debugger;
+            Todo.checkEmpty(modal);
+            let spinner = document.querySelector('.center').remove();
 
+            return true;
+        })
     }
 
+}
+
+class Loader {
+
+    constructor(){ 
+
+        this.image = [];
+    }
+
+    loading(type,srcFile){
+
+        if (type === 'image') {
+        let image = new Image();
+        image.src = srcFile;
+        this.image.push(image);
+    }
+    }
 }
 
 class Storage{

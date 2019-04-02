@@ -25,6 +25,7 @@ function () {
     _classCallCheck(this, ListModal);
 
     this.weatherHistory = {};
+    this.weathersArray = [];
     this.states = {
       main: false,
       modal: false
@@ -54,7 +55,6 @@ function () {
       fetch('https://get.geojs.io/v1/ip/geo.json').then(function (response) {
         return response.json();
       }).then(function (response) {
-        console.log(response);
         var coords = {
           latitude: response.latitude,
           longitude: response.longitude
@@ -64,10 +64,15 @@ function () {
     }
   }, {
     key: "getWeather",
-    value: function getWeather(target, modal) {
+    value: function getWeather(target, modal, load) {
       var _this = this;
 
       var coords = JSON.parse(localStorage.coords);
+      var weatherBox = document.createElement('div');
+      weatherBox.classList.add('weather-box');
+      load.classList.add('center');
+      modal.appendChild(weatherBox);
+      weatherBox.appendChild(load);
       fetch("http://api.openweathermap.org/data/2.5/forecast?lat=".concat(coords.latitude, "&lon=").concat(coords.longitude, "&APPID=").concat(this.getKey())).then(function (response) {
         return response.json();
       }).then(function (response) {
@@ -86,21 +91,45 @@ function () {
             var weatherView = document.createElement('p');
             weatherView.classList.add('weather');
             weatherView.innerHTML = "".concat(key, " : ").concat(_this.weatherHistory[key]);
-            modal.appendChild(weatherView);
-          } else {
-            var _weatherView = document.createElement('p');
 
-            _weatherView.classList.add('weather');
+            _this.weathersArray.push(weatherView);
 
-            _weatherView.innerHTML = "Not found";
-            modal.appendChild(_weatherView);
+            weatherBox.appendChild(weatherView);
           }
         }
+
+        debugger;
+        Todo.checkEmpty(modal);
+        var spinner = document.querySelector('.center').remove();
+        return true;
       });
     }
   }]);
 
   return ListModal;
+}();
+
+var Loader =
+/*#__PURE__*/
+function () {
+  function Loader() {
+    _classCallCheck(this, Loader);
+
+    this.image = [];
+  }
+
+  _createClass(Loader, [{
+    key: "loading",
+    value: function loading(type, srcFile) {
+      if (type === 'image') {
+        var image = new Image();
+        image.src = srcFile;
+        this.image.push(image);
+      }
+    }
+  }]);
+
+  return Loader;
 }();
 
 var Storage =
@@ -230,6 +259,15 @@ function (_View) {
   }
 
   _createClass(Todo, [{
+    key: "spinnerShow",
+    value: function spinnerShow(modal, load) {
+      var weatherBox = document.createElement('div');
+      weatherBox.classList.add('weather-box');
+      load.classList.add('center');
+      modal.appendChild(weatherBox);
+      weatherBox.appendChild(load);
+    }
+  }, {
     key: "build",
     value: function build() {
       var time = new Date().toLocaleDateString().split('.').reverse().join().replace(/\,/g, '-');
@@ -310,6 +348,11 @@ function (_View) {
           if (value[i].save) {
             todoList.classList.add('unactive');
           }
+
+          if (todoList.dataset.date === Date.now()) {
+            todoList.classList = [];
+            todoList.classList.add('today');
+          }
         }
 
         todoList.setAttribute('draggable', 'true');
@@ -319,8 +362,11 @@ function (_View) {
           todoList.dataset.date = this.arrayJSON[i];
           var dateNow = JSON.parse(localStorage.date)[i];
           var todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g, ',')).getTime();
+          var today = new Date(Date.now()).toLocaleDateString();
 
-          if (todoDay < Date.now()) {
+          if (todoList.dataset.date === today) {
+            todoList.classList.add('today');
+          } else if (todoDay < today) {
             todoList.classList.add('unactive');
           }
         } else if (localStorage.prewDate && localStorage.prewTime) {
@@ -362,6 +408,19 @@ function (_View) {
       modal.appendChild(deleteBtn);
       modalBg.appendChild(modal);
       getList.appendChild(modalBg);
+    }
+  }], [{
+    key: "checkEmpty",
+    value: function checkEmpty(modal) {
+      debugger;
+      var checkP = document.querySelectorAll('.weather');
+
+      if (checkP.length === 0) {
+        var weatherView = document.createElement('p');
+        weatherView.classList.add('weather');
+        weatherView.innerHTML = "Weather not found";
+        modal.appendChild(weatherView);
+      }
     }
   }]);
 
@@ -416,7 +475,7 @@ function (_Storage) {
 
   _createClass(TodoControl, [{
     key: "setLsitener",
-    value: function setLsitener(todoView, todoState) {
+    value: function setLsitener(todoView, todoState, load) {
       var _this2 = this;
 
       var parentDnD = document.getElementsByClassName('todoList')[0];
@@ -440,7 +499,9 @@ function (_Storage) {
           if (target.dataset.num) {
             todoView.showModal.call(target);
             modal = document.querySelector('[data-modal-num]');
-            todoState.getWeather(target, modal);
+            todoView.spinnerShow(modal, load.image[0]);
+            todoState.getWeather(target, modal, load.image[0]); // todoView.checkEmpty(modal);
+
             todoState.setState('main', false);
             todoState.setState('modal', true);
           }
@@ -611,6 +672,8 @@ var todoApp = function () {
       appID: document.getElementById('todo'),
       title: 'Todo-list'
     };
+    var load = new Loader();
+    load.loading('image', '../img/spinner.gif');
     var todoState = new ListModal();
     todoState.getCoords();
     todoState.setState('main', true);
@@ -622,7 +685,7 @@ var todoApp = function () {
       btn: document.querySelector('.setTodo')
     };
     var controller = new TodoControl(controllerSettings);
-    controller.setLsitener(todoView, todoState);
+    controller.setLsitener(todoView, todoState, load);
   }
 
   return {

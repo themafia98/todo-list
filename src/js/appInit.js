@@ -4,10 +4,8 @@ let todoApp = (function(){
     function main() {
 
         let settingsTodo = {appID: document.getElementById('todo'),title:'Todo-list'};
-
-  
- 
-
+        let load = new Loader();
+        load.loading('image','../img/spinner.gif');
         let todoState = new ListModal();
         todoState.getCoords();
 
@@ -22,7 +20,7 @@ let todoApp = (function(){
             btn: document.querySelector('.setTodo')
         }
         let controller = new TodoControl(controllerSettings);
-        controller.setLsitener(todoView,todoState);
+        controller.setLsitener(todoView,todoState,load);
 
     }
 

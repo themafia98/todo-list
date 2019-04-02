@@ -18,6 +18,27 @@ class Todo extends View {
         this.saveP = [];
     }
 
+    spinnerShow(modal,load){
+
+            let weatherBox = document.createElement('div');
+            weatherBox.classList.add('weather-box');
+            load.classList.add('center');
+            modal.appendChild(weatherBox);
+            weatherBox.appendChild(load);
+    }
+
+    static checkEmpty(modal){
+        debugger;
+        let checkP = document.querySelectorAll('.weather');
+        if (checkP.length === 0){
+        let weatherView = document.createElement('p');
+        weatherView.classList.add('weather');
+        weatherView.innerHTML = `Weather not found`;
+        modal.appendChild(weatherView);
+    }
+
+    }
+
     build(){
         
         let time = new Date().toLocaleDateString().split('.').reverse().join().replace(/\,/g,'-');
@@ -110,6 +131,12 @@ class Todo extends View {
                 
                 todoList.classList.add('unactive');
             }
+            
+            if (todoList.dataset.date === Date.now()){
+                
+                todoList.classList = [];
+                todoList.classList.add('today');
+            }
         }
 
         todoList.setAttribute('draggable','true');
@@ -122,8 +149,11 @@ class Todo extends View {
 
             let dateNow = JSON.parse(localStorage.date)[i];
             let todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g,',')).getTime();
+            
+            let today = new Date(Date.now()).toLocaleDateString();
+            if (todoList.dataset.date === today) { todoList.classList.add('today');  } else
+            if (todoDay < today) { todoList.classList.add('unactive');  }
 
-            if (todoDay < Date.now()) { todoList.classList.add('unactive');  }
 
         } else if ((localStorage.prewDate) && (localStorage.prewTime)){
 

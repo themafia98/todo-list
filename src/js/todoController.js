@@ -6,7 +6,7 @@ class TodoControl extends Storage{
     this.btnAdd = btn;
     }
 
-    setLsitener(todoView,todoState){
+    setLsitener(todoView,todoState,load){
 
         let parentDnD = document.getElementsByClassName('todoList')[0];
 
@@ -31,7 +31,11 @@ class TodoControl extends Storage{
                     todoView.showModal.call(target);
                     modal = document.querySelector('[data-modal-num]');
                     
-                    todoState.getWeather(target,modal);
+                    todoView.spinnerShow(modal,load.image[0]);
+                    todoState.getWeather(target,modal,load.image[0])
+                    // todoView.checkEmpty(modal);
+
+
                     todoState.setState('main',false);
                     todoState.setState('modal',true);
 

@@ -1,5 +1,4 @@
-
-@mixin fullscreen($max,$min){
+@mixin fullscreen($max, $min) {
     max-width: $max;
     min-height: $min;
     margin: 0 auto;
@@ -10,7 +9,7 @@
     height: 100%;
 }
 
-body{
+body {
     background: grey;
     font-family: 'Lobster', cursive;
 }
@@ -18,8 +17,8 @@ body{
 #todo {
     position: relative;
     @extend %max;
-    @include fullscreen(1140px,800px);
-    background:  url('../img/bg.jpg') repeat;
+    @include fullscreen(1140px, 800px);
+    background: url('../img/bg.jpg') repeat;
 
     .wrapper {
         display: flex;
@@ -29,19 +28,22 @@ body{
         margin: 0 auto;
     }
 
-    .title{
+    .title {
         font-weight: 900;
         font-size: 45px;
         color: darkslateblue;
         text-align: center;
+        margin-bottom: 0;
     }
 
     .controllers {
-            position: relative;
-            display: flex;
-            justify-content: center;
-            height: 120px;
-        .getTodo{
+        position: relative;
+        display: flex;
+        justify-content: center;
+        width: 100%;
+        height: 20%;
+
+        .getTodo {
             position: absolute;
             width: 250px;
             height: 25px;
@@ -49,21 +51,23 @@ body{
             border: 2px solid brown;
             text-align: center;
         }
-        .getTodo::placeholder{
+
+        .getTodo::placeholder {
             text-align: center;
             color: red;
         }
 
-        .setTodo{
+        .setTodo {
             position: absolute;
             width: 100px;
             height: 35px;
             border-radius: 25px;
             border: 2px solid brown;
             text-align: center;
-            top: 85%;
+            top: 60%;
         }
-        .setTodo::placeholder{
+
+        .setTodo::placeholder {
             text-align: center;
             color: red;
         }
@@ -72,15 +76,16 @@ body{
             background: lightblue;
             color: brown;
         }
+
         .date {
             position: absolute;
             width: 200px;
             height: 26px;
             text-align: center;
-            top: 43%;
+            top: 30%;
             border-radius: 5px;
             border: 2px solid brown;
-            }
+        }
 
     }
 
@@ -91,17 +96,17 @@ body{
         justify-content: center;
     }
 
-    .todoList{
+    .todoList {
         width: 70%;
         height: 90%;
-        background:	whitesmoke;
+        background: whitesmoke;
         margin: 0 auto;
         overflow-y: auto;
         overflow-x: hidden;
         border: 2px solid black;
         box-shadow: 0 0 10px;
 
-        .todoList__title{
+        .todoList__title {
             border-bottom: 4px solid powderblue;
             font-size: 35px;
             text-align: center;
@@ -110,13 +115,14 @@ body{
             margin-top: 0;
         }
 
-        p[data-num]{
+        p[data-num] {
             word-wrap: break-word;
             font-size: 23px;
             background: lightblue;
             text-align: center;
             margin-top: 0;
         }
+
         p[data-num]:hover {
             cursor: pointer;
             background: green;
@@ -130,21 +136,33 @@ body{
 
 }
 
-
+.center{
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    display: block;
+    margin: auto;
+}
 
 ::-webkit-scrollbar {
     width: 15px;
     background: rgb(65, 113, 129);
-  }
+}
 
 
-  ::-webkit-scrollbar-thumb {
-        background: rgb(15, 15, 75); 
-  }
+::-webkit-scrollbar-thumb {
+    background: rgb(15, 15, 75);
+}
 
 
 #todo .todoList p[data-num].unactive {
     background: grey;
+}
+
+#todo .todoList p[data-num].today {
+    background: rgb(201, 211, 62);
 }
 
 .background-modal {
@@ -154,7 +172,7 @@ body{
     width: 100%;
     height: 100%;
     position: absolute;
-    background: rgba(0,0,0,.6);
+    background: rgba(0, 0, 0, .6);
     z-index: 1;
 
     .modal-window {
@@ -165,7 +183,7 @@ body{
         box-shadow: 0 0 3px lightblue;
         border: 5px solid lightblue;
 
-        .close{
+        .close {
             font-family: 'Times New Roman', Times, serif;
             font-weight: bold;
             font-size: 18px;
@@ -174,10 +192,10 @@ body{
             border-color: rgb(80, 2, 2);
             color: rgb(80, 2, 2);
             background: lightcoral;
-            
+
         }
 
-        .delete{
+        .delete {
             display: block;
             margin: 0 auto;
             font-size: 20px;
@@ -200,11 +218,17 @@ body{
 }
 
 
-@media screen and (max-width: 700px){
+.hide {
+    display: none;
+}
+
+
+@media screen and (max-width: 700px) {
     #todo .todoList {
         width: 95%;
         height: 100%;
     }
+
     #todo {
         position: absolute;
         height: 100%;
@@ -212,7 +236,7 @@ body{
     }
 
     #todo .title {
-        margin-bottom: 0;
+        margin: 0;
     }
 
     #todo .controllers {
@@ -221,6 +245,14 @@ body{
     }
 
     .background-modal .modal-window {
-    height: 80%;
+        height: 80%;
+    }
+
+    #todo .controllers .date {
+        top: 42%;
+    }
+
+    #todo .controllers .setTodo {
+        top: 85%;
     }
 }
