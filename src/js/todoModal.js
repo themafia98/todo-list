@@ -39,6 +39,10 @@ class ListModal{
             }
             localStorage.coords = JSON.stringify(coords);
         })
+
+        .catch ( error => {
+            console.log(error);
+        });
     }
     
     getWeather(target,modal,load) {
@@ -70,7 +74,7 @@ class ListModal{
 
         .then ( ()=> {
 
-            
+
             for (let key in this.weatherHistory){
                 if (this.weatherHistory != {}){
             let weatherView = document.createElement('p');
@@ -85,6 +89,10 @@ class ListModal{
             Todo.spinnerHide();
             return true;
         })
+
+        .catch ( error => {
+            console.log(error);
+        });
     }
 
 }

@@ -60,6 +60,8 @@ function () {
           longitude: response.longitude
         };
         localStorage.coords = JSON.stringify(coords);
+      }).catch(function (error) {
+        console.log(error);
       });
     }
   }, {
@@ -101,6 +103,8 @@ function () {
         Todo.checkEmpty(modal);
         Todo.spinnerHide();
         return true;
+      }).catch(function (error) {
+        console.log(error);
       });
     }
   }]);
