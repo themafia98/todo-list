@@ -80,10 +80,9 @@ class ListModal{
             weatherBox.appendChild(weatherView);
                 }
             }
-            debugger;
-            Todo.checkEmpty(modal);
-            let spinner = document.querySelector('.center').remove();
 
+            Todo.checkEmpty(modal);
+            Todo.spinnerHide();
             return true;
         })
     }

@@ -98,9 +98,8 @@ function () {
           }
         }
 
-        debugger;
         Todo.checkEmpty(modal);
-        var spinner = document.querySelector('.center').remove();
+        Todo.spinnerHide();
         return true;
       });
     }
@@ -421,6 +420,12 @@ function (_View) {
         weatherView.innerHTML = "Weather not found";
         modal.appendChild(weatherView);
       }
+    }
+  }, {
+    key: "spinnerHide",
+    value: function spinnerHide() {
+      var spinner = document.querySelector('.center');
+      spinner && spinner.remove();
     }
   }]);
 

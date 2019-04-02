@@ -35,8 +35,13 @@ class Todo extends View {
         weatherView.classList.add('weather');
         weatherView.innerHTML = `Weather not found`;
         modal.appendChild(weatherView);
+        }
     }
 
+    static spinnerHide(){
+
+        let spinner = document.querySelector('.center');
+        (spinner) && (spinner.remove());
     }
 
     build(){
