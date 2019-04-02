@@ -77,7 +77,6 @@ function () {
           var time = element.dt_txt.split(' ')[1];
 
           if (date === target.dataset.date) {
-            debugger;
             _this.weatherHistory["".concat(time)] = "".concat(Math.floor(element.main.temp - 273.15), " C\xB0");
           } // } else {
           //     this.weatherHistory['key'] = 'not found';
@@ -443,7 +442,6 @@ function (_Storage) {
           if (target.dataset.num) {
             todoView.showModal.call(target);
             modal = document.querySelector('[data-modal-num]');
-            debugger;
             todoState.getWeather(target, modal);
             todoState.setState('main', false);
             todoState.setState('modal', true);

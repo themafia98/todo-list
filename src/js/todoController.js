@@ -30,7 +30,7 @@ class TodoControl extends Storage{
                     
                     todoView.showModal.call(target);
                     modal = document.querySelector('[data-modal-num]');
-                    debugger;
+                    
                     todoState.getWeather(target,modal);
                     todoState.setState('main',false);
                     todoState.setState('modal',true);

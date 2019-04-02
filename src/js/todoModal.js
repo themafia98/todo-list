@@ -52,7 +52,7 @@ class ListModal{
                 let time = element.dt_txt.split(' ')[1];
                 if (date === target.dataset.date){
                     
-                    debugger;
+                    
                     this.weatherHistory[`${time}`]= `${Math.floor((element.main.temp - 273.15))} C°`;
                 }
                 // } else {
