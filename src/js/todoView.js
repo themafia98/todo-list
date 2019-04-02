@@ -61,7 +61,7 @@ class Todo extends View {
 
         let datePick = document.createElement('input');
         datePick.classList.add('date');
-        datePick.setAttribute('type','datetime-local');
+        datePick.setAttribute('type','date');
         datePick.setAttribute('value',time  + `T${new Date().toLocaleTimeString()}`);
 
         footer.appendChild(titleName);
