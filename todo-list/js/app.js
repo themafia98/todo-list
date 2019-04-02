@@ -24,6 +24,7 @@ function () {
   function ListModal() {
     _classCallCheck(this, ListModal);
 
+    this.weatherHistory = {};
     this.states = {
       main: false,
       modal: false
@@ -31,6 +32,11 @@ function () {
   }
 
   _createClass(ListModal, [{
+    key: "getKey",
+    value: function getKey() {
+      return this.key = 'fcec3450dbf00eb6e012fa3766c6d11d';
+    }
+  }, {
     key: "setState",
     value: function setState(bind, what) {
       bind === 'main' && (this.states.main = what);
@@ -41,6 +47,60 @@ function () {
     value: function getState(bind) {
       if (bind === 'main') return this.states.main;
       if (bind === 'modal') return this.states.modal;
+    }
+  }, {
+    key: "getCoords",
+    value: function getCoords() {
+      fetch('https://get.geojs.io/v1/ip/geo.json').then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        console.log(response);
+        var coords = {
+          latitude: response.latitude,
+          longitude: response.longitude
+        };
+        localStorage.coords = JSON.stringify(coords);
+      });
+    }
+  }, {
+    key: "getWeather",
+    value: function getWeather(target, modal) {
+      var _this = this;
+
+      var coords = JSON.parse(localStorage.coords);
+      fetch("http://api.openweathermap.org/data/2.5/forecast?lat=".concat(coords.latitude, "&lon=").concat(coords.longitude, "&APPID=").concat(this.getKey())).then(function (response) {
+        return response.json();
+      }).then(function (response) {
+        _this.weatherHistory = {};
+        response.list.forEach(function (element) {
+          var date = element.dt_txt.split(' ')[0].split('-').reverse().join().replace(/\,/g, '.');
+          var time = element.dt_txt.split(' ')[1];
+
+          if (date === target.dataset.date) {
+            debugger;
+            _this.weatherHistory["".concat(time)] = "".concat(Math.floor(element.main.temp - 273.15), " C\xB0");
+          } // } else {
+          //     this.weatherHistory['key'] = 'not found';
+          // }
+
+        });
+      }).then(function () {
+        for (var key in _this.weatherHistory) {
+          if (_this.weatherHistory != {}) {
+            var weatherView = document.createElement('p');
+            weatherView.classList.add('weather');
+            weatherView.innerHTML = "".concat(key, " : ").concat(_this.weatherHistory[key]);
+            modal.appendChild(weatherView);
+          } else {
+            var _weatherView = document.createElement('p');
+
+            _weatherView.classList.add('weather');
+
+            _weatherView.innerHTML = "Not found";
+            modal.appendChild(_weatherView);
+          }
+        }
+      });
     }
   }]);
 
@@ -111,15 +171,15 @@ function (_ListModal) {
   _inherits(todoOne, _ListModal);
 
   function todoOne(timerN, value) {
-    var _this;
+    var _this2;
 
     _classCallCheck(this, todoOne);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(todoOne).call(this));
-    _this.value = value;
-    _this.timer = timerN;
-    _this.save = false;
-    return _this;
+    _this2 = _possibleConstructorReturn(this, _getPrototypeOf(todoOne).call(this));
+    _this2.value = value;
+    _this2.timer = timerN;
+    _this2.save = false;
+    return _this2;
   }
 
   return todoOne;
@@ -367,6 +427,7 @@ function (_Storage) {
       var clickEvent = function clickEvent(e) {
         var target = e.target;
         var modalWindow = target.parentNode.parentNode;
+        var modal = null;
 
         if (todoState.getState('main')) {
           if (target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
@@ -381,6 +442,9 @@ function (_Storage) {
 
           if (target.dataset.num) {
             todoView.showModal.call(target);
+            modal = document.querySelector('[data-modal-num]');
+            debugger;
+            todoState.getWeather(target, modal);
             todoState.setState('main', false);
             todoState.setState('modal', true);
           }
@@ -396,7 +460,6 @@ function (_Storage) {
           target.classList[0] === 'background-modal' && target.remove();
 
           if (target.classList[0] === 'delete') {
-            debugger;
             var parent = target.parentNode;
             var todoDelete = document.querySelector("[data-num=\"".concat(parent.dataset.modalNum, "\"]"));
             var splits = JSON.parse(localStorage.list);
@@ -427,7 +490,6 @@ function (_Storage) {
               localStorage.timersN = --localStorage.timersN;
             }
 
-            debugger;
             var todos = document.querySelectorAll('[data-date]');
 
             for (var i = 0; i < todos.length; i++) {
@@ -554,6 +616,7 @@ var todoApp = function () {
       title: 'Todo-list'
     };
     var todoState = new ListModal();
+    todoState.getCoords();
     todoState.setState('main', true);
     var storageData = new Storage();
     var todoView = new Todo(settingsTodo);

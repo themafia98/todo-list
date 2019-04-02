@@ -1,12 +1,17 @@
 
+
 class ListModal{
 
     constructor(){
-
+        this.weatherHistory = {};
         this.states = {
             main: false,
             modal: false
         };
+    }
+
+    getKey(){
+        return this.key = 'fcec3450dbf00eb6e012fa3766c6d11d';
     }
 
     setState(bind,what){
@@ -20,6 +25,64 @@ class ListModal{
         if (bind === 'modal') return this.states.modal;
     }
 
+    getCoords(){
+
+        fetch('https://get.geojs.io/v1/ip/geo.json')
+        .then( (response) => response.json())
+        .then( (response) =>{
+            console.log(response);
+            let coords = {
+                latitude: response.latitude,
+                longitude: response.longitude
+            }
+            localStorage.coords = JSON.stringify(coords);
+        })
+    }
+    
+    getWeather(target,modal) {
+
+        let coords = JSON.parse(localStorage.coords);
+        fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${coords.latitude}&lon=${coords.longitude}&APPID=${this.getKey()}`)
+        .then( (response) => response.json())
+        .then( (response) =>{
+            this.weatherHistory = {};
+            response.list.forEach(element => {
+
+                let date = element.dt_txt.split(' ')[0].split('-').reverse().join().replace(/\,/g,'.');
+                let time = element.dt_txt.split(' ')[1];
+                if (date === target.dataset.date){
+                    
+                    debugger;
+                    this.weatherHistory[`${time}`]= `${Math.floor((element.main.temp - 273.15))} C°`;
+                }
+                // } else {
+
+                //     this.weatherHistory['key'] = 'not found';
+                // }
+            });
+
+        })
+
+        .then ( ()=> {
+
+            
+        
+            for (let key in this.weatherHistory){
+                if (this.weatherHistory != {}){
+            let weatherView = document.createElement('p');
+            weatherView.classList.add('weather');
+            weatherView.innerHTML = `${key} : ${this.weatherHistory[key]}`;
+            modal.appendChild(weatherView);
+                } else {
+                    let weatherView = document.createElement('p');
+                    weatherView.classList.add('weather');
+                    weatherView.innerHTML = `Not found`;
+                    modal.appendChild(weatherView);
+                }
+            }
+        });
+
+    }
 
 }
 

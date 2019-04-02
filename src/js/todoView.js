@@ -164,8 +164,7 @@ class Todo extends View {
         deleteBtn.setAttribute('value','Delete todo');
         deleteBtn.classList.add('delete');
 
-
-        
+ 
         let showTodoDate = document.createElement('p');
         showTodoDate.classList.add('modal-date');
         showTodoDate.innerHTML = this.dataset.date;

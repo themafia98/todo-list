@@ -14,6 +14,7 @@ class TodoControl extends Storage{
 
             let target = e.target;
             let modalWindow = target.parentNode.parentNode;
+            let modal = null;
             
             if (todoState.getState('main')){
                 if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
@@ -26,8 +27,11 @@ class TodoControl extends Storage{
                 }
 
                 if(target.dataset.num){
-
+                    
                     todoView.showModal.call(target);
+                    modal = document.querySelector('[data-modal-num]');
+                    debugger;
+                    todoState.getWeather(target,modal);
                     todoState.setState('main',false);
                     todoState.setState('modal',true);
 
@@ -44,7 +48,7 @@ class TodoControl extends Storage{
                 (target.classList[0] === 'background-modal') && (target.remove());
 
                 if(target.classList[0] === 'delete'){
-                    debugger;
+                    
                     let parent = target.parentNode;
                     let todoDelete = document.querySelector(`[data-num="${parent.dataset.modalNum}"]`);
 
@@ -70,7 +74,7 @@ class TodoControl extends Storage{
                     localStorage.timersN = --localStorage.timersN;
                 }
 
-debugger;
+
                 let todos = document.querySelectorAll('[data-date]');
                       for (let i = 0; i < todos.length; i++){
 

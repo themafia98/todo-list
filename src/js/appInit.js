@@ -5,7 +5,11 @@ let todoApp = (function(){
 
         let settingsTodo = {appID: document.getElementById('todo'),title:'Todo-list'};
 
+  
+ 
+
         let todoState = new ListModal();
+        todoState.getCoords();
 
         todoState.setState('main',true);
 
@@ -22,9 +26,11 @@ let todoApp = (function(){
 
     }
 
-
-
     return { init: main };
 })();
 
+
+
 todoApp.init();
+
+
