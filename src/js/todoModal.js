@@ -68,7 +68,7 @@ class ListModal{
 
         .then (()=> {
 
-
+            this.weathersArray = [];
             for (let key in this.weatherHistory){
                 if (this.weatherHistory != {}){
             let weatherView = document.createElement('li');
@@ -79,6 +79,7 @@ class ListModal{
                 }
             }
 
+            (this.weathersArray.length <= 1) && (weatherList.classList.add('ResetCount'));
             Todo.checkEmpty(modal);
             Todo.spinnerHide();
             return true;
@@ -98,11 +99,12 @@ class Loader {
         this.image = [];
     }
 
-    loading(type,srcFile){
+    loading(type,srcFile, css){
 
         if (type === 'image') {
         let image = new Image();
         image.src = srcFile;
+        image.classList.add(css);
         this.image.push(image);
     }
     }

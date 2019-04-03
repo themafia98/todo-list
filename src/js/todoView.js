@@ -225,4 +225,15 @@ class Todo extends View {
         getList.appendChild(modalBg);
 
     }
+
+    createEditInput(target){
+
+        let addNotes = document.querySelector('.addNotes');
+        let textArea = document.querySelector('.textArea');
+        let inputEdit = document.createElement('textarea');
+        addNotes.classList.add('visibility');
+        inputEdit.setAttribute('maxLength' ,'100');
+        inputEdit.classList.add('edditable');
+        textArea.appendChild(inputEdit);
+    }
 }

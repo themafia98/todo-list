@@ -83,6 +83,8 @@ function () {
           }
         });
       }).then(function () {
+        _this.weathersArray = [];
+
         for (var key in _this.weatherHistory) {
           if (_this.weatherHistory != {}) {
             var weatherView = document.createElement('li');
@@ -95,6 +97,7 @@ function () {
           }
         }
 
+        _this.weathersArray.length <= 1 && weatherList.classList.add('ResetCount');
         Todo.checkEmpty(modal);
         Todo.spinnerHide();
         return true;
@@ -118,10 +121,11 @@ function () {
 
   _createClass(Loader, [{
     key: "loading",
-    value: function loading(type, srcFile) {
+    value: function loading(type, srcFile, css) {
       if (type === 'image') {
         var image = new Image();
         image.src = srcFile;
+        image.classList.add(css);
         this.image.push(image);
       }
     }
@@ -404,6 +408,17 @@ function (_View) {
       modalBg.appendChild(modal);
       getList.appendChild(modalBg);
     }
+  }, {
+    key: "createEditInput",
+    value: function createEditInput(target) {
+      var addNotes = document.querySelector('.addNotes');
+      var textArea = document.querySelector('.textArea');
+      var inputEdit = document.createElement('textarea');
+      addNotes.classList.add('visibility');
+      inputEdit.setAttribute('maxLength', '100');
+      inputEdit.classList.add('edditable');
+      textArea.appendChild(inputEdit);
+    }
   }], [{
     key: "checkEmpty",
     value: function checkEmpty(modal) {
@@ -512,6 +527,12 @@ function (_Storage) {
         }
 
         if (todoState.getState('modal')) {
+          if (target.classList[0] === 'addNotes') {
+            todoView.createEditInput(target);
+          }
+
+          ;
+
           if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
             todoState.setState('main', true);
             todoState.setState('modal', false);
@@ -677,7 +698,7 @@ var todoApp = function () {
       title: 'Todo-list'
     };
     var load = new Loader();
-    load.loading('image', '../img/spinner.gif');
+    load.loading('image', '../img/spinner.gif', 'smallSpinner');
     var todoState = new ListModal();
     todoState.getCoords();
     todoState.setState('main', true);

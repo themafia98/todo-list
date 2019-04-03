@@ -5,7 +5,7 @@ let todoApp = (function(){
 
         let settingsTodo = {appID: document.getElementById('todo'),title:'Todo-list'};
         let load = new Loader();
-        load.loading('image','../img/spinner.gif');
+        load.loading('image','../img/spinner.gif', 'smallSpinner');
         let todoState = new ListModal();
         todoState.getCoords();
 

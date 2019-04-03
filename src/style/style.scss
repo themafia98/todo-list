@@ -9,6 +9,11 @@
     height: 100%;
 }
 
+.smallSpinner{
+    width: 80px;
+    height: 80px;
+}
+
 .textArea {
 
     width: 100%;
@@ -31,6 +36,13 @@
         margin-top: 0;
         padding: 10px;
         box-sizing: content-box;
+        cursor: pointer;
+    }
+
+    .addNotes:hover {
+        font-size: 16.5px;
+        background: green;
+        color: red;
     }
 }
 
@@ -156,7 +168,7 @@ ul {
             margin-top: 0;
         }
 
-        p[data-num] {
+        p {
             word-wrap: break-word;
             font-size: 23px;
             background: lightblue;
@@ -164,11 +176,21 @@ ul {
             margin-top: 0;
         }
 
-        p[data-num]:hover {
+        .unactive {
+            background: grey;
+        }
+        
+        .today {
+            background: rgb(201, 211, 62);
+        }
+
+        p:hover {
             cursor: pointer;
             background: green;
             color: red;
         }
+
+
 
         .dateAdd {
             text-align: center;
@@ -197,14 +219,6 @@ ul {
     background: rgb(15, 15, 75);
 }
 
-
-#todo .todoList p[data-num].unactive {
-    background: grey;
-}
-
-#todo .todoList p[data-num].today {
-    background: rgb(201, 211, 62);
-}
 
 .background-modal {
     display: flex;
@@ -255,11 +269,31 @@ ul {
             font-size: 18px;
             text-align: center;
             margin: 0;
-            padding-top: 10px;
         }
     }
 }
 
+
+.edditable {
+    width: 50%;
+    height: 25%;
+    border: 1px solid red;
+    position: absolute;
+    top: 50%;
+    resize: none;
+    left: 50%;
+    margin-right: -50%;
+    transform: translate(-50%, -50%);
+}
+
+.visibility {
+    visibility: hidden;
+}
+
+
+.ResetCount{
+    column-count: 1;
+}
 
 .hide {
     display: none;

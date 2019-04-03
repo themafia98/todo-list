@@ -45,6 +45,12 @@ class TodoControl extends Storage{
 
             if (todoState.getState('modal')){
 
+                
+                if (target.classList[0] === 'addNotes'){
+                    
+                    todoView.createEditInput(target);
+                };
+
                 if (target.classList[0] === 'close' ||target.classList[0] === 'background-modal'){
                     todoState.setState('main',true);
                     todoState.setState('modal',false);
