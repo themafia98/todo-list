@@ -9,6 +9,31 @@
     height: 100%;
 }
 
+.textArea {
+
+    width: 100%;
+    text-align: center;
+    margin: 0 auto;
+
+    .currentTodo{
+        font-size: 25px;
+        margin-bottom: 0;
+    }
+
+    .addNotes__title{
+    font-size: 14px;
+        color: grey;
+    }
+
+    .addNotes {
+        display: inline-block;
+        border: 1px solid red;
+        margin-top: 0;
+        padding: 10px;
+        box-sizing: content-box;
+    }
+}
+
 .important {
     color: red;
 }
@@ -17,6 +42,18 @@ body {
     background: grey;
     font-family: 'Lobster', cursive;
 }
+
+ul {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    padding: 0;
+    list-style-type: none;
+    column-count: 2;
+    border-top: 1px solid lightsteelblue;
+}
+
+
 
 #todo {
     position: relative;
@@ -217,6 +254,8 @@ body {
         .weather {
             font-size: 18px;
             text-align: center;
+            margin: 0;
+            padding-top: 10px;
         }
     }
 }

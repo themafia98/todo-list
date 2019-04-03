@@ -15,10 +15,11 @@ class TodoControl extends Storage{
             let target = e.target;
             let modalWindow = target.parentNode.parentNode;
             let modal = null;
-            
+
+                
             if (todoState.getState('main')){
                 if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
-
+                    
                     this.buffer = [];
                     this.number = this.localeStorageUpdate();
                     this.dataParser(target);
@@ -27,13 +28,13 @@ class TodoControl extends Storage{
                 }
 
                 if(target.dataset.num){
-                    
+
                     todoView.showModal.call(target);
                     modal = document.querySelector('[data-modal-num]');
-                    
-                    todoView.spinnerShow(modal,load.image[0]);
-                    todoState.getWeather(target,modal,load.image[0])
-                    // todoView.checkEmpty(modal);
+                    let weatherBox = todoView.spinnerShow(modal,load.image[0]);
+                    let weatherList = document.querySelector('.weatherList');
+
+                    todoState.getWeather(target,weatherList,modal);
 
 
                     todoState.setState('main',false);

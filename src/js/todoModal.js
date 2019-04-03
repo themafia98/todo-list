@@ -45,15 +45,9 @@ class ListModal{
         });
     }
     
-    getWeather(target,modal,load) {
+    getWeather(target,weatherList,modal) {
 
         let coords = JSON.parse(localStorage.coords);
-
-        let weatherBox = document.createElement('div');
-        weatherBox.classList.add('weather-box');
-        load.classList.add('center');
-        modal.appendChild(weatherBox);
-        weatherBox.appendChild(load);
         
         fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${coords.latitude}&lon=${coords.longitude}&APPID=${this.getKey()}`)
         .then((response) => response.json())
@@ -72,16 +66,16 @@ class ListModal{
 
         })
 
-        .then ( ()=> {
+        .then (()=> {
 
 
             for (let key in this.weatherHistory){
                 if (this.weatherHistory != {}){
-            let weatherView = document.createElement('p');
+            let weatherView = document.createElement('li');
             weatherView.classList.add('weather');
             weatherView.innerHTML = `${key} : ${this.weatherHistory[key]}`;
             this.weathersArray.push(weatherView);
-            weatherBox.appendChild(weatherView);
+            weatherList.appendChild(weatherView);
                 }
             }
 
@@ -151,6 +145,8 @@ class Storage{
         localStorage.setItem('newTodo',this.btnEnter.value);
         
         let todo = new todoOne(this.number,localStorage.newTodo);
+
+        todo.save = true;
 
         (localStorage.list) && (this.lists = JSON.parse(localStorage.list));
         this.lists.push(todo);

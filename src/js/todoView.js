@@ -19,28 +19,40 @@ class Todo extends View {
     }
 
     spinnerShow(modal,load){
-
-            let weatherBox = document.createElement('div');
-            weatherBox.classList.add('weather-box');
+        
+            let weatherBox = document.querySelector('.weather-box');
+            if (!weatherBox){
+                weatherBox = document.createElement('div');
+                weatherBox.classList.add('weather-box');
+            };
             load.classList.add('center');
             modal.appendChild(weatherBox);
             weatherBox.appendChild(load);
+
+            return weatherBox;
     }
 
     static checkEmpty(modal){
         
+        let weatherLists = document.querySelector('.weatherList');
+        let weatherBox = document.querySelector('.weather-box');
         let checkP = document.querySelectorAll('.weather');
+
         if (checkP.length === 0){
-        let weatherView = document.createElement('p');
-        weatherView.classList.add('weather');
-        weatherView.innerHTML = `Weather not found`;
-        modal.appendChild(weatherView);
+
+            let weatherView = document.createElement('p');
+            weatherView.classList.add('weather');
+            weatherView.innerHTML = `Weather not found`;
+            weatherLists.remove();
+            weatherBox.remove();
+            modal.appendChild(weatherView);
+
         }
     }
 
     static spinnerHide(){
 
-        let spinner = document.querySelector('.center');
+        let spinner = document.querySelector('.weather-box');
         (spinner) && (spinner.remove());
     }
 
@@ -64,12 +76,6 @@ class Todo extends View {
         titleName.classList.add('title');
         titleName.innerHTML = this.title;
 
-        // let titleTodoList = document.createElement('h3');
-        // titleTodoList.classList.add('todoList__title');
-        // titleTodoList.innerHTML = 'list'.toLocaleUpperCase();
-
-        // let todoWrapperTitlte = document.createElement('div');
-        // todoWrapperTitlte.classList.add('title');
 
         let todoControllers = document.createElement('div');
         todoControllers.classList.add('controllers');
@@ -89,7 +95,7 @@ class Todo extends View {
         datePick.classList.add('date');
         datePick.setAttribute('type','date');
         datePick.setAttribute('value',time);
-        // + `T${new Date().toLocaleTimeString()}`
+
 
         footer.appendChild(titleName);
 
@@ -97,8 +103,7 @@ class Todo extends View {
         todoControllers.appendChild(datePick);
         todoControllers.appendChild(button);
 
-        // todoWrapperTitlte.appendChild(titleTodoList);
-        // todoList.appendChild(todoWrapperTitlte);
+
         section.appendChild(todoList);
 
         wrapper.appendChild(footer);
@@ -108,75 +113,57 @@ class Todo extends View {
     }
 
     showNewTodo(value){
-        
+
     let here = document.querySelector('.todoList');
     let oldTodo = document.querySelectorAll('p');
     let todoList;
-    let dateAdd;
-    this.saveP = [];
-        
+    const NOW = Date.now();
+
     if (oldTodo.length){
         oldTodo.forEach( (element,i) => {
-            
-            if(element.classList[0] === 'unactive') { 
-                value[i].save = true; this.saveP.push(oldTodo[i])}
             element.remove();
         });;
     }
+
     for (let i = 0; i < value.length; i++){
 
-
-
-
-        if( (value[i].save) && ((this.saveP[i]) &&  (this.saveP[i].classList[0] === 'unactive'))){
-            todoList = this.saveP[i];
-        } else  {
+        if(value[i].save){
+            
             todoList = document.createElement('p');
-            if(value[i].save) {
-                
-                todoList.classList.add('unactive');
-            }
-            
-            if (todoList.dataset.date === Date.now()){
-                
-                todoList.classList = [];
-                todoList.classList.add('today');
-            }
-        }
+            todoList.setAttribute('draggable','true');
 
-        todoList.setAttribute('draggable','true');
-        
         if (localStorage.date) {
-            
+
             this.arrayJSON = JSON.parse(localStorage.date);
-            
+
             todoList.dataset.date = this.arrayJSON[i];
 
             let dateNow = JSON.parse(localStorage.date)[i];
             let todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g,',')).getTime();
-            
-            let today = new Date(Date.now()).toLocaleDateString();
-            if (todoList.dataset.date === today) { todoList.classList.add('today');  } else
-            if (todoDay < today) { todoList.classList.add('unactive');  }
+
+            let today = new Date(NOW).toLocaleDateString();
+            (todoList.dataset.date === today) && (todoList.classList.add('today'));
+            (todoDay < NOW) && (todoList.classList.add('unactive'));
 
 
         } else if ((localStorage.prewDate) && (localStorage.prewTime)){
 
             todoList.dataset.date =  JSON.parse(localStorage.prewDate)[i];
             todoList.dataset.time =  JSON.parse(localStorage.prewTime)[i];
+
+            (todoList.dataset.date === today) && (todoList.classList.add('today'));
+            (todoDay < today) && (todoList.classList.add('unactive'));
         }
 
         todoList.dataset.num = i;
         todoList.innerHTML = value[i].value;
 
         here.appendChild(todoList);
-    } 
+        } 
+    }
 
     localStorage.removeItem('newTime');
     localStorage.removeItem('newTodo');
-    
-    (dateAdd) && (here.insertBefore(dateAdd,here.children[1]));
-
     }
 
     showModal(){
@@ -200,14 +187,40 @@ class Todo extends View {
         deleteBtn.setAttribute('value','Delete todo');
         deleteBtn.classList.add('delete');
 
+        let noteZone = document.createElement('div');
+        noteZone.classList.add('textArea');
+
+        let currentTodo = document.createElement('p');
+        currentTodo.classList.add('currentTodo');
+        currentTodo.innerHTML = this.innerHTML;
+
+        let additionalNotesTitle = document.createElement('p');
+        additionalNotesTitle.classList.add('addNotes__title');
+        additionalNotesTitle.innerHTML = 'additional notes';
+
+        let additionalNotes = document.createElement('p');
+        additionalNotes.classList.add('addNotes');
+        additionalNotes.innerHTML = 'click for add note';
+
+        let weatherList = document.createElement('ul');
+        weatherList.classList.add('weatherList');
  
         let showTodoDate = document.createElement('p');
         showTodoDate.classList.add('modal-date');
         showTodoDate.innerHTML = this.dataset.date;
 
+        
+
         modal.appendChild(closeBtn);
         modal.appendChild(showTodoDate);
         modal.appendChild(deleteBtn);
+
+        noteZone.appendChild(currentTodo);
+        noteZone.appendChild(additionalNotesTitle);
+        noteZone.appendChild(additionalNotes);
+        modal.appendChild(noteZone);
+
+        modal.appendChild(weatherList);
         modalBg.appendChild(modal);
         getList.appendChild(modalBg);
 
