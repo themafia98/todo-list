@@ -521,7 +521,6 @@ function (_Storage) {
 
         if (todoState.getState('main')) {
           if (target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
-            _this2.buffer = [];
             _this2.number = _this2.localeStorageUpdate();
 
             _this2.dataParser(target);
@@ -542,11 +541,7 @@ function (_Storage) {
         }
 
         if (todoState.getState('modal')) {
-          if (target.classList[0] === 'addNotes') {
-            todoView.createEditInput(target);
-          }
-
-          ;
+          target.classList[0] === 'addNotes' && todoView.createEditInput(target);
 
           if (target.classList[0] === 'editButton') {
             var notes = document.querySelector('.addNotes');
@@ -593,29 +588,11 @@ function (_Storage) {
             }
 
             var todos = document.querySelectorAll('[data-date]');
-
-            for (var i = 0; i < todos.length; i++) {
-              todos[i].dataset.num && (todos[i].dataset.num = i);
-            }
+            todos.forEach(function (element) {
+              return element.dataset.num = i;
+            });
           }
-        } // if (e.target.dataset.num) {
-        //     let splits = JSON.parse(localStorage.list);
-        //     let date = JSON.parse(localStorage.date);
-        //     let count = () => {
-        //         splits.forEach((element,i) => {
-        //         if (element.timer === parseInt(e.target.dataset.num)) return i;
-        //     });
-        //     }
-        //     date.splice(count(),1);
-        //     localStorage.date = JSON.stringify(date);
-        //     if (splits.some((item) => item.value === e.target.innerHTML)) {
-        //         let filter = splits.filter((v) => v.value === e.target.innerHTML);
-        //         this.updateStorage(JSON.parse(localStorage.list),filter[0].timer);
-        //         e.target.remove();
-        //         localStorage.timersN = --localStorage.timersN;
-        //     }
-        // }
-
+        }
       };
 
       document.addEventListener('click', clickEvent, false);
@@ -634,8 +611,6 @@ function (_Storage) {
           if (e.clientY - offset > 0) {
             target.style['border-bottom'] = 'solid 4px red';
             target.style['border-top'] = '';
-          } else {// target.style['border-top'] = 'solid 4px red';
-            // target.style['border-bottom'] = '';
           }
         }
       });
@@ -655,51 +630,26 @@ function (_Storage) {
           var targetNum = parseInt(target.dataset.num);
 
           if (dragNum < targetNum) {
-            var swapDate1 = swapeDate.splice(targetNum, 1, swapeDate[dragNum])[0];
-            var swapDate2 = swapeDate[dragNum];
-            swapeDate.splice(targetNum, 0, swapDate1);
+            swapeDate.splice(targetNum, 0, swapeDate.splice(targetNum, 1, swapeDate[dragNum])[0]);
             swapeDate.splice(dragNum, 1);
-            var swapList1 = swapeList.splice(targetNum, 1, swapeList[dragNum])[0];
-            var swapList2 = swapeList[dragNum];
-            swapeList.splice(targetNum, 0, swapList1);
+            swapeList.splice(targetNum, 0, swapeList.splice(targetNum, 1, swapeList[dragNum])[0]);
             swapeList.splice(dragNum, 1);
             this.insertBefore(drag, target.nextSibling);
           } else {
-            var _swapDate = swapeDate.splice(targetNum, 1, swapeDate[dragNum])[0];
-            var _swapDate2 = swapeDate[dragNum];
-            swapeDate.splice(targetNum, 0, _swapDate);
+            swapeDate.splice(targetNum, 0, swapeDate.splice(targetNum, 1, swapeDate[dragNum])[0]);
             swapeDate.splice(dragNum + 1, 1);
-            var _swapList = swapeList.splice(targetNum, 1, swapeList[dragNum])[0];
-            var _swapList2 = swapeList[dragNum];
-            swapeList.splice(targetNum, 0, _swapList);
+            swapeList.splice(targetNum, 0, swapeList.splice(targetNum, 1, swapeList[dragNum])[0]);
             swapeList.splice(dragNum + 1, 1);
             this.insertBefore(drag, target.nextSibling);
           }
 
           var todos = document.querySelectorAll('[data-date]');
-
-          for (var i = 0; i < todos.length; i++) {
-            todos[i].dataset.num && (todos[i].dataset.num = i);
-          }
-
+          todos.forEach(function (element) {
+            return element.dataset.num = i;
+          });
           localStorage.date = JSON.stringify(swapeDate);
           localStorage.list = JSON.stringify(swapeList);
-        } else {
-          target.style['border-top'] = ''; // let dragNum = parseInt(drag.dataset.num);
-          // let targetNum = parseInt(target.dataset.num);
-          // let swapDate1 = swapeDate.splice(dragNum,1,swapeDate[targetNum-1])[0];
-          // swapeDate.splice(targetNum-1,1,swapDate1);
-          // let swapList1 = swapeList.splice(dragNum,1,swapeList[targetNum-1])[0];
-          // swapeList.splice(targetNum-1,1,swapList1)[0];
-          // this.insertBefore(drag, target);
-          // let todos = document.querySelectorAll('[data-num]');
-          // // for (let i = 0; i < todos.length; i++){
-          // //     (todos[i].dataset.num) && (todos[i].dataset.num = i);
-          // // }
-          // localStorage.date = JSON.stringify(swapeDate);
-          // localStorage.list = JSON.stringify(swapeList);
-        } // this.insertBefore(target,target.previousSibling);
-
+        } else target.style['border-top'] = '';
       });
       window.addEventListener('DOMContentLoaded', function () {
         localStorage.list && todoView.showNewTodo(JSON.parse(localStorage.list));

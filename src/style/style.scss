@@ -1,17 +1,40 @@
+
 @mixin fullscreen($max, $min) {
     max-width: $max;
     min-height: $min;
     margin: 0 auto;
 }
 
+%absCenter {
+
+    position: $abs;
+    left: 0;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+}
+
+%marginCenter {
+    text-align: center;
+    margin: 0;
+}
+
+
+
 %max {
     width: 100%;
     height: 100%;
 }
 
+body {
+    background: $mainBgColor;
+    font-family: $main-font;
+}
+
 .smallSpinner{
-    width: 80px;
-    height: 80px;
+    width: $spinnerW;
+    height: $spinnerW;
 }
 
 .textArea {
@@ -21,17 +44,17 @@
     margin: 0 auto;
 
     .currentTodo{
-        font-size: 25px;
+        font-size: $todoTitles;
         margin-bottom: 0;
     }
 
     .addNotes__title{
-    font-size: 14px;
+    font-size: $addNoteTitle;
         color: grey;
     }
 
     .addNotes {
-        border: 1px solid red;
+        border: $addNoteButtonBorder;
         margin-top: 0;
         padding: 10px;
         cursor: pointer;
@@ -39,35 +62,30 @@
     }
 
     .addNotes:hover {
-        font-size: 16.5px;
-        background: green;
-        color: red;
+        font-size: $addNoteHover;
+        background: $addNoteHoverColorBg;
+        color: $importantColor;
     }
 }
 
 .important {
-    color: red;
-}
-
-body {
-    background: grey;
-    font-family: 'Lobster', cursive;
+    color: $importantColor;
 }
 
 .weatherList {
     width: 100%;
-    position: absolute;
+    position: $abs;
     bottom: 0;
     padding: 0;
     list-style-type: none;
     column-count: 2;
-    border-top: 1px solid lightsteelblue;
+    border-top: $weatherBorder;
 }
 
 .weatherNone {
 
     width: 100%;
-    position: absolute;
+    position: $abs;
     bottom: 0;
     padding-bottom: 10px;
 }
@@ -75,40 +93,40 @@ body {
 
 
 #todo {
-    position: relative;
+    position: $rel;
     @extend %max;
     @include fullscreen(1140px, 800px);
-    background: url('../img/bg.jpg') repeat;
+    background: $appBG;
 
     .wrapper {
         display: flex;
         flex-direction: column;
-        position: absolute;
+        position: $abs;
         @extend %max;
         margin: 0 auto;
     }
 
     .title {
         font-weight: 900;
-        font-size: 45px;
-        color: darkslateblue;
+        font-size: $appTitleFontSize;
+        color: $appTitleColor;
         text-align: center;
         margin-bottom: 0;
     }
 
     .controllers {
-        position: relative;
+        position: $rel;
         display: flex;
         justify-content: center;
         width: 100%;
         height: 20%;
 
         .getTodo {
-            position: absolute;
-            width: 250px;
-            height: 25px;
+            position: $abs;
+            width: $inputMainTodoW;
+            height: $inputMainTodoH;
             border-radius: 10px;
-            border: 2px solid brown;
+            border: $inputMainTodoBorder;
             text-align: center;
         }
 
@@ -118,33 +136,33 @@ body {
         }
 
         .setTodo {
-            position: absolute;
-            width: 100px;
-            height: 35px;
-            border-radius: 25px;
-            border: 2px solid brown;
+            position: $abs;
+            width: $buttonMainTodoW;
+            height: $buttonMainTodoH;
+            border-radius: $buttonMainTodoRadius;
+            border: $inputMainTodoBorder;
             text-align: center;
             top: 60%;
         }
 
         .setTodo::placeholder {
             text-align: center;
-            color: red;
+            color: $importantColor;
         }
 
         .setTodo:active {
-            background: lightblue;
-            color: brown;
+            background: $buttonMainTodoActiveBgColor;
+            color: $buttonMainTodoActiveColor;
         }
 
         .date {
-            position: absolute;
-            width: 200px;
-            height: 26px;
+            position: $abs;
+            width: $mainDateInputW;
+            height: $mainDateInputH;
             text-align: center;
             top: 30%;
             border-radius: 5px;
-            border: 2px solid brown;
+            border: $inputMainTodoBorder;
         }
 
     }
@@ -163,38 +181,38 @@ body {
         margin: 0 auto;
         overflow-y: auto;
         overflow-x: hidden;
-        border: 2px solid black;
+        border: $todoListBorder;
         box-shadow: 0 0 10px;
 
         .todoList__title {
-            border-bottom: 4px solid powderblue;
-            font-size: 35px;
+            border-bottom: $todoListTittleBottomBorder;
+            font-size: $todoListTittleSizeFont;
             text-align: center;
             font-weight: 600;
-            color: brown;
+            color: $todoListTittleColor;
             margin-top: 0;
         }
 
         p {
             word-wrap: break-word;
-            font-size: 23px;
-            background: lightblue;
+            font-size: $todoListItemFontSize;
+            background: $todoListItemColor;
             text-align: center;
             margin-top: 0;
         }
 
         .unactive {
-            background: grey;
+            background: $unactiveColor;
         }
         
         .today {
-            background: rgb(201, 211, 62);
+            background: $todayColor;
         }
 
         p:hover {
             cursor: pointer;
-            background: green;
-            color: red;
+            background: $todoHoverColorBg;
+            color: $todoHoverTxtColor;
         }
 
 
@@ -207,53 +225,47 @@ body {
 }
 
 .center{
-    position: absolute;
-    left: 0;
-    right: 0;
-    top: 0;
-    bottom: 0;
     display: block;
-    margin: auto;
+    @extend %absCenter;
 }
 
 ::-webkit-scrollbar {
     width: 15px;
-    background: rgb(65, 113, 129);
+    background: $scrollBarColor;
 }
 
 
 ::-webkit-scrollbar-thumb {
-    background: rgb(15, 15, 75);
+    background: $scrollBarThumbColor;
 }
 
 
 .background-modal {
+
+    @extend %max;
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    background: rgba(0, 0, 0, .6);
+    position: $abs;
+    background: $hideColor;
     z-index: 1;
 
     .modal-window {
-        position: relative;
+        position: $rel;
         width: 65%;
         height: 65%;
-        background: whitesmoke;
-        box-shadow: 0 0 3px lightblue;
-        border: 5px solid lightblue;
+        background: $modalWindowColor;
+        box-shadow: $modalWindowShadow;
+        border: $modalWindowBorder;
 
         .close {
-            font-family: 'Times New Roman', Times, serif;
+            font-family: $closeBtnFont;
             font-weight: bold;
             font-size: 18px;
             border-radius: 20px;
-            border: 2px solid transparent;
-            border-color: rgb(80, 2, 2);
-            color: rgb(80, 2, 2);
-            background: lightcoral;
+            border: $closeBtnBorder;
+            color: $closeColor;
+            background:  $closeBtnColor;
 
         }
 
@@ -263,19 +275,17 @@ body {
             font-size: 20px;
             border-radius: 5px;
             background: tomato;
-            border: 2px solid #8b4513;
+            border: $deleteBtnBorder;
         }
 
         .modal-date {
-            font-size: 25px;
-            text-align: center;
-            margin: 0;
+            font-size: $modalDateFontSize;
+            @extend %marginCenter;
         }
 
         .weather {
-            font-size: 18px;
-            text-align: center;
-            margin: 0;
+            font-size: $weatherFontSize;
+            @extend %marginCenter;
         }
     }
 }
@@ -284,29 +294,29 @@ body {
 .edditable {
     width: 75%;
     height: 70%;
-    border: 1px solid red;
-    position: absolute;
+    border: $edditableBorder;
+    position: $abs;
     top: 53%;
     resize: none;
     left: 50%;
     margin-right: -50%;
-    transform: translate(-50%, -50%);
+    transform: $tranCenter;
 }
 
 .editButton {
-    position: absolute;
+    position: $abs;
     top: 100%;
     left: 50%;
-    transform: translate(-50%,-50%);
+    transform: $tranCenter;
     background: red;
     border: 1px solid brown;
 }
 
 .editWrapper {
-    position: absolute;
-    transform: translate(-50%,-50%);
-    width: 50%;
-    height: 200px;
+    position: $abs;
+    transform: $tranCenter;
+    width: $editWrapperW;
+    height: $editWrapperH;
     top: 50%;
     left: 50%;
 }
@@ -324,45 +334,3 @@ body {
     display: none;
 }
 
-
-@media screen and (max-width: 700px) {
-    #todo .todoList {
-        width: 95%;
-        height: 100%;
-    }
-
-    .editWrapper {
-        width: 70%;
-    }
-
-    .textArea .addNotes {
-        width: 85%;
-    }
-
-    #todo {
-        position: absolute;
-        height: 100%;
-        min-height: 0;
-    }
-
-    #todo .title {
-        margin: 0;
-    }
-
-    #todo .controllers {
-        margin-bottom: 10%;
-
-    }
-
-    .background-modal .modal-window {
-        height: 80%;
-    }
-
-    #todo .controllers .date {
-        top: 42%;
-    }
-
-    #todo .controllers .setTodo {
-        top: 85%;
-    }
-}

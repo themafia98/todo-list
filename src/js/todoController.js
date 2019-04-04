@@ -16,11 +16,11 @@ class TodoControl extends Storage{
             let modalWindow = target.parentNode.parentNode;
             let modal = null;
 
-                
+
             if (todoState.getState('main')){
+
                 if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
-                    
-                    this.buffer = [];
+
                     this.number = this.localeStorageUpdate();
                     this.dataParser(target);
                     todoView.showNewTodo(JSON.parse(localStorage.list));
@@ -45,14 +45,11 @@ class TodoControl extends Storage{
 
             if (todoState.getState('modal')){
 
-                
-                if (target.classList[0] === 'addNotes'){
-                    
-                    todoView.createEditInput(target);
-                };
+
+                (target.classList[0] === 'addNotes') && (todoView.createEditInput(target));
 
                 if(target.classList[0] === 'editButton'){
-                    
+
                     let notes = document.querySelector('.addNotes');
                     notes.innerHTML = target.previousSibling.value;
                     notes.classList.toggle('visibility');
@@ -61,7 +58,7 @@ class TodoControl extends Storage{
 
                 }
 
-                if (target.classList[0] === 'close' ||target.classList[0] === 'background-modal'){
+                if (target.classList[0] === 'close' || target.classList[0] === 'background-modal'){
                     todoState.setState('main',true);
                     todoState.setState('modal',false);
                 }
@@ -69,67 +66,39 @@ class TodoControl extends Storage{
                 (target.classList[0] === 'background-modal') && (target.remove());
 
                 if(target.classList[0] === 'delete'){
-                    
+
                     let parent = target.parentNode;
                     let todoDelete = document.querySelector(`[data-num="${parent.dataset.modalNum}"]`);
                     let numDelete =  parseInt(todoDelete.dataset.num);
 
-                let splits = JSON.parse(localStorage.list);
-                let date = JSON.parse(localStorage.date);
-                    
-                let counter =  splits.find(element =>  element.timer === numDelete );
+                    let splits = JSON.parse(localStorage.list);
+                    let date = JSON.parse(localStorage.date);
 
-                date.splice(counter.timer,1);
-                localStorage.date = JSON.stringify(date);
+                    let counter =  splits.find(element =>  element.timer === numDelete );
 
-                
-                if (splits.some((item) => item.timer === numDelete)) {
-                    
-                    let filter = splits.filter((v) =>  (v.timer === numDelete) && (v.value === todoDelete.innerHTML) );
-                    
+                    date.splice(counter.timer,1);
+                    localStorage.date = JSON.stringify(date);
 
-                    this.updateStorage(JSON.parse(localStorage.list),filter[0].timer);
-                    todoDelete.remove();
-                    todoState.setState('main',true);
-                    todoState.setState('modal',false);
-                    modalWindow.remove();
-                    localStorage.timersN = --localStorage.timersN;
+                    if (splits.some(item => item.timer === numDelete)) {
+
+                        let filter = splits.filter(v => (v.timer === numDelete) && (v.value === todoDelete.innerHTML));
+
+
+                        this.updateStorage(JSON.parse(localStorage.list),filter[0].timer);
+                        todoDelete.remove();
+                        todoState.setState('main',true);
+                        todoState.setState('modal',false);
+                        modalWindow.remove();
+                        localStorage.timersN = --localStorage.timersN;
                 }
 
-                
-                let todos = document.querySelectorAll('[data-date]');
-                      for (let i = 0; i < todos.length; i++){
+                    let todos = document.querySelectorAll('[data-date]');
 
-                    (todos[i].dataset.num) && (todos[i].dataset.num = i);
-                }
-
-
+                    todos.forEach(element => element.dataset.num = i);
                 }
 
             }
 
-
-            // if (e.target.dataset.num) {
-
-            //     let splits = JSON.parse(localStorage.list);
-            //     let date = JSON.parse(localStorage.date);
-            //     let count = () => {
-            //         splits.forEach((element,i) => {
-            //         if (element.timer === parseInt(e.target.dataset.num)) return i;
-            //     });
-            //     }
-
-            //     date.splice(count(),1);
-            //     localStorage.date = JSON.stringify(date);
-    
-            //     if (splits.some((item) => item.value === e.target.innerHTML)) {
-
-            //         let filter = splits.filter((v) => v.value === e.target.innerHTML);
-            //         this.updateStorage(JSON.parse(localStorage.list),filter[0].timer);
-            //         e.target.remove();
-            //         localStorage.timersN = --localStorage.timersN;
-            //     }
-            // }
         };
 
         document.addEventListener('click',clickEvent,false);
@@ -150,14 +119,12 @@ class TodoControl extends Storage{
             let offset = bounding.y + (bounding.height/2);
 
             if (target.classList[0] != 'todoList'){
+
                 if ( e.clientY - offset > 0 ) {
                     target.style['border-bottom'] = 'solid 4px red';
                     target.style['border-top'] = '';
-                } else {
-                    // target.style['border-top'] = 'solid 4px red';
-                    // target.style['border-bottom'] = '';
                 }
-        }
+            }
 
         });
 
@@ -182,74 +149,34 @@ class TodoControl extends Storage{
 
                 if (dragNum < targetNum){
 
-                let swapDate1 = swapeDate.splice(targetNum,1,swapeDate[dragNum])[0];
-                let swapDate2 = swapeDate[dragNum];
-                swapeDate.splice(targetNum,0,swapDate1);
-                swapeDate.splice(dragNum,1);
-                let swapList1 = swapeList.splice(targetNum,1,swapeList[dragNum])[0];
-                let swapList2 = swapeList[dragNum];
-                swapeList.splice(targetNum,0,swapList1);
-                swapeList.splice(dragNum,1);
+                    swapeDate.splice(targetNum,0,swapeDate.splice(targetNum,1,swapeDate[dragNum])[0]);
+                    swapeDate.splice(dragNum,1);
+                    swapeList.splice(targetNum,0,swapeList.splice(targetNum,1,swapeList[dragNum])[0]);
+                    swapeList.splice(dragNum,1);
 
-                this.insertBefore(drag, target.nextSibling);
+                    this.insertBefore(drag, target.nextSibling);
+
                 } else {
 
-                let swapDate1 = swapeDate.splice(targetNum,1,swapeDate[dragNum])[0];
-                let swapDate2 = swapeDate[dragNum];
-                swapeDate.splice(targetNum,0,swapDate1);
-                swapeDate.splice(dragNum+1,1);
-                let swapList1 = swapeList.splice(targetNum,1,swapeList[dragNum])[0];
-                let swapList2 = swapeList[dragNum];
-                swapeList.splice(targetNum,0,swapList1);
-                swapeList.splice(dragNum+1,1);
-                this.insertBefore(drag, target.nextSibling);
+                    swapeDate.splice(targetNum,0,swapeDate.splice(targetNum,1,swapeDate[dragNum])[0]);
+                    swapeDate.splice(dragNum+1,1);
+                    swapeList.splice(targetNum,0,swapeList.splice(targetNum,1,swapeList[dragNum])[0]);
+                    swapeList.splice(dragNum+1,1);
+                    this.insertBefore(drag, target.nextSibling);
                 }
 
-
-
                 let todos = document.querySelectorAll('[data-date]');
-                for (let i = 0; i < todos.length; i++){
-
-                     (todos[i].dataset.num) && (todos[i].dataset.num = i);
-                 }
+                todos.forEach(element => element.dataset.num = i);
 
                 localStorage.date = JSON.stringify(swapeDate);
                 localStorage.list = JSON.stringify(swapeList);
 
-            } else {
-                target.style['border-top'] = '';
+            } else target.style['border-top'] = '';
 
-                
-
-                // let dragNum = parseInt(drag.dataset.num);
-                // let targetNum = parseInt(target.dataset.num);
-
-                // let swapDate1 = swapeDate.splice(dragNum,1,swapeDate[targetNum-1])[0];
-                // swapeDate.splice(targetNum-1,1,swapDate1);
- 
-                // let swapList1 = swapeList.splice(dragNum,1,swapeList[targetNum-1])[0];
-                // swapeList.splice(targetNum-1,1,swapList1)[0];
-
-
-                // this.insertBefore(drag, target);
-
-                // let todos = document.querySelectorAll('[data-num]');
-                // // for (let i = 0; i < todos.length; i++){
-
-                // //     (todos[i].dataset.num) && (todos[i].dataset.num = i);
-                // // }
-
-                // localStorage.date = JSON.stringify(swapeDate);
-                // localStorage.list = JSON.stringify(swapeList);
-
-
-            }
-    
-            // this.insertBefore(target,target.previousSibling);
         });
 
         window.addEventListener('DOMContentLoaded',() =>{
-            
+
             (localStorage.list) && (todoView.showNewTodo(JSON.parse(localStorage.list)));
 
         },false);

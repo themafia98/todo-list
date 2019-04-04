@@ -1,0 +1,43 @@
+
+
+@media screen and (max-width: 700px) {
+    #todo .todoList {
+        width: 95%;
+        height: 100%;
+    }
+
+    .editWrapper {
+        width: 70%;
+    }
+
+    .textArea .addNotes {
+        width: 85%;
+    }
+
+    #todo {
+        position: $abs;
+        height: 100%;
+        min-height: 0;
+    }
+
+    #todo .title {
+        margin: 0;
+    }
+
+    #todo .controllers {
+        margin-bottom: 10%;
+
+    }
+
+    .background-modal .modal-window {
+        height: 80%;
+    }
+
+    #todo .controllers .date {
+        top: 42%;
+    }
+
+    #todo .controllers .setTodo {
+        top: 85%;
+    }
+}
