@@ -31,12 +31,11 @@
     }
 
     .addNotes {
-        display: inline-block;
         border: 1px solid red;
         margin-top: 0;
         padding: 10px;
-        box-sizing: content-box;
         cursor: pointer;
+        overflow-wrap: break-word;
     }
 
     .addNotes:hover {
@@ -55,7 +54,7 @@ body {
     font-family: 'Lobster', cursive;
 }
 
-ul {
+.weatherList {
     width: 100%;
     position: absolute;
     bottom: 0;
@@ -63,6 +62,14 @@ ul {
     list-style-type: none;
     column-count: 2;
     border-top: 1px solid lightsteelblue;
+}
+
+.weatherNone {
+
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    padding-bottom: 10px;
 }
 
 
@@ -275,15 +282,33 @@ ul {
 
 
 .edditable {
-    width: 50%;
-    height: 25%;
+    width: 75%;
+    height: 70%;
     border: 1px solid red;
     position: absolute;
-    top: 50%;
+    top: 53%;
     resize: none;
     left: 50%;
     margin-right: -50%;
     transform: translate(-50%, -50%);
+}
+
+.editButton {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    background: red;
+    border: 1px solid brown;
+}
+
+.editWrapper {
+    position: absolute;
+    transform: translate(-50%,-50%);
+    width: 50%;
+    height: 200px;
+    top: 50%;
+    left: 50%;
 }
 
 .visibility {
@@ -304,6 +329,14 @@ ul {
     #todo .todoList {
         width: 95%;
         height: 100%;
+    }
+
+    .editWrapper {
+        width: 70%;
+    }
+
+    .textArea .addNotes {
+        width: 85%;
     }
 
     #todo {

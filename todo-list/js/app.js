@@ -162,6 +162,9 @@ function () {
       var newList = list.filter(function (v) {
         return v.timer != nums;
       });
+      newList.forEach(function (item, i) {
+        item.timer = i;
+      });
       localStorage.list = JSON.stringify(newList);
       return true;
     }
@@ -389,6 +392,8 @@ function (_View) {
       var additionalNotesTitle = document.createElement('p');
       additionalNotesTitle.classList.add('addNotes__title');
       additionalNotesTitle.innerHTML = 'additional notes';
+      var edditableWrapper = document.createElement('div');
+      edditableWrapper.classList.add('editWrapper');
       var additionalNotes = document.createElement('p');
       additionalNotes.classList.add('addNotes');
       additionalNotes.innerHTML = 'click for add note';
@@ -401,8 +406,9 @@ function (_View) {
       modal.appendChild(showTodoDate);
       modal.appendChild(deleteBtn);
       noteZone.appendChild(currentTodo);
-      noteZone.appendChild(additionalNotesTitle);
-      noteZone.appendChild(additionalNotes);
+      edditableWrapper.appendChild(additionalNotesTitle);
+      edditableWrapper.appendChild(additionalNotes);
+      noteZone.appendChild(edditableWrapper);
       modal.appendChild(noteZone);
       modal.appendChild(weatherList);
       modalBg.appendChild(modal);
@@ -413,11 +419,19 @@ function (_View) {
     value: function createEditInput(target) {
       var addNotes = document.querySelector('.addNotes');
       var textArea = document.querySelector('.textArea');
+      var edditableWrapper = document.querySelector('.editWrapper');
       var inputEdit = document.createElement('textarea');
+      var buttonEdit = document.createElement('input');
       addNotes.classList.add('visibility');
       inputEdit.setAttribute('maxLength', '100');
       inputEdit.classList.add('edditable');
-      textArea.appendChild(inputEdit);
+      inputEdit.value = addNotes.innerHTML;
+      buttonEdit.setAttribute('type', 'button');
+      buttonEdit.classList.add('editButton');
+      buttonEdit.setAttribute('value', 'Edit');
+      edditableWrapper.appendChild(inputEdit);
+      edditableWrapper.appendChild(buttonEdit);
+      textArea.appendChild(edditableWrapper);
     }
   }], [{
     key: "checkEmpty",
@@ -429,6 +443,7 @@ function (_View) {
       if (checkP.length === 0) {
         var weatherView = document.createElement('p');
         weatherView.classList.add('weather');
+        weatherView.classList.add('weatherNone');
         weatherView.innerHTML = "Weather not found";
         weatherLists.remove();
         weatherBox.remove();
@@ -518,7 +533,7 @@ function (_Storage) {
           if (target.dataset.num) {
             todoView.showModal.call(target);
             modal = document.querySelector('[data-modal-num]');
-            var weatherBox = todoView.spinnerShow(modal, load.image[0]);
+            todoView.spinnerShow(modal, load.image[0]);
             var weatherList = document.querySelector('.weatherList');
             todoState.getWeather(target, weatherList, modal);
             todoState.setState('main', false);
@@ -533,6 +548,14 @@ function (_Storage) {
 
           ;
 
+          if (target.classList[0] === 'editButton') {
+            var notes = document.querySelector('.addNotes');
+            notes.innerHTML = target.previousSibling.value;
+            notes.classList.toggle('visibility');
+            target.previousSibling.remove();
+            target.remove();
+          }
+
           if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
             todoState.setState('main', true);
             todoState.setState('modal', false);
@@ -544,23 +567,20 @@ function (_Storage) {
           if (target.classList[0] === 'delete') {
             var parent = target.parentNode;
             var todoDelete = document.querySelector("[data-num=\"".concat(parent.dataset.modalNum, "\"]"));
+            var numDelete = parseInt(todoDelete.dataset.num);
             var splits = JSON.parse(localStorage.list);
             var date = JSON.parse(localStorage.date);
-
-            var count = function count() {
-              splits.forEach(function (element, i) {
-                if (element.timer === parseInt(todoDelete.dataset.num)) return i;
-              });
-            };
-
-            date.splice(count(), 1);
+            var counter = splits.find(function (element) {
+              return element.timer === numDelete;
+            });
+            date.splice(counter.timer, 1);
             localStorage.date = JSON.stringify(date);
 
             if (splits.some(function (item) {
-              return item.value === todoDelete.innerHTML;
+              return item.timer === numDelete;
             })) {
               var filter = splits.filter(function (v) {
-                return v.value === todoDelete.innerHTML;
+                return v.timer === numDelete && v.value === todoDelete.innerHTML;
               });
 
               _this2.updateStorage(JSON.parse(localStorage.list), filter[0].timer);

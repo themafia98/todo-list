@@ -132,6 +132,12 @@ class Storage{
         let nums = parseInt(num);
         let newList = list.filter( (v) => { return v.timer != nums;});
 
+        
+        newList.forEach((item,i)=>{
+
+            item.timer = i;
+        });
+
         localStorage.list = JSON.stringify(newList);
 
         return true;

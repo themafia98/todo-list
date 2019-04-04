@@ -42,6 +42,7 @@ class Todo extends View {
 
             let weatherView = document.createElement('p');
             weatherView.classList.add('weather');
+            weatherView.classList.add('weatherNone');
             weatherView.innerHTML = `Weather not found`;
             weatherLists.remove();
             weatherBox.remove();
@@ -198,6 +199,9 @@ class Todo extends View {
         additionalNotesTitle.classList.add('addNotes__title');
         additionalNotesTitle.innerHTML = 'additional notes';
 
+        let edditableWrapper = document.createElement('div');
+        edditableWrapper.classList.add('editWrapper');
+        
         let additionalNotes = document.createElement('p');
         additionalNotes.classList.add('addNotes');
         additionalNotes.innerHTML = 'click for add note';
@@ -216,8 +220,9 @@ class Todo extends View {
         modal.appendChild(deleteBtn);
 
         noteZone.appendChild(currentTodo);
-        noteZone.appendChild(additionalNotesTitle);
-        noteZone.appendChild(additionalNotes);
+        edditableWrapper.appendChild(additionalNotesTitle);
+        edditableWrapper.appendChild(additionalNotes);
+        noteZone.appendChild(edditableWrapper);
         modal.appendChild(noteZone);
 
         modal.appendChild(weatherList);
@@ -230,10 +235,24 @@ class Todo extends View {
 
         let addNotes = document.querySelector('.addNotes');
         let textArea = document.querySelector('.textArea');
+
+        let edditableWrapper = document.querySelector('.editWrapper');
         let inputEdit = document.createElement('textarea');
+        let buttonEdit = document.createElement('input');
+
+
+        
         addNotes.classList.add('visibility');
         inputEdit.setAttribute('maxLength' ,'100');
         inputEdit.classList.add('edditable');
-        textArea.appendChild(inputEdit);
+        inputEdit.value = addNotes.innerHTML;
+        buttonEdit.setAttribute('type','button');
+        buttonEdit.classList.add('editButton');
+        buttonEdit.setAttribute('value','Edit');
+
+
+        edditableWrapper.appendChild(inputEdit);
+        edditableWrapper.appendChild(buttonEdit);
+        textArea.appendChild(edditableWrapper);
     }
 }
