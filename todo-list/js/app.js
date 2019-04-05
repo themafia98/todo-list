@@ -25,8 +25,12 @@ function () {
     _classCallCheck(this, ListModal);
 
     this.states = {
-      main: false,
-      modal: false
+      main: function main() {
+        return false;
+      },
+      modal: function modal() {
+        return false;
+      }
     };
   }
 
@@ -202,6 +206,7 @@ function (_ListModal) {
     _this2.value = value;
     _this2.save = false;
     _this2.uniqueId = "id".concat(Math.floor((Math.random() + 5 - 5).toFixed(7) * 10000000));
+    _this2.note = 'click for add note';
     return _this2;
   }
 
@@ -362,6 +367,12 @@ function (_View) {
   }, {
     key: "showModal",
     value: function showModal() {
+      var _this2 = this;
+
+      var jsonObject = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'click for add note';
+      var num = jsonObject.findIndex(function (element) {
+        return element.uniqueId === _this2.dataset.unique;
+      });
       var getList = document.getElementById('todo');
       var modalBg = document.createElement('div');
       modalBg.classList.add('background-modal');
@@ -388,7 +399,7 @@ function (_View) {
       edditableWrapper.classList.add('editWrapper');
       var additionalNotes = document.createElement('p');
       additionalNotes.classList.add('addNotes');
-      additionalNotes.innerHTML = 'click for add note';
+      additionalNotes.innerHTML = jsonObject[num].note;
       var weatherList = document.createElement('ul');
       weatherList.classList.add('weatherList');
       var showTodoDate = document.createElement('p');
@@ -524,7 +535,9 @@ function (_Storage) {
           }
 
           if (target.dataset.unique) {
-            todoView.showModal.call(target);
+            var jsonObject = null;
+            localStorage.list && (jsonObject = JSON.parse(localStorage.list));
+            todoView.showModal.call(target, jsonObject);
             modal = document.querySelector('[data-modal-num]');
             todoView.spinnerShow(modal, load.image[0]);
             var weatherList = document.querySelector('.weatherList');
@@ -538,8 +551,16 @@ function (_Storage) {
           target.classList[0] === 'addNotes' && todoView.createEditInput(target);
 
           if (target.classList[0] === 'editButton') {
+            var _modal = document.querySelector('[data-modal-num]');
+
             var notes = document.querySelector('.addNotes');
+            var item = JSON.parse(localStorage.list);
+            var index = item.findIndex(function (item) {
+              return _modal.dataset.modalNum === item.uniqueId;
+            });
             notes.innerHTML = target.previousSibling.value;
+            item[index].note = target.previousSibling.value;
+            localStorage.list = JSON.stringify(item);
             notes.classList.toggle('visibility');
             target.previousSibling.remove();
             target.remove();

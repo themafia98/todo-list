@@ -4,8 +4,8 @@ class ListModal{
 
     constructor(){
         this.states = {
-            main: false,
-            modal: false
+            main: () => false,
+            modal: () => false,
         };
     }
 
@@ -176,6 +176,7 @@ class todoOne extends ListModal {
         this.value = value;
         this.save = false;
         this.uniqueId = `id${ Math.floor((((Math.random()+5)-5).toFixed(7))*10000000)}`;
+        this.note  = 'click for add note';
     }
 }
 

@@ -168,8 +168,11 @@ class Todo extends View {
     localStorage.removeItem('newTodo');
     }
 
-    showModal(){
+    showModal(jsonObject = 'click for add note'){
 
+        
+
+        let num = jsonObject.findIndex(element => element.uniqueId === this.dataset.unique);
 
         let getList = document.getElementById('todo');
 
@@ -203,10 +206,10 @@ class Todo extends View {
 
         let edditableWrapper = document.createElement('div');
         edditableWrapper.classList.add('editWrapper');
-        
+            
         let additionalNotes = document.createElement('p');
         additionalNotes.classList.add('addNotes');
-        additionalNotes.innerHTML = 'click for add note';
+        additionalNotes.innerHTML = jsonObject[num].note;
 
         let weatherList = document.createElement('ul');
         weatherList.classList.add('weatherList');

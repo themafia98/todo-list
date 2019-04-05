@@ -30,14 +30,16 @@ class TodoControl extends Storage{
 
                 if(target.dataset.unique){
 
-                    todoView.showModal.call(target);
+                    let jsonObject = null;
+                    (localStorage.list) && (jsonObject = JSON.parse(localStorage.list));
+                    todoView.showModal.call(target,jsonObject);
                     modal = document.querySelector('[data-modal-num]');
                     todoView.spinnerShow(modal,load.image[0]);
                     let weatherList = document.querySelector('.weatherList');
 
                     todoState.getWeather(target,weatherList,modal);
 
-
+                    
                     todoState.setState('main',false);
                     todoState.setState('modal',true);
 
@@ -46,13 +48,19 @@ class TodoControl extends Storage{
 
             if (todoState.getState('modal')){
 
+                
 
                 (target.classList[0] === 'addNotes') && (todoView.createEditInput(target));
-
+                
                 if(target.classList[0] === 'editButton'){
-
+                    
+                    let modal = document.querySelector('[data-modal-num]');
                     let notes = document.querySelector('.addNotes');
+                    let item =  JSON.parse(localStorage.list);
+                    let index = item.findIndex(item => modal.dataset.modalNum === item.uniqueId);
                     notes.innerHTML = target.previousSibling.value;
+                    item[index].note = target.previousSibling.value;
+                    localStorage.list = JSON.stringify(item);
                     notes.classList.toggle('visibility');
                     target.previousSibling.remove();
                     target.remove();
