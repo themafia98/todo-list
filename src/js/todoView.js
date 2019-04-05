@@ -141,8 +141,8 @@ class Todo extends View {
 
             let dateNow = JSON.parse(localStorage.date)[i];
             let todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g,',')).getTime();
-
             let today = new Date(NOW).toLocaleDateString();
+
             (todoList.dataset.date === today) && (todoList.classList.add('today'));
             (todoDay < NOW) && (todoList.classList.add('unactive'));
 
@@ -156,7 +156,8 @@ class Todo extends View {
             (todoDay < today) && (todoList.classList.add('unactive'));
         }
 
-        todoList.dataset.num = i;
+        
+        todoList.dataset.unique = value[i].uniqueId;
         todoList.innerHTML = value[i].value;
 
         here.appendChild(todoList);
@@ -169,6 +170,7 @@ class Todo extends View {
 
     showModal(){
 
+
         let getList = document.getElementById('todo');
 
         let modalBg = document.createElement('div');
@@ -176,7 +178,7 @@ class Todo extends View {
 
         let modal = document.createElement('div');
         modal.classList.add('modal-window');
-        modal.dataset.modalNum = this.dataset.num;
+        modal.dataset.modalNum = this.dataset.unique;
 
         let closeBtn = document.createElement('input');
         closeBtn.setAttribute('type','button');

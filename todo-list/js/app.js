@@ -24,8 +24,6 @@ function () {
   function ListModal() {
     _classCallCheck(this, ListModal);
 
-    this.weatherHistory = {};
-    this.weathersArray = [];
     this.states = {
       main: false,
       modal: false
@@ -52,6 +50,8 @@ function () {
   }, {
     key: "getCoords",
     value: function getCoords() {
+      this.weatherHistory = {};
+      this.weathersArray = [];
       fetch('https://get.geojs.io/v1/ip/geo.json').then(function (response) {
         return response.json();
       }).then(function (response) {
@@ -144,7 +144,6 @@ function () {
     this.lists = [];
     this.dateArray = [];
     this.buffer = {};
-    this.timersN = -1;
     this.number = 0;
   }
 
@@ -158,12 +157,8 @@ function () {
   }, {
     key: "updateStorage",
     value: function updateStorage(list, num) {
-      var nums = parseInt(num);
       var newList = list.filter(function (v) {
-        return v.timer != nums;
-      });
-      newList.forEach(function (item, i) {
-        item.timer = i;
+        return v.uniqueId != num;
       });
       localStorage.list = JSON.stringify(newList);
       return true;
@@ -171,11 +166,8 @@ function () {
   }, {
     key: "localeStorageUpdate",
     value: function localeStorageUpdate() {
-      !localStorage.timersN && (localStorage.timersN = -1);
-      localStorage.timersN && (localStorage.timersN = ++localStorage.timersN);
-      this.number = localStorage.timersN ? parseInt(localStorage.timersN) : -1;
       localStorage.setItem('newTodo', this.btnEnter.value);
-      var todo = new todoOne(this.number, localStorage.newTodo);
+      var todo = new todoOne(localStorage.newTodo);
       todo.save = true;
       localStorage.list && (this.lists = JSON.parse(localStorage.list));
       this.lists.push(todo);
@@ -201,15 +193,15 @@ var todoOne =
 function (_ListModal) {
   _inherits(todoOne, _ListModal);
 
-  function todoOne(timerN, value) {
+  function todoOne(value) {
     var _this2;
 
     _classCallCheck(this, todoOne);
 
     _this2 = _possibleConstructorReturn(this, _getPrototypeOf(todoOne).call(this));
     _this2.value = value;
-    _this2.timer = timerN;
     _this2.save = false;
+    _this2.uniqueId = "id".concat(Math.floor((Math.random() + 5 - 5).toFixed(7) * 10000000));
     return _this2;
   }
 
@@ -358,7 +350,7 @@ function (_View) {
             todoDay < today && todoList.classList.add('unactive');
           }
 
-          todoList.dataset.num = i;
+          todoList.dataset.unique = value[i].uniqueId;
           todoList.innerHTML = value[i].value;
           here.appendChild(todoList);
         }
@@ -375,7 +367,7 @@ function (_View) {
       modalBg.classList.add('background-modal');
       var modal = document.createElement('div');
       modal.classList.add('modal-window');
-      modal.dataset.modalNum = this.dataset.num;
+      modal.dataset.modalNum = this.dataset.unique;
       var closeBtn = document.createElement('input');
       closeBtn.setAttribute('type', 'button');
       closeBtn.setAttribute('value', 'X');
@@ -521,7 +513,9 @@ function (_Storage) {
 
         if (todoState.getState('main')) {
           if (target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
-            _this2.number = _this2.localeStorageUpdate();
+            _this2.buffer = [];
+
+            _this2.localeStorageUpdate();
 
             _this2.dataParser(target);
 
@@ -529,7 +523,7 @@ function (_Storage) {
             _this2.btnEnter.value = '';
           }
 
-          if (target.dataset.num) {
+          if (target.dataset.unique) {
             todoView.showModal.call(target);
             modal = document.querySelector('[data-modal-num]');
             todoView.spinnerShow(modal, load.image[0]);
@@ -561,37 +555,31 @@ function (_Storage) {
 
           if (target.classList[0] === 'delete') {
             var parent = target.parentNode;
-            var todoDelete = document.querySelector("[data-num=\"".concat(parent.dataset.modalNum, "\"]"));
-            var numDelete = parseInt(todoDelete.dataset.num);
+            var todoDelete = document.querySelector("[data-unique=\"".concat(parent.dataset.modalNum, "\"]"));
+            var numDelete = todoDelete.dataset.unique;
             var splits = JSON.parse(localStorage.list);
             var date = JSON.parse(localStorage.date);
-            var counter = splits.find(function (element) {
-              return element.timer === numDelete;
+            var counter = splits.findIndex(function (element) {
+              return element.uniqueId === numDelete;
             });
-            date.splice(counter.timer, 1);
+            date.splice(counter, 1);
             localStorage.date = JSON.stringify(date);
-
-            if (splits.some(function (item) {
-              return item.timer === numDelete;
-            })) {
-              var filter = splits.filter(function (v) {
-                return v.timer === numDelete && v.value === todoDelete.innerHTML;
-              });
-
-              _this2.updateStorage(JSON.parse(localStorage.list), filter[0].timer);
-
-              todoDelete.remove();
-              todoState.setState('main', true);
-              todoState.setState('modal', false);
-              modalWindow.remove();
-              localStorage.timersN = --localStorage.timersN;
-            }
-
-            var todos = document.querySelectorAll('[data-date]');
-            todos.forEach(function (element) {
-              return element.dataset.num = i;
+            var filter = splits.filter(function (v) {
+              return v.uniqueId === numDelete;
             });
+
+            _this2.updateStorage(JSON.parse(localStorage.list), filter[0].uniqueId);
+
+            todoDelete.remove();
+            todoState.setState('main', true);
+            todoState.setState('modal', false);
+            modalWindow.remove();
           }
+
+          var todos = document.querySelectorAll('[data-date]');
+          todos.forEach(function (element, i) {
+            return element.dataset.num = i;
+          });
         }
       };
 
@@ -626,8 +614,14 @@ function (_Storage) {
 
         if (target.style['border-bottom'] !== '') {
           target.style['border-bottom'] = '';
-          var dragNum = parseInt(drag.dataset.num);
-          var targetNum = parseInt(target.dataset.num);
+          var dragID = drag.dataset.unique;
+          var targetID = target.dataset.unique;
+          var targetNum = swapeList.findIndex(function (element) {
+            return element.uniqueId === targetID;
+          });
+          var dragNum = swapeList.findIndex(function (element) {
+            return element.uniqueId === dragID;
+          });
 
           if (dragNum < targetNum) {
             swapeDate.splice(targetNum, 0, swapeDate.splice(targetNum, 1, swapeDate[dragNum])[0]);
@@ -644,7 +638,7 @@ function (_Storage) {
           }
 
           var todos = document.querySelectorAll('[data-date]');
-          todos.forEach(function (element) {
+          todos.forEach(function (element, i) {
             return element.dataset.num = i;
           });
           localStorage.date = JSON.stringify(swapeDate);

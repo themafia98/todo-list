@@ -20,14 +20,15 @@ class TodoControl extends Storage{
             if (todoState.getState('main')){
 
                 if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
-
-                    this.number = this.localeStorageUpdate();
+                    
+                    this.buffer = [];
+                    this.localeStorageUpdate();
                     this.dataParser(target);
                     todoView.showNewTodo(JSON.parse(localStorage.list));
                     this.btnEnter.value = '';
                 }
 
-                if(target.dataset.num){
+                if(target.dataset.unique){
 
                     todoView.showModal.call(target);
                     modal = document.querySelector('[data-modal-num]');
@@ -66,38 +67,33 @@ class TodoControl extends Storage{
                 (target.classList[0] === 'background-modal') && (target.remove());
 
                 if(target.classList[0] === 'delete'){
-
+                    
+                    
                     let parent = target.parentNode;
-                    let todoDelete = document.querySelector(`[data-num="${parent.dataset.modalNum}"]`);
-                    let numDelete =  parseInt(todoDelete.dataset.num);
+                    let todoDelete = document.querySelector(`[data-unique="${parent.dataset.modalNum}"]`);
+                    let numDelete =  todoDelete.dataset.unique;
 
                     let splits = JSON.parse(localStorage.list);
                     let date = JSON.parse(localStorage.date);
 
-                    let counter =  splits.find(element =>  element.timer === numDelete );
+                    let counter =  splits.findIndex(element =>  element.uniqueId === numDelete);
 
-                    date.splice(counter.timer,1);
+                    date.splice(counter,1);
                     localStorage.date = JSON.stringify(date);
 
-                    if (splits.some(item => item.timer === numDelete)) {
+                        let filter = splits.filter(v => (v.uniqueId === numDelete));
 
-                        let filter = splits.filter(v => (v.timer === numDelete) && (v.value === todoDelete.innerHTML));
-
-
-                        this.updateStorage(JSON.parse(localStorage.list),filter[0].timer);
+                        this.updateStorage(JSON.parse(localStorage.list),filter[0].uniqueId);
                         todoDelete.remove();
                         todoState.setState('main',true);
                         todoState.setState('modal',false);
                         modalWindow.remove();
-                        localStorage.timersN = --localStorage.timersN;
                 }
 
                     let todos = document.querySelectorAll('[data-date]');
-
-                    todos.forEach(element => element.dataset.num = i);
+                    
+                    todos.forEach( (element,i) => element.dataset.num = i);
                 }
-
-            }
 
         };
 
@@ -143,9 +139,11 @@ class TodoControl extends Storage{
             if ( target.style['border-bottom'] !== '' ) {
                 target.style['border-bottom'] = '';
 
-                let dragNum = parseInt(drag.dataset.num);
-                let targetNum = parseInt(target.dataset.num);
+                let dragID = drag.dataset.unique;
+                let targetID = target.dataset.unique;
 
+                let targetNum = swapeList.findIndex(element =>  element.uniqueId === targetID);
+                let dragNum =  swapeList.findIndex(element =>  element.uniqueId === dragID);
 
                 if (dragNum < targetNum){
 
@@ -166,7 +164,7 @@ class TodoControl extends Storage{
                 }
 
                 let todos = document.querySelectorAll('[data-date]');
-                todos.forEach(element => element.dataset.num = i);
+                todos.forEach( (element,i) => element.dataset.num = i);
 
                 localStorage.date = JSON.stringify(swapeDate);
                 localStorage.list = JSON.stringify(swapeList);

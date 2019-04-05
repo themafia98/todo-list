@@ -3,8 +3,6 @@
 class ListModal{
 
     constructor(){
-        this.weatherHistory = {};
-        this.weathersArray = [];
         this.states = {
             main: false,
             modal: false
@@ -27,6 +25,9 @@ class ListModal{
     }
 
     getCoords(){
+
+        this.weatherHistory = {};
+        this.weathersArray = [];
 
 
         fetch('https://get.geojs.io/v1/ip/geo.json')
@@ -116,7 +117,6 @@ class Storage{
         this.lists = [];
         this.dateArray = [];
         this.buffer = {};
-        this.timersN = -1;
         this.number = 0;
     }
 
@@ -129,14 +129,7 @@ class Storage{
 
     updateStorage(list,num){
         
-        let nums = parseInt(num);
-        let newList = list.filter( (v) => { return v.timer != nums;});
-
-        
-        newList.forEach((item,i)=>{
-
-            item.timer = i;
-        });
+        let newList = list.filter( (v) => { return v.uniqueId != num;});
 
         localStorage.list = JSON.stringify(newList);
 
@@ -145,14 +138,10 @@ class Storage{
 
     localeStorageUpdate(){
 
-        
-        (!(localStorage.timersN)) && (localStorage.timersN = -1);
-        (localStorage.timersN) && (localStorage.timersN = ++localStorage.timersN);
-        this.number  = (localStorage.timersN) ? parseInt(localStorage.timersN) : -1;
 
         localStorage.setItem('newTodo',this.btnEnter.value);
         
-        let todo = new todoOne(this.number,localStorage.newTodo);
+        let todo = new todoOne(localStorage.newTodo);
 
         todo.save = true;
 
@@ -182,11 +171,11 @@ class Storage{
 
 class todoOne extends ListModal {
 
-    constructor(timerN,value){
+    constructor(value){
         super();
         this.value = value;
-        this.timer = timerN;
         this.save = false;
+        this.uniqueId = `id${ Math.floor((((Math.random()+5)-5).toFixed(7))*10000000)}`;
     }
 }
 
