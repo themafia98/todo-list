@@ -32,7 +32,7 @@ class Todo extends View {
             return weatherBox;
     }
 
-    static checkEmpty(modal){
+    static checkEmpty(modal = document.createElement('div')){
         
         let weatherLists = document.querySelector('.weatherList');
         let weatherBox = document.querySelector('.weather-box');
@@ -70,6 +70,33 @@ class Todo extends View {
         let section = document.createElement('div');
         section.classList.add('section');
 
+        let sortWrapper = document.createElement('div');
+        sortWrapper.classList.add('sortWrapper');
+
+        let sortBtnBefore = document.createElement('input');
+        sortBtnBefore.setAttribute('type','button');
+        sortBtnBefore.classList.add('sort');
+        sortBtnBefore.classList.add('sortBefore');
+        sortBtnBefore.value = 'past';
+
+        let sortBtnCurrent = document.createElement('input');
+        sortBtnCurrent.setAttribute('type','button');
+        sortBtnCurrent.classList.add('sort');
+        sortBtnCurrent.classList.add('sortCurrent');
+        sortBtnCurrent.value = 'current';
+
+        let sortBtnAfter = document.createElement('input');
+        sortBtnAfter.setAttribute('type','button');
+        sortBtnAfter.classList.add('sort');
+        sortBtnAfter.classList.add('sortAfter');
+        sortBtnAfter.value = 'future';
+
+        let sortBtnAll = document.createElement('input');
+        sortBtnAll.setAttribute('type','button');
+        sortBtnAll.classList.add('sort');
+        sortBtnAll.classList.add('sortAll');
+        sortBtnAll.value = 'all';
+
         let todoList = document.createElement('div');
         todoList.classList.add('todoList');
 
@@ -105,6 +132,12 @@ class Todo extends View {
         todoControllers.appendChild(button);
 
 
+        sortWrapper.appendChild(sortBtnBefore);
+        sortWrapper.appendChild(sortBtnCurrent);
+        sortWrapper.appendChild(sortBtnAfter);
+        sortWrapper.appendChild(sortBtnAll);
+
+        section.appendChild(sortWrapper);
         section.appendChild(todoList);
 
         wrapper.appendChild(footer);
@@ -113,7 +146,23 @@ class Todo extends View {
         this.ID.appendChild(wrapper);
     }
 
-    showNewTodo(value){
+    sortTodos(todo = [],type,currentTodos){
+
+        
+
+        if (type != 'sortAll'){
+            
+            todo.forEach(element =>  element.classList.add('hide'));
+            currentTodos.forEach(element => element.classList.toggle('hide'));
+            return;
+        }
+
+        if (type === 'sortAll'){
+        todo.forEach( element => (element.classList[1] === 'hide') && (element.classList.toggle('hide')) );
+        }
+    }
+
+    showNewTodo(value = false){
 
     let here = document.querySelector('.todoList');
     let oldTodo = document.querySelectorAll('p');
@@ -143,8 +192,13 @@ class Todo extends View {
             let todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g,',')).getTime();
             let today = new Date(NOW).toLocaleDateString();
 
-            (todoList.dataset.date === today) && (todoList.classList.add('today'));
-            (todoDay < NOW) && (todoList.classList.add('unactive'));
+            if (todoList.dataset.date === today) {
+                todoList.classList.add('today')
+            } else if (todoDay < NOW){
+                todoList.classList.add('unactive');
+            } else if (todoDay > NOW){
+                todoList.classList.add('future');
+            }
 
 
         } else if ((localStorage.prewDate) && (localStorage.prewTime)){

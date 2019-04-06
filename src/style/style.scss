@@ -1,4 +1,6 @@
 
+@import 'value';
+
 @mixin fullscreen($max, $min) {
     max-width: $max;
     min-height: $min;
@@ -35,6 +37,49 @@ body {
     height: $spinnerW;
 }
 
+%sortButtons {
+    border: $sortButtonsBorder;
+    font-weight: 600;
+    margin: 2px;
+}
+
+
+.sortWrapper {
+
+    display: flex;
+    justify-content: center;
+    flex: 0 0 30px;
+    margin-bottom: 5px;
+
+    .sortBefore {
+        @extend %sortButtons;
+        background: $unactiveColor;
+        color: $SortButtonsColor;
+    }
+
+    .sortCurrent {
+        @extend %sortButtons;
+        background: $todayColor;
+        color :$SortButtonsColor;
+    }
+
+    .sortAfter {
+        @extend %sortButtons;
+        background: $todoListItemColor;
+        color: $SortButtonsColor;
+    }
+
+    .sortAll {
+        @extend %sortButtons;
+        background: $todoAllColor;
+        color: $SortButtonsColor;
+    }
+
+    .sort:active {
+        color: $importantColor;
+    }
+}
+
 .textArea {
 
     width: 100%;
@@ -52,6 +97,7 @@ body {
     }
 
     .addNotes {
+        transition: all .5s ease-in-out;
         border: $addNoteButtonBorder;
         margin-top: 0;
         padding: 10px;
@@ -192,6 +238,7 @@ body {
         }
 
         p {
+            transition: opacity 0.5s ease-in-out;
             word-wrap: break-word;
             font-size: $todoListItemFontSize;
             background: $todoListItemColor;
@@ -200,14 +247,17 @@ body {
         }
 
         .unactive {
+            transition: opacity 0.5s ease-in-out;
             background: $unactiveColor;
         }
         
         .today {
+            transition: opacity 0.5s ease-in-out;
             background: $todayColor;
         }
 
         p:hover {
+            transition: 0.5s ease-in-out;
             cursor: pointer;
             background: $todoHoverColorBg;
             color: $todoHoverTxtColor;
@@ -264,6 +314,7 @@ body {
             border: $closeBtnBorder;
             color: $closeColor;
             background:  $closeBtnColor;
+            cursor: pointer;
 
         }
 
@@ -321,6 +372,7 @@ body {
 
 .visibility {
     visibility: hidden;
+    opacity: 0;
 }
 
 
@@ -329,6 +381,15 @@ body {
 }
 
 .hide {
-    display: none;
+    
+    position: absolute;
+    visibility: hidden;
+    opacity: 0;
+
+    
+
 }
+
+
+@import 'media';
 

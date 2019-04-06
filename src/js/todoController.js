@@ -18,6 +18,21 @@ class TodoControl extends Storage{
 
 
             if (todoState.getState('main')){
+                
+                let todos = document.querySelectorAll('[data-unique]');
+                let currentTodos = null;
+
+                (target.classList[1] === 'sortAfter') &&
+                (currentTodos =  document.querySelectorAll('.future'));
+
+                (target.classList[1] === 'sortBefore') &&
+                (currentTodos =  document.querySelectorAll('.unactive'));
+
+                (target.classList[1] === 'sortCurrent') &&
+                (currentTodos =  document.querySelectorAll('.today'));
+
+                (target.classList[0] === 'sort') &&
+                (todoView.sortTodos(todos,target.classList[1],currentTodos));
 
                 if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)) {
                     

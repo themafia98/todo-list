@@ -287,6 +287,28 @@ function (_View) {
       footer.classList.add('footer');
       var section = document.createElement('div');
       section.classList.add('section');
+      var sortWrapper = document.createElement('div');
+      sortWrapper.classList.add('sortWrapper');
+      var sortBtnBefore = document.createElement('input');
+      sortBtnBefore.setAttribute('type', 'button');
+      sortBtnBefore.classList.add('sort');
+      sortBtnBefore.classList.add('sortBefore');
+      sortBtnBefore.value = 'past';
+      var sortBtnCurrent = document.createElement('input');
+      sortBtnCurrent.setAttribute('type', 'button');
+      sortBtnCurrent.classList.add('sort');
+      sortBtnCurrent.classList.add('sortCurrent');
+      sortBtnCurrent.value = 'current';
+      var sortBtnAfter = document.createElement('input');
+      sortBtnAfter.setAttribute('type', 'button');
+      sortBtnAfter.classList.add('sort');
+      sortBtnAfter.classList.add('sortAfter');
+      sortBtnAfter.value = 'future';
+      var sortBtnAll = document.createElement('input');
+      sortBtnAll.setAttribute('type', 'button');
+      sortBtnAll.classList.add('sort');
+      sortBtnAll.classList.add('sortAll');
+      sortBtnAll.value = 'all';
       var todoList = document.createElement('div');
       todoList.classList.add('todoList');
       var titleName = document.createElement('h1');
@@ -311,6 +333,11 @@ function (_View) {
       todoControllers.appendChild(input);
       todoControllers.appendChild(datePick);
       todoControllers.appendChild(button);
+      sortWrapper.appendChild(sortBtnBefore);
+      sortWrapper.appendChild(sortBtnCurrent);
+      sortWrapper.appendChild(sortBtnAfter);
+      sortWrapper.appendChild(sortBtnAll);
+      section.appendChild(sortWrapper);
       section.appendChild(todoList);
       wrapper.appendChild(footer);
       wrapper.appendChild(todoControllers);
@@ -318,8 +345,32 @@ function (_View) {
       this.ID.appendChild(wrapper);
     }
   }, {
+    key: "sortTodos",
+    value: function sortTodos() {
+      var todo = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+      var type = arguments.length > 1 ? arguments[1] : undefined;
+      var currentTodos = arguments.length > 2 ? arguments[2] : undefined;
+
+      if (type != 'sortAll') {
+        todo.forEach(function (element) {
+          return element.classList.add('hide');
+        });
+        currentTodos.forEach(function (element) {
+          return element.classList.toggle('hide');
+        });
+        return;
+      }
+
+      if (type === 'sortAll') {
+        todo.forEach(function (element) {
+          return element.classList[1] === 'hide' && element.classList.toggle('hide');
+        });
+      }
+    }
+  }, {
     key: "showNewTodo",
-    value: function showNewTodo(value) {
+    value: function showNewTodo() {
+      var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
       var here = document.querySelector('.todoList');
       var oldTodo = document.querySelectorAll('p');
       var todoList;
@@ -346,8 +397,13 @@ function (_View) {
 
             var _today = new Date(NOW).toLocaleDateString();
 
-            todoList.dataset.date === _today && todoList.classList.add('today');
-            _todoDay < NOW && todoList.classList.add('unactive');
+            if (todoList.dataset.date === _today) {
+              todoList.classList.add('today');
+            } else if (_todoDay < NOW) {
+              todoList.classList.add('unactive');
+            } else if (_todoDay > NOW) {
+              todoList.classList.add('future');
+            }
           } else if (localStorage.prewDate && localStorage.prewTime) {
             todoList.dataset.date = JSON.parse(localStorage.prewDate)[i];
             todoList.dataset.time = JSON.parse(localStorage.prewTime)[i];
@@ -438,7 +494,8 @@ function (_View) {
     }
   }], [{
     key: "checkEmpty",
-    value: function checkEmpty(modal) {
+    value: function checkEmpty() {
+      var modal = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document.createElement('div');
       var weatherLists = document.querySelector('.weatherList');
       var weatherBox = document.querySelector('.weather-box');
       var checkP = document.querySelectorAll('.weather');
@@ -523,6 +580,13 @@ function (_Storage) {
         var modal = null;
 
         if (todoState.getState('main')) {
+          var todos = document.querySelectorAll('[data-unique]');
+          var currentTodos = null;
+          target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
+          target.classList[1] === 'sortBefore' && (currentTodos = document.querySelectorAll('.unactive'));
+          target.classList[1] === 'sortCurrent' && (currentTodos = document.querySelectorAll('.today'));
+          target.classList[0] === 'sort' && todoView.sortTodos(todos, target.classList[1], currentTodos);
+
           if (target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
             _this2.buffer = [];
 
@@ -597,8 +661,9 @@ function (_Storage) {
             modalWindow.remove();
           }
 
-          var todos = document.querySelectorAll('[data-date]');
-          todos.forEach(function (element, i) {
+          var _todos = document.querySelectorAll('[data-date]');
+
+          _todos.forEach(function (element, i) {
             return element.dataset.num = i;
           });
         }
