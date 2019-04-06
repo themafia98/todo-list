@@ -6,9 +6,7 @@
         height: 90%;
     }
 
-    .editWrapper {
-        width: 70%;
-    }
+
 
     .textArea .addNotes {
         width: 85%;
@@ -19,6 +17,10 @@
         // max-width: 700px;
         // min-height: 700px;
         // max-height: 100%;
+    }
+
+    #todo .textArea .currentTodo {
+        margin: 0;
     }
 
     #todo .title {
@@ -49,6 +51,22 @@
     #todo, #todo .section, #todo .wrapper, .background-modal {
         height: 97%;
 
+    }
+
+    #todo .editWrapper {
+        width: 90%;
+        height: 125px;
+        top: 55%;
+    }
+
+    #todo .edditable {
+        width: 95%;
+        height: 50%;
+    }
+
+    #todo .editButton {
+        top: 91%;
+        width: 90%;
     }
 
 }
