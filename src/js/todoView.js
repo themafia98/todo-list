@@ -182,8 +182,6 @@ class Todo extends View {
             todoList = document.createElement('p');
             todoList.setAttribute('draggable','true');
 
-        if (localStorage.date) {
-
             this.arrayJSON = JSON.parse(localStorage.date);
 
             todoList.dataset.date = this.arrayJSON[i];
@@ -201,21 +199,12 @@ class Todo extends View {
             }
 
 
-        } else if ((localStorage.prewDate) && (localStorage.prewTime)){
+            todoList.dataset.unique = value[i].uniqueId;
+            todoList.innerHTML = value[i].value;
 
-            todoList.dataset.date =  JSON.parse(localStorage.prewDate)[i];
-            todoList.dataset.time =  JSON.parse(localStorage.prewTime)[i];
+            here.appendChild(todoList);
 
-            (todoList.dataset.date === today) && (todoList.classList.add('today'));
-            (todoDay < today) && (todoList.classList.add('unactive'));
         }
-
-        
-        todoList.dataset.unique = value[i].uniqueId;
-        todoList.innerHTML = value[i].value;
-
-        here.appendChild(todoList);
-        } 
     }
 
     localStorage.removeItem('newTime');
@@ -224,7 +213,6 @@ class Todo extends View {
 
     showModal(jsonObject = 'click for add note'){
 
-        
 
         let num = jsonObject.findIndex(element => element.uniqueId === this.dataset.unique);
 

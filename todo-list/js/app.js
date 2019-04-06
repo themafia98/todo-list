@@ -387,28 +387,18 @@ function (_View) {
         if (value[i].save) {
           todoList = document.createElement('p');
           todoList.setAttribute('draggable', 'true');
+          this.arrayJSON = JSON.parse(localStorage.date);
+          todoList.dataset.date = this.arrayJSON[i];
+          var dateNow = JSON.parse(localStorage.date)[i];
+          var todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g, ',')).getTime();
+          var today = new Date(NOW).toLocaleDateString();
 
-          if (localStorage.date) {
-            this.arrayJSON = JSON.parse(localStorage.date);
-            todoList.dataset.date = this.arrayJSON[i];
-            var dateNow = JSON.parse(localStorage.date)[i];
-
-            var _todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g, ',')).getTime();
-
-            var _today = new Date(NOW).toLocaleDateString();
-
-            if (todoList.dataset.date === _today) {
-              todoList.classList.add('today');
-            } else if (_todoDay < NOW) {
-              todoList.classList.add('unactive');
-            } else if (_todoDay > NOW) {
-              todoList.classList.add('future');
-            }
-          } else if (localStorage.prewDate && localStorage.prewTime) {
-            todoList.dataset.date = JSON.parse(localStorage.prewDate)[i];
-            todoList.dataset.time = JSON.parse(localStorage.prewTime)[i];
-            todoList.dataset.date === today && todoList.classList.add('today');
-            todoDay < today && todoList.classList.add('unactive');
+          if (todoList.dataset.date === today) {
+            todoList.classList.add('today');
+          } else if (todoDay < NOW) {
+            todoList.classList.add('unactive');
+          } else if (todoDay > NOW) {
+            todoList.classList.add('future');
           }
 
           todoList.dataset.unique = value[i].uniqueId;
