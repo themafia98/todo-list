@@ -375,7 +375,6 @@ function (_View) {
       var oldTodo = document.querySelectorAll('p');
       var todoList;
       var NOW = Date.now();
-      debugger;
       oldTodo.length && oldTodo.forEach(function (element) {
         return element.remove();
       });
@@ -625,7 +624,6 @@ function (_Storage) {
           }
 
           if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
-            debugger;
             modal = document.querySelector('[data-modal-num]').parentNode;
             modal.classList.toggle('animateOpen');
             modal.classList.add('animateHide');

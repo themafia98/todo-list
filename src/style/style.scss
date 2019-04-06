@@ -1,10 +1,9 @@
 
 @import 'value';
 
-@mixin fullscreen($max, $min) {
-    max-width: $max;
-    min-height: $min;
-    margin: 0 auto;
+@mixin fullscreen {
+    width: 100%;
+    height: 100%;
 }
 
 %absCenter {
@@ -28,7 +27,7 @@
 }
 
 body {
-    background: $mainBgColor;
+    background: $appBG;
     font-family: $mainFont;
 }
 
@@ -137,10 +136,6 @@ body {
 
 
 #todo {
-    position: $rel;
-    @extend %max;
-    @include fullscreen(1140px, 800px);
-    background: $appBG;
 
     .wrapper {
         display: flex;

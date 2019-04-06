@@ -168,7 +168,7 @@ class Todo extends View {
     let oldTodo = document.querySelectorAll('p');
     let todoList;
     const NOW = Date.now();
-        debugger;
+        
     (oldTodo.length) && (oldTodo.forEach(element => element.remove()));
 
     for (let i = 0; i < value.length; i++){

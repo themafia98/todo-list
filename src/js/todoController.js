@@ -88,7 +88,7 @@ class TodoControl extends Storage{
                 }
 
                 if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
-                    debugger;
+                    
 
                     modal = document.querySelector('[data-modal-num]').parentNode;
                     modal.classList.toggle('animateOpen');
