@@ -375,13 +375,10 @@ function (_View) {
       var oldTodo = document.querySelectorAll('p');
       var todoList;
       var NOW = Date.now();
-
-      if (oldTodo.length) {
-        oldTodo.forEach(function (element, i) {
-          element.remove();
-        });
-        ;
-      }
+      debugger;
+      oldTodo.length && oldTodo.forEach(function (element) {
+        return element.remove();
+      });
 
       for (var i = 0; i < value.length; i++) {
         if (value[i].save) {

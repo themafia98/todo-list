@@ -168,17 +168,13 @@ class Todo extends View {
     let oldTodo = document.querySelectorAll('p');
     let todoList;
     const NOW = Date.now();
-
-    if (oldTodo.length){
-        oldTodo.forEach( (element,i) => {
-            element.remove();
-        });;
-    }
+        debugger;
+    (oldTodo.length) && (oldTodo.forEach(element => element.remove()));
 
     for (let i = 0; i < value.length; i++){
 
         if(value[i].save){
-            
+
             todoList = document.createElement('p');
             todoList.setAttribute('draggable','true');
 
@@ -197,7 +193,6 @@ class Todo extends View {
             } else if (todoDay > NOW){
                 todoList.classList.add('future');
             }
-
 
             todoList.dataset.unique = value[i].uniqueId;
             todoList.innerHTML = value[i].value;
