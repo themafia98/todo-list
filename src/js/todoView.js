@@ -158,7 +158,7 @@ class Todo extends View {
         }
 
         if (type === 'sortAll'){
-        todo.forEach( element => (element.classList[1] === 'hide') && (element.classList.toggle('hide')) );
+        todo.forEach( element => (element.classList[1] === 'hide') && (element.classList.toggle('hide')));
         }
     }
 
@@ -215,10 +215,13 @@ class Todo extends View {
 
         let modalBg = document.createElement('div');
         modalBg.classList.add('background-modal');
+        modalBg.classList.add('animateOpen');
 
         let modal = document.createElement('div');
         modal.classList.add('modal-window');
+        modal.classList.add('animateOpen');
         modal.dataset.modalNum = this.dataset.unique;
+
 
         let closeBtn = document.createElement('input');
         closeBtn.setAttribute('type','button');

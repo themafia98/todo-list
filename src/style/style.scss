@@ -246,13 +246,12 @@ body {
             margin-top: 0;
         }
 
+
         .unactive {
-            transition: opacity 0.5s ease-in-out;
             background: $unactiveColor;
         }
         
         .today {
-            transition: opacity 0.5s ease-in-out;
             background: $todayColor;
         }
 
@@ -299,6 +298,7 @@ body {
     z-index: 1;
 
     .modal-window {
+        transition: width 3s ease-in-out;
         position: $rel;
         width: 65%;
         height: 65%;
@@ -388,6 +388,43 @@ body {
 
     
 
+}
+
+
+.animateHide{
+    animation: opacityHide  0.4s linear;
+}
+
+.animateOpen{
+    animation: opacityOpen  0.4s linear;
+}
+
+
+@keyframes opacityHide {
+
+    from {
+        opacity: $opacityAnimate;
+    }
+    50% {
+        opacity: $opacityAnimate - 0.5;
+    }
+    to {
+        opacity: 0;
+        visibility: hidden;
+    }
+}
+
+@keyframes opacityOpen {
+
+    from {
+        opacity: 0;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 

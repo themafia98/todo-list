@@ -86,8 +86,20 @@ class TodoControl extends Storage{
                     todoState.setState('main',true);
                     todoState.setState('modal',false);
                 }
-                ((target.classList[0] === 'close')  && (modalWindow.remove()));
-                (target.classList[0] === 'background-modal') && (target.remove());
+
+                if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
+                    debugger;
+
+                    modal = document.querySelector('[data-modal-num]').parentNode;
+                    modal.classList.toggle('animateOpen');
+
+                    modal.classList.add('animateHide');
+                    let timer = setTimeout(()=>{
+                        modal.style.display = 'none';
+                        modal.remove();
+                    },400);
+                }
+
 
                 if(target.classList[0] === 'delete'){
                     

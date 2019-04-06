@@ -419,8 +419,10 @@ function (_View) {
       var getList = document.getElementById('todo');
       var modalBg = document.createElement('div');
       modalBg.classList.add('background-modal');
+      modalBg.classList.add('animateOpen');
       var modal = document.createElement('div');
       modal.classList.add('modal-window');
+      modal.classList.add('animateOpen');
       modal.dataset.modalNum = this.dataset.unique;
       var closeBtn = document.createElement('input');
       closeBtn.setAttribute('type', 'button');
@@ -622,8 +624,16 @@ function (_Storage) {
             todoState.setState('modal', false);
           }
 
-          target.classList[0] === 'close' && modalWindow.remove();
-          target.classList[0] === 'background-modal' && target.remove();
+          if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
+            debugger;
+            modal = document.querySelector('[data-modal-num]').parentNode;
+            modal.classList.toggle('animateOpen');
+            modal.classList.add('animateHide');
+            var timer = setTimeout(function () {
+              modal.style.display = 'none';
+              modal.remove();
+            }, 400);
+          }
 
           if (target.classList[0] === 'delete') {
             var parent = target.parentNode;
