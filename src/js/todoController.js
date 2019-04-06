@@ -15,7 +15,7 @@ class TodoControl extends Storage{
             let target = e.target;
             let modalWindow = target.parentNode.parentNode;
             let modal = null;
-
+            
 
             if (todoState.getState('main')){
                 

@@ -385,8 +385,9 @@ function (_View) {
           todoList.setAttribute('draggable', 'true');
           this.arrayJSON = JSON.parse(localStorage.date);
           todoList.dataset.date = this.arrayJSON[i];
-          var dateNow = JSON.parse(localStorage.date)[i];
-          var todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g, ',')).getTime();
+          var dateNow = JSON.parse(localStorage.date)[i].replace(/\./g, '/');
+          debugger;
+          var todoDay = new Date(dateNow).getTime();
           var today = new Date(NOW).toLocaleDateString();
 
           if (todoList.dataset.date === today) {

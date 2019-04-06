@@ -182,8 +182,9 @@ class Todo extends View {
 
             todoList.dataset.date = this.arrayJSON[i];
 
-            let dateNow = JSON.parse(localStorage.date)[i];
-            let todoDay = new Date(dateNow.split('.').reverse().join().replace(/\./g,',')).getTime();
+            let dateNow = JSON.parse(localStorage.date)[i].replace(/\./g,'/');
+            debugger;
+            let todoDay = new Date(dateNow).getTime();
             let today = new Date(NOW).toLocaleDateString();
 
             if (todoList.dataset.date === today) {
