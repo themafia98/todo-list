@@ -281,11 +281,21 @@ class Todo extends View {
 
     buildCalendar(...date){
         
+
         let dateObject = date[0];
         let monthName = dateObject.monthName[dateObject.currentMonth-1];
 
-        let calendarWrapper = document.createElement('div');
+        let clearCalendar = document.querySelector('.calendar');
+        
+        if (clearCalendar) clearCalendar.remove();
+
+        let calendarWrapper = document.querySelector('calendar') ?  document.querySelector('calendar') : document.createElement('div');
         calendarWrapper.classList.add('calendar');
+
+        let zeroMonth = (dateObject.currentMonth < 10) ? '0' : '';
+        let zeroDay = (dateObject.currentDay < 10) ? '0' : '';
+        calendarWrapper.dataset.current = `${zeroDay + dateObject.currentDay}.${zeroMonth + dateObject.currentMonth}.${dateObject.currentYear}`;
+
         let calendarName = document.createElement('h3');
         calendarName.innerHTML = monthName  + ' ' + dateObject.currentYear;
     
@@ -314,12 +324,28 @@ class Todo extends View {
             ulCalendar.appendChild(dayWeek);
         }
 
+        let EmptyCount = 0;
+
         for(let i = 1, j = 1; j <= dateObject.totalDay; i++){
+            
+
+
+            if ((dateObject.weekDay === 0) && (EmptyCount === 0)) {
+
+                for(let i = 0; i < dateObject.dateWeek.length-1; i++){
+
+                    let dempty = document.createElement('li');
+                    dempty.classList.add('empty');
+                    ulCalendar.appendChild(dempty);
+                }
+                EmptyCount++;
+            }
 
             if (dateObject.weekDay <= i){
 
             let day = document.createElement('li');
-            (dateObject.currentDay === j) && (day.classList.add('today'));
+            ((dateObject.currentDay === j) && (dateObject.todayYear === dateObject.currentYear)) &&
+                                                                        (day.classList.add('today'));
 
             day.dataset.day = j;
             day.innerHTML = j;
@@ -333,6 +359,7 @@ class Todo extends View {
                 ulCalendar.appendChild(dempty);
             }
         }
+    
         calendarController.appendChild(spanPrew);
         calendarController.appendChild(spanNext);
         calendarController.appendChild(calendarName);

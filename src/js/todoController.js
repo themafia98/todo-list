@@ -28,12 +28,13 @@ class TodoControl extends Storage{
 
                         datePicker.parseCalendarData(-1);
                         todoView.buildCalendar(datePicker);
-                    }
-                // } else
-                //     {
-                //     (target.dataset.move === 'next') && (console.log('next'));
-                //     }
 
+                    } else if (target.dataset.move === 'next'){
+                        datePicker.parseCalendarData(+1);
+                        todoView.buildCalendar(datePicker);
+
+                    }
+            
                 }
 
                 (target.classList[1] === 'sortAfter') &&

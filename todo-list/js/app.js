@@ -219,6 +219,7 @@ function () {
   function Calendar() {
     _classCallCheck(this, Calendar);
 
+    this.todayYear = new Date().getFullYear();
     this.totalDay = null;
     this.dateWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fr', 'Sat', 'Sun'];
     this.monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -238,7 +239,6 @@ function () {
       var changeYear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       this.currentYear = this.currentYear + changeYear;
       this.firstDay = new Date(this.currentYear, this.currentMonth - 1);
-      debugger;
       this.weekDay = this.firstDay.getDay();
       this.totalDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
       console.log(this.firstDay + ' ' + this.weekDay); // (this.currentMonth-1 === 0) && (this.totalDay = 31);
@@ -503,8 +503,13 @@ function (_View) {
     value: function buildCalendar() {
       var dateObject = arguments.length <= 0 ? undefined : arguments[0];
       var monthName = dateObject.monthName[dateObject.currentMonth - 1];
-      var calendarWrapper = document.createElement('div');
+      var clearCalendar = document.querySelector('.calendar');
+      if (clearCalendar) clearCalendar.remove();
+      var calendarWrapper = document.querySelector('calendar') ? document.querySelector('calendar') : document.createElement('div');
       calendarWrapper.classList.add('calendar');
+      var zeroMonth = dateObject.currentMonth < 10 ? '0' : '';
+      var zeroDay = dateObject.currentDay < 10 ? '0' : '';
+      calendarWrapper.dataset.current = "".concat(zeroDay + dateObject.currentDay, ".").concat(zeroMonth + dateObject.currentMonth, ".").concat(dateObject.currentYear);
       var calendarName = document.createElement('h3');
       calendarName.innerHTML = monthName + ' ' + dateObject.currentYear;
       var ulCalendar = document.createElement('ul');
@@ -526,18 +531,32 @@ function (_View) {
         ulCalendar.appendChild(dayWeek);
       }
 
+      var EmptyCount = 0;
+
       for (var _i = 1, j = 1; j <= dateObject.totalDay; _i++) {
+        if (dateObject.weekDay === 0 && EmptyCount === 0) {
+          for (var _i2 = 0; _i2 < dateObject.dateWeek.length - 1; _i2++) {
+            var dempty = document.createElement('li');
+            dempty.classList.add('empty');
+            ulCalendar.appendChild(dempty);
+          }
+
+          EmptyCount++;
+        }
+
         if (dateObject.weekDay <= _i) {
           var day = document.createElement('li');
-          dateObject.currentDay === j && day.classList.add('today');
+          dateObject.currentDay === j && dateObject.todayYear === dateObject.currentYear && day.classList.add('today');
           day.dataset.day = j;
           day.innerHTML = j;
           ulCalendar.appendChild(day);
           j++;
         } else {
-          var dempty = document.createElement('li');
-          dempty.classList.add('empty');
-          ulCalendar.appendChild(dempty);
+          var _dempty = document.createElement('li');
+
+          _dempty.classList.add('empty');
+
+          ulCalendar.appendChild(_dempty);
         }
       }
 
@@ -662,11 +681,10 @@ function (_Storage) {
             if (target.dataset.move === 'prew') {
               datePicker.parseCalendarData(-1);
               todoView.buildCalendar(datePicker);
-            } // } else
-            //     {
-            //     (target.dataset.move === 'next') && (console.log('next'));
-            //     }
-
+            } else if (target.dataset.move === 'next') {
+              datePicker.parseCalendarData(+1);
+              todoView.buildCalendar(datePicker);
+            }
           }
 
           target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));

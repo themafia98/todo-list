@@ -185,6 +185,7 @@ class Calendar {
 
     constructor(){
 
+        this.todayYear = new Date().getFullYear();
         this.totalDay = null;
         this.dateWeek = ['Mon', 'Tue', 'Wed', 'Thu','Fr','Sat','Sun'];
         this.monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
@@ -207,7 +208,6 @@ class Calendar {
 
         this.currentYear = this.currentYear + changeYear;
         this.firstDay = new Date(this.currentYear,this.currentMonth-1);
-        debugger;
         this.weekDay = this.firstDay.getDay();
 
         this.totalDay = new Date(this.currentYear,this.currentMonth,0).getDate();
