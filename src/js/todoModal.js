@@ -154,7 +154,7 @@ class Storage{
     }
 
     dataParser(target){
-       
+
         (localStorage.date) && (this.buffer = JSON.parse(localStorage.date));
         let valueButton = target.previousSibling.value.slice(0,10).split('-').reverse()
                         .join().replace(/\,/g,'.');
@@ -164,9 +164,6 @@ class Storage{
         (localStorage.date) && (localStorage.date = JSON.stringify(this.buffer));
 
     }
-
-
-    
 }
 
 class todoOne extends ListModal {
@@ -186,6 +183,7 @@ class Calendar {
     constructor(){
 
         this.todayYear = new Date().getFullYear();
+        this.todayMonth = new Date().getMonth();
         this.totalDay = null;
         this.dateWeek = ['Mon', 'Tue', 'Wed', 'Thu','Fr','Sat','Sun'];
         this.monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
@@ -204,9 +202,10 @@ class Calendar {
 
     }
 
-    parseCalendarData(changeYear = 0){
+    parseCalendarData(changeYear = 0, changeMonth = 0){
 
         this.currentYear = this.currentYear + changeYear;
+        this.currentMonth = this.currentMonth + changeMonth;
         this.firstDay = new Date(this.currentYear,this.currentMonth-1);
         this.weekDay = this.firstDay.getDay();
 
@@ -214,6 +213,11 @@ class Calendar {
         console.log(this.firstDay + ' ' + this.weekDay);
         // (this.currentMonth-1 === 0) && (this.totalDay = 31);
         // (this.currentMonth-1 === 1) && (this.totalDay = 31);
+    }
+
+    saveCalendarData(date){
+        
+        localStorage.bufferSelectData = date;
     }
 }
 

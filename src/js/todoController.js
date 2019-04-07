@@ -18,9 +18,15 @@ class TodoControl extends Storage{
             
 
             if (todoState.getState('main')){
-
+                // todoView.buildCalendar(datePicker);
                 let todos = document.querySelectorAll('[data-unique]');
                 let currentTodos = null;
+
+
+                (target.classList[0] === 'selectCalendar') && (todoView.buildCalendar(datePicker));
+                
+
+
 
                 if (target.dataset.move){
 
@@ -29,12 +35,41 @@ class TodoControl extends Storage{
                         datePicker.parseCalendarData(-1);
                         todoView.buildCalendar(datePicker);
 
-                    } else if (target.dataset.move === 'next'){
+                    }
+                    
+                    if (target.dataset.move === 'next'){
                         datePicker.parseCalendarData(+1);
                         todoView.buildCalendar(datePicker);
 
                     }
+
+                    if (target.dataset.move === 'prewMonth'){
+                        
+                        datePicker.parseCalendarData(null, -1);
+                        todoView.buildCalendar(datePicker);
+
+                    }
+
+                    if (target.dataset.move === 'nextMonth'){
+                        
+                        datePicker.parseCalendarData(null, +1);
+                        todoView.buildCalendar(datePicker);
+
+                    }
             
+                }
+
+                if (target.dataset.day){
+                    
+                    let days = document.querySelectorAll('[data-day]');
+                    let date = target.parentElement.parentElement.dataset.current.split('.');
+
+                    date[0] = target.dataset.day;
+                    days.forEach((element)=> { 
+                        (element.classList[0] === 'selectDay') && (element.classList.toggle('selectDay'));
+                    });
+                    target.classList.add('selectDay');
+                    datePicker.saveCalendarData(date.join().replace(/\,/g,'.'));
                 }
 
                 (target.classList[1] === 'sortAfter') &&

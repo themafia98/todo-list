@@ -48,6 +48,11 @@ body {
 }
 
 
+.selectDay{
+    background: green;
+    color:red;
+}
+
 
 #todo {
 
@@ -67,16 +72,18 @@ body {
         margin-bottom: 0;
     }
 
+    .selectCalendar {
+        position: absolute;
+        top: 90%;
+    }
+
     .calendar {
         background: white;
         border: 1px solid black;
         display: grid;
-        display: none;
-        grid-template-rows:  auto;
-        width: 25%;
+        grid-template-rows: 3rem auto;
         position: relative;
         margin:0;
-        z-index: 100;
 
         .calendarController{
         position: relative;
@@ -85,7 +92,8 @@ body {
         span {
             cursor: pointer;
             position: $abs;
-            font-size: 20px;
+            font-size: 15px;
+            top: 18%;
         }
         span:hover {
         color: $importantColor;
@@ -95,6 +103,17 @@ body {
             transform: translateX(-100%);
             left: 100%;
         }
+
+        span[data-move='prewMonth'] {
+            transform: translateX(-100%);
+            left: 25%;
+        }
+
+        span[data-move='nextMonth'] {
+            transform: translateX(-100%);
+            left: 80%;
+        }
+
 
         li {
             transition: all 0.3s linear;

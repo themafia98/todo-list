@@ -16,7 +16,6 @@ let todoApp = (function(){
 
         let datePicker = new Calendar();
         datePicker.parseCalendarData();
-        todoView.buildCalendar(datePicker);
 
         let controllerSettings = {
             controllerEnter: document.querySelector('.getTodo'),

@@ -220,6 +220,7 @@ function () {
     _classCallCheck(this, Calendar);
 
     this.todayYear = new Date().getFullYear();
+    this.todayMonth = new Date().getMonth();
     this.totalDay = null;
     this.dateWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fr', 'Sat', 'Sun'];
     this.monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -237,12 +238,19 @@ function () {
     key: "parseCalendarData",
     value: function parseCalendarData() {
       var changeYear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      var changeMonth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
       this.currentYear = this.currentYear + changeYear;
+      this.currentMonth = this.currentMonth + changeMonth;
       this.firstDay = new Date(this.currentYear, this.currentMonth - 1);
       this.weekDay = this.firstDay.getDay();
       this.totalDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
       console.log(this.firstDay + ' ' + this.weekDay); // (this.currentMonth-1 === 0) && (this.totalDay = 31);
       // (this.currentMonth-1 === 1) && (this.totalDay = 31);
+    }
+  }, {
+    key: "saveCalendarData",
+    value: function saveCalendarData(date) {
+      localStorage.bufferSelectData = date;
     }
   }]);
 
@@ -325,6 +333,10 @@ function (_View) {
       section.classList.add('section');
       var sortWrapper = document.createElement('div');
       sortWrapper.classList.add('sortWrapper');
+      var selectCalendar = document.createElement('input');
+      selectCalendar.setAttribute('type', 'button');
+      selectCalendar.classList.add('selectCalendar');
+      selectCalendar.value = 'select data';
       var sortBtnBefore = document.createElement('input');
       sortBtnBefore.setAttribute('type', 'button');
       sortBtnBefore.classList.add('sort');
@@ -367,6 +379,7 @@ function (_View) {
       datePick.setAttribute('value', time);
       footer.appendChild(titleName);
       todoControllers.appendChild(input);
+      todoControllers.appendChild(selectCalendar);
       todoControllers.appendChild(datePick);
       todoControllers.appendChild(button);
       sortWrapper.appendChild(sortBtnBefore);
@@ -521,6 +534,12 @@ function (_View) {
       var spanNext = document.createElement('span');
       spanNext.dataset.move = 'next';
       spanNext.innerHTML = '==>';
+      var spanMonthPrew = document.createElement('span');
+      spanMonthPrew.dataset.move = 'prewMonth';
+      spanMonthPrew.innerHTML = '<=';
+      var spanMonthNext = document.createElement('span');
+      spanMonthNext.dataset.move = 'nextMonth';
+      spanMonthNext.innerHTML = '=>';
       calendarController.classList.add('calendarController');
       var controllers = document.querySelector('.controllers');
 
@@ -546,7 +565,7 @@ function (_View) {
 
         if (dateObject.weekDay <= _i) {
           var day = document.createElement('li');
-          dateObject.currentDay === j && dateObject.todayYear === dateObject.currentYear && day.classList.add('today');
+          dateObject.currentDay === j && dateObject.todayYear === dateObject.currentYear && dateObject.currentMonth === dateObject.todayMonth + 1 && day.classList.add('today');
           day.dataset.day = j;
           day.innerHTML = j;
           ulCalendar.appendChild(day);
@@ -561,7 +580,9 @@ function (_View) {
       }
 
       calendarController.appendChild(spanPrew);
+      calendarController.appendChild(spanMonthPrew);
       calendarController.appendChild(spanNext);
+      calendarController.appendChild(spanMonthNext);
       calendarController.appendChild(calendarName);
       calendarWrapper.appendChild(calendarController);
       calendarWrapper.appendChild(ulCalendar);
@@ -674,17 +695,42 @@ function (_Storage) {
         var modal = null;
 
         if (todoState.getState('main')) {
+          // todoView.buildCalendar(datePicker);
           var todos = document.querySelectorAll('[data-unique]');
           var currentTodos = null;
+          target.classList[0] === 'selectCalendar' && todoView.buildCalendar(datePicker);
 
           if (target.dataset.move) {
             if (target.dataset.move === 'prew') {
               datePicker.parseCalendarData(-1);
               todoView.buildCalendar(datePicker);
-            } else if (target.dataset.move === 'next') {
+            }
+
+            if (target.dataset.move === 'next') {
               datePicker.parseCalendarData(+1);
               todoView.buildCalendar(datePicker);
             }
+
+            if (target.dataset.move === 'prewMonth') {
+              datePicker.parseCalendarData(null, -1);
+              todoView.buildCalendar(datePicker);
+            }
+
+            if (target.dataset.move === 'nextMonth') {
+              datePicker.parseCalendarData(null, +1);
+              todoView.buildCalendar(datePicker);
+            }
+          }
+
+          if (target.dataset.day) {
+            var days = document.querySelectorAll('[data-day]');
+            var date = target.parentElement.parentElement.dataset.current.split('.');
+            date[0] = target.dataset.day;
+            days.forEach(function (element) {
+              element.classList[0] === 'selectDay' && element.classList.toggle('selectDay');
+            });
+            target.classList.add('selectDay');
+            datePicker.saveCalendarData(date.join().replace(/\,/g, '.'));
           }
 
           target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
@@ -755,12 +801,16 @@ function (_Storage) {
             var todoDelete = document.querySelector("[data-unique=\"".concat(parent.dataset.modalNum, "\"]"));
             var numDelete = todoDelete.dataset.unique;
             var splits = JSON.parse(localStorage.list);
-            var date = JSON.parse(localStorage.date);
+
+            var _date = JSON.parse(localStorage.date);
+
             var counter = splits.findIndex(function (element) {
               return element.uniqueId === numDelete;
             });
-            date.splice(counter, 1);
-            localStorage.date = JSON.stringify(date);
+
+            _date.splice(counter, 1);
+
+            localStorage.date = JSON.stringify(_date);
             var filter = splits.filter(function (v) {
               return v.uniqueId === numDelete;
             });
@@ -868,7 +918,6 @@ var todoApp = function () {
     todoView.build();
     var datePicker = new Calendar();
     datePicker.parseCalendarData();
-    todoView.buildCalendar(datePicker);
     var controllerSettings = {
       controllerEnter: document.querySelector('.getTodo'),
       btn: document.querySelector('.setTodo')

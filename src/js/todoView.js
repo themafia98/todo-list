@@ -74,6 +74,12 @@ class Todo extends View {
         let sortWrapper = document.createElement('div');
         sortWrapper.classList.add('sortWrapper');
 
+
+        let selectCalendar = document.createElement('input');
+        selectCalendar.setAttribute('type','button');
+        selectCalendar.classList.add('selectCalendar');
+        selectCalendar.value = 'select data';
+
         let sortBtnBefore = document.createElement('input');
         sortBtnBefore.setAttribute('type','button');
         sortBtnBefore.classList.add('sort');
@@ -129,6 +135,7 @@ class Todo extends View {
         footer.appendChild(titleName);
 
         todoControllers.appendChild(input);
+        todoControllers.appendChild(selectCalendar);
         todoControllers.appendChild(datePick);
         todoControllers.appendChild(button);
 
@@ -289,11 +296,14 @@ class Todo extends View {
         
         if (clearCalendar) clearCalendar.remove();
 
-        let calendarWrapper = document.querySelector('calendar') ?  document.querySelector('calendar') : document.createElement('div');
+        let calendarWrapper = document.querySelector('calendar') ?
+        document.querySelector('calendar') : document.createElement('div');
+
         calendarWrapper.classList.add('calendar');
 
         let zeroMonth = (dateObject.currentMonth < 10) ? '0' : '';
         let zeroDay = (dateObject.currentDay < 10) ? '0' : '';
+
         calendarWrapper.dataset.current = `${zeroDay + dateObject.currentDay}.${zeroMonth + dateObject.currentMonth}.${dateObject.currentYear}`;
 
         let calendarName = document.createElement('h3');
@@ -312,6 +322,14 @@ class Todo extends View {
         spanNext.dataset.move = 'next';
         spanNext.innerHTML = '==>';
 
+        let spanMonthPrew = document.createElement('span');
+        spanMonthPrew.dataset.move = 'prewMonth';
+        spanMonthPrew.innerHTML = '<=';
+
+        let spanMonthNext = document.createElement('span');
+        spanMonthNext.dataset.move = 'nextMonth';
+        spanMonthNext.innerHTML = '=>';
+
         calendarController.classList.add('calendarController');
 
         let controllers = document.querySelector('.controllers');
@@ -329,7 +347,6 @@ class Todo extends View {
         for(let i = 1, j = 1; j <= dateObject.totalDay; i++){
             
 
-
             if ((dateObject.weekDay === 0) && (EmptyCount === 0)) {
 
                 for(let i = 0; i < dateObject.dateWeek.length-1; i++){
@@ -342,10 +359,11 @@ class Todo extends View {
             }
 
             if (dateObject.weekDay <= i){
-
+                
             let day = document.createElement('li');
-            ((dateObject.currentDay === j) && (dateObject.todayYear === dateObject.currentYear)) &&
-                                                                        (day.classList.add('today'));
+            ((dateObject.currentDay === j) && (dateObject.todayYear === dateObject.currentYear) &&
+                                           (dateObject.currentMonth === dateObject.todayMonth+1)) &&
+                                                                    (day.classList.add('today'));
 
             day.dataset.day = j;
             day.innerHTML = j;
@@ -361,7 +379,9 @@ class Todo extends View {
         }
     
         calendarController.appendChild(spanPrew);
+        calendarController.appendChild(spanMonthPrew);
         calendarController.appendChild(spanNext);
+        calendarController.appendChild(spanMonthNext);
         calendarController.appendChild(calendarName);
         calendarWrapper.appendChild(calendarController);
         calendarWrapper.appendChild(ulCalendar);
