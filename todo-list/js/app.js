@@ -212,6 +212,42 @@ function (_ListModal) {
 
   return todoOne;
 }(ListModal);
+
+var Calendar =
+/*#__PURE__*/
+function () {
+  function Calendar() {
+    _classCallCheck(this, Calendar);
+
+    this.totalDay = null;
+    this.dateWeek = ['Mon', 'Tue', 'Wed', 'Thu', 'Fr', 'Sat', 'Sun'];
+    this.monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+    this.dateNow = Date.now();
+    this.currentDate = new Date(this.dateNow);
+    this.LocalTimeFormat = this.currentDate.toLocaleDateString().split('.');
+    this.currentDay = parseInt(this.LocalTimeFormat[0]);
+    this.currentMonth = parseInt(this.LocalTimeFormat[1]);
+    this.currentYear = parseInt(this.LocalTimeFormat[2]);
+    this.firstDay = null;
+    this.weekDay = null;
+  }
+
+  _createClass(Calendar, [{
+    key: "parseCalendarData",
+    value: function parseCalendarData() {
+      var changeYear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+      this.currentYear = this.currentYear + changeYear;
+      this.firstDay = new Date(this.currentYear, this.currentMonth - 1);
+      debugger;
+      this.weekDay = this.firstDay.getDay();
+      this.totalDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
+      console.log(this.firstDay + ' ' + this.weekDay); // (this.currentMonth-1 === 0) && (this.totalDay = 31);
+      // (this.currentMonth-1 === 1) && (this.totalDay = 31);
+    }
+  }]);
+
+  return Calendar;
+}();
 "use strict";
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
@@ -385,9 +421,9 @@ function (_View) {
           todoList.setAttribute('draggable', 'true');
           this.arrayJSON = JSON.parse(localStorage.date);
           todoList.dataset.date = this.arrayJSON[i];
-          var dateNow = JSON.parse(localStorage.date)[i].replace(/\./g, '/');
-          debugger;
-          var todoDay = new Date(dateNow).getTime();
+          var dateNow = JSON.parse(localStorage.date)[i].split('.').reverse();
+          dateNow[1] = dateNow[1] - 1;
+          var todoDay = new Date(dateNow[0], dateNow[1], dateNow[2]).getTime();
           var today = new Date(NOW).toLocaleDateString();
 
           if (todoList.dataset.date === today) {
@@ -461,6 +497,56 @@ function (_View) {
       modal.appendChild(weatherList);
       modalBg.appendChild(modal);
       getList.appendChild(modalBg);
+    }
+  }, {
+    key: "buildCalendar",
+    value: function buildCalendar() {
+      var dateObject = arguments.length <= 0 ? undefined : arguments[0];
+      var monthName = dateObject.monthName[dateObject.currentMonth - 1];
+      var calendarWrapper = document.createElement('div');
+      calendarWrapper.classList.add('calendar');
+      var calendarName = document.createElement('h3');
+      calendarName.innerHTML = monthName + ' ' + dateObject.currentYear;
+      var ulCalendar = document.createElement('ul');
+      ulCalendar.classList.add('calendarList');
+      var calendarController = document.createElement('div');
+      var spanPrew = document.createElement('span');
+      spanPrew.dataset.move = 'prew';
+      spanPrew.innerHTML = '<==';
+      var spanNext = document.createElement('span');
+      spanNext.dataset.move = 'next';
+      spanNext.innerHTML = '==>';
+      calendarController.classList.add('calendarController');
+      var controllers = document.querySelector('.controllers');
+
+      for (var i = 0; i < dateObject.dateWeek.length; i++) {
+        var dayWeek = document.createElement('li');
+        dayWeek.dataset.week = dateObject.dateWeek[i];
+        dayWeek.innerHTML = dateObject.dateWeek[i];
+        ulCalendar.appendChild(dayWeek);
+      }
+
+      for (var _i = 1, j = 1; j <= dateObject.totalDay; _i++) {
+        if (dateObject.weekDay <= _i) {
+          var day = document.createElement('li');
+          dateObject.currentDay === j && day.classList.add('today');
+          day.dataset.day = j;
+          day.innerHTML = j;
+          ulCalendar.appendChild(day);
+          j++;
+        } else {
+          var dempty = document.createElement('li');
+          dempty.classList.add('empty');
+          ulCalendar.appendChild(dempty);
+        }
+      }
+
+      calendarController.appendChild(spanPrew);
+      calendarController.appendChild(spanNext);
+      calendarController.appendChild(calendarName);
+      calendarWrapper.appendChild(calendarController);
+      calendarWrapper.appendChild(ulCalendar);
+      controllers.appendChild(calendarWrapper);
     }
   }, {
     key: "createEditInput",
@@ -558,7 +644,7 @@ function (_Storage) {
 
   _createClass(TodoControl, [{
     key: "setLsitener",
-    value: function setLsitener(todoView, todoState, load) {
+    value: function setLsitener(todoView, todoState, load, datePicker) {
       var _this2 = this;
 
       var parentDnD = document.getElementsByClassName('todoList')[0];
@@ -571,6 +657,18 @@ function (_Storage) {
         if (todoState.getState('main')) {
           var todos = document.querySelectorAll('[data-unique]');
           var currentTodos = null;
+
+          if (target.dataset.move) {
+            if (target.dataset.move === 'prew') {
+              datePicker.parseCalendarData(-1);
+              todoView.buildCalendar(datePicker);
+            } // } else
+            //     {
+            //     (target.dataset.move === 'next') && (console.log('next'));
+            //     }
+
+          }
+
           target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
           target.classList[1] === 'sortBefore' && (currentTodos = document.querySelectorAll('.unactive'));
           target.classList[1] === 'sortCurrent' && (currentTodos = document.querySelectorAll('.today'));
@@ -748,15 +846,17 @@ var todoApp = function () {
     var todoState = new ListModal();
     todoState.getCoords();
     todoState.setState('main', true);
-    var storageData = new Storage();
     var todoView = new Todo(settingsTodo);
     todoView.build();
+    var datePicker = new Calendar();
+    datePicker.parseCalendarData();
+    todoView.buildCalendar(datePicker);
     var controllerSettings = {
       controllerEnter: document.querySelector('.getTodo'),
       btn: document.querySelector('.setTodo')
     };
     var controller = new TodoControl(controllerSettings);
-    controller.setLsitener(todoView, todoState, load);
+    controller.setLsitener(todoView, todoState, load, datePicker);
   }
 
   return {

@@ -56,7 +56,7 @@ class ListModal{
             this.weatherHistory = {};
             response.list.forEach(element => {
 
-
+                
                 let date = element.dt_txt.split(' ')[0].split('-').reverse().join().replace(/\,/g,'.');
                 let time = element.dt_txt.split(' ')[1].slice(0,5);
                 if (date === target.dataset.date){
@@ -177,6 +177,43 @@ class todoOne extends ListModal {
         this.save = false;
         this.uniqueId = `id${ Math.floor((((Math.random()+5)-5).toFixed(7))*10000000)}`;
         this.note  = 'click for add note';
+    }
+}
+
+
+class Calendar {
+
+    constructor(){
+
+        this.totalDay = null;
+        this.dateWeek = ['Mon', 'Tue', 'Wed', 'Thu','Fr','Sat','Sun'];
+        this.monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
+
+        this.dateNow = Date.now();
+        this.currentDate = new Date(this.dateNow);
+
+        this.LocalTimeFormat = this.currentDate.toLocaleDateString().split('.');
+
+        this.currentDay = parseInt(this.LocalTimeFormat[0]);
+        this.currentMonth =  parseInt(this.LocalTimeFormat[1]);
+        this.currentYear =  parseInt(this.LocalTimeFormat[2]);
+
+        this.firstDay = null;
+        this.weekDay = null;
+
+    }
+
+    parseCalendarData(changeYear = 0){
+
+        this.currentYear = this.currentYear + changeYear;
+        this.firstDay = new Date(this.currentYear,this.currentMonth-1);
+        debugger;
+        this.weekDay = this.firstDay.getDay();
+
+        this.totalDay = new Date(this.currentYear,this.currentMonth,0).getDate();
+        console.log(this.firstDay + ' ' + this.weekDay);
+        // (this.currentMonth-1 === 0) && (this.totalDay = 31);
+        // (this.currentMonth-1 === 1) && (this.totalDay = 31);
     }
 }
 

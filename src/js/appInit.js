@@ -11,16 +11,19 @@ let todoApp = (function(){
 
         todoState.setState('main',true);
 
-        let storageData = new Storage();
         let todoView = new Todo(settingsTodo);
         todoView.build();
+
+        let datePicker = new Calendar();
+        datePicker.parseCalendarData();
+        todoView.buildCalendar(datePicker);
 
         let controllerSettings = {
             controllerEnter: document.querySelector('.getTodo'),
             btn: document.querySelector('.setTodo')
         }
         let controller = new TodoControl(controllerSettings);
-        controller.setLsitener(todoView,todoState,load);
+        controller.setLsitener(todoView,todoState,load,datePicker);
 
     }
 

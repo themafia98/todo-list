@@ -58,8 +58,9 @@ class Todo extends View {
     }
 
     build(){
-        
+  
         let time = new Date().toLocaleDateString().split('.').reverse().join().replace(/\,/g,'-');
+        
 
         let wrapper = document.createElement('div');
         wrapper.classList.add('wrapper');
@@ -182,9 +183,10 @@ class Todo extends View {
 
             todoList.dataset.date = this.arrayJSON[i];
 
-            let dateNow = JSON.parse(localStorage.date)[i].replace(/\./g,'/');
-            debugger;
-            let todoDay = new Date(dateNow).getTime();
+            let dateNow = JSON.parse(localStorage.date)[i].split('.').reverse();
+            dateNow[1] = dateNow[1]-1;
+
+            let todoDay = new Date(dateNow[0],dateNow[1],dateNow[2]).getTime();
             let today = new Date(NOW).toLocaleDateString();
 
             if (todoList.dataset.date === today) {
@@ -275,6 +277,68 @@ class Todo extends View {
         modalBg.appendChild(modal);
         getList.appendChild(modalBg);
 
+    }
+
+    buildCalendar(...date){
+        
+        let dateObject = date[0];
+        let monthName = dateObject.monthName[dateObject.currentMonth-1];
+
+        let calendarWrapper = document.createElement('div');
+        calendarWrapper.classList.add('calendar');
+        let calendarName = document.createElement('h3');
+        calendarName.innerHTML = monthName  + ' ' + dateObject.currentYear;
+    
+        let ulCalendar = document.createElement('ul');
+        ulCalendar.classList.add('calendarList');
+
+        let calendarController = document.createElement('div');
+
+        let spanPrew = document.createElement('span');
+        spanPrew.dataset.move = 'prew';
+        spanPrew.innerHTML = '<==';
+
+        let spanNext = document.createElement('span');
+        spanNext.dataset.move = 'next';
+        spanNext.innerHTML = '==>';
+
+        calendarController.classList.add('calendarController');
+
+        let controllers = document.querySelector('.controllers');
+
+        for(let i = 0; i < dateObject.dateWeek.length; i++){
+
+            let dayWeek = document.createElement('li');
+            dayWeek.dataset.week = dateObject.dateWeek[i];
+            dayWeek.innerHTML = dateObject.dateWeek[i];
+            ulCalendar.appendChild(dayWeek);
+        }
+
+        for(let i = 1, j = 1; j <= dateObject.totalDay; i++){
+
+            if (dateObject.weekDay <= i){
+
+            let day = document.createElement('li');
+            (dateObject.currentDay === j) && (day.classList.add('today'));
+
+            day.dataset.day = j;
+            day.innerHTML = j;
+            ulCalendar.appendChild(day);
+            j++;
+
+            } else {
+
+                let dempty = document.createElement('li');
+                dempty.classList.add('empty');
+                ulCalendar.appendChild(dempty);
+            }
+        }
+        calendarController.appendChild(spanPrew);
+        calendarController.appendChild(spanNext);
+        calendarController.appendChild(calendarName);
+        calendarWrapper.appendChild(calendarController);
+        calendarWrapper.appendChild(ulCalendar);
+        controllers.appendChild(calendarWrapper);
     }
 
     createEditInput(target){

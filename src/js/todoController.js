@@ -6,7 +6,7 @@ class TodoControl extends Storage{
     this.btnAdd = btn;
     }
 
-    setLsitener(todoView,todoState,load){
+    setLsitener(todoView,todoState,load,datePicker){
 
         let parentDnD = document.getElementsByClassName('todoList')[0];
 
@@ -18,9 +18,23 @@ class TodoControl extends Storage{
             
 
             if (todoState.getState('main')){
-                
+
                 let todos = document.querySelectorAll('[data-unique]');
                 let currentTodos = null;
+
+                if (target.dataset.move){
+
+                   if (target.dataset.move === 'prew'){
+
+                        datePicker.parseCalendarData(-1);
+                        todoView.buildCalendar(datePicker);
+                    }
+                // } else
+                //     {
+                //     (target.dataset.move === 'next') && (console.log('next'));
+                //     }
+
+                }
 
                 (target.classList[1] === 'sortAfter') &&
                 (currentTodos =  document.querySelectorAll('.future'));
@@ -62,7 +76,6 @@ class TodoControl extends Storage{
             }
 
             if (todoState.getState('modal')){
-
                 
 
                 (target.classList[0] === 'addNotes') && (todoView.createEditInput(target));

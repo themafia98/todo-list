@@ -16,6 +16,11 @@
     margin: auto;
 }
 
+%fix {
+    margin: 0;
+    padding: 0;
+}
+
 %marginCenter {
     text-align: center;
     margin: 0;
@@ -60,6 +65,75 @@ body {
         color: $appTitleColor;
         text-align: center;
         margin-bottom: 0;
+    }
+
+    .calendar {
+        background: white;
+        border: 1px solid black;
+        display: grid;
+        display: none; // demo
+        grid-template-rows:  auto;
+        width: 25%;
+        position: relative;
+        margin:0;
+        z-index: 100;
+
+       .calendarController{
+        position: relative;
+       }
+
+       span {
+           cursor: pointer;
+            position: $abs;
+            font-size: 20px;
+       }
+       span:hover {
+        color: $importantColor;
+       }
+
+       span[data-move='next'] {
+           transform: translateX(-100%);
+        left: 100%;
+       }
+
+
+
+        h3 {
+            display: inline-block;
+            vertical-align: sub;
+            width: 100%;
+            text-align: center;
+            color: $importantColor;
+            margin: 0;
+        }
+
+    .calendarList {
+        border-top: 1px solid black;
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        grid-row: 2;
+        @extend %fix;
+
+        li[data-day] {
+            text-align: center;
+        }
+
+        li[data-day]:hover {
+            cursor: pointer;
+           background: green;
+        }
+
+        li[data-week]{
+            text-align: center;
+            color: $importantColor;
+        }
+
+        .today {
+            background: red;
+            color: gold;
+        }
+
+    }
     }
 
     .controllers {
@@ -142,7 +216,6 @@ body {
         }
 
         p {
-            transition: opacity 0.5s ease-in-out;
             word-wrap: break-word;
             font-size: $todoListItemFontSize;
             background: $todoListItemColor;
