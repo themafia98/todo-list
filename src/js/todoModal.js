@@ -218,8 +218,11 @@ class Calendar {
 
         } else if (this.currentMonth === 12){
 
-        this.currentYear = target === 'prewMonth' ? this.currentYear : this.currentYear + changeMonth;
-        this.currentMonth = target === 'prewMonth' ? this.currentMonth : target === 'nextMonth' ? (this.one) : this.currentMonth;
+        this.currentYear = (target === 'prewMonth') ? this.currentYear : (target != 'nextMonth') ?
+                this.currentYear = this.currentYear: this.currentYear  + changeMonth;
+
+        this.currentMonth = (target === 'prewMonth') ? this.currentMonth + changeMonth : target === 'nextMonth' ? 
+                (this.one) : this.currentMonth;
 
         ((target === 'prew') || (target === 'next')) && (this.currentYear = this.currentYear + changeYear);
         } else {
