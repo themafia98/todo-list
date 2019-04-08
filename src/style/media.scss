@@ -1,12 +1,11 @@
 
 
 @media screen and (max-width: 700px) {
+
     #todo .todoList {
         width: 95%;
         height: 90%;
     }
-
-
 
     .textArea .addNotes {
         width: 85%;
@@ -21,6 +20,9 @@
 
     #todo .textArea .currentTodo {
         margin: 0;
+        word-break: break-word;
+        padding: 10px;
+        font-size: 18px;
     }
 
     #todo .title {
@@ -32,9 +34,6 @@
 
     }
 
-    .background-modal .modal-window {
-        height: 80%;
-    }
 
     #todo .controllers .date {
         top: 42%;
@@ -46,6 +45,7 @@
 
     #todo .background-modal .modal-window {
         width: 85%;
+        height: 95%;
     }
 
     #todo, #todo .section, #todo .wrapper, .background-modal {
@@ -70,7 +70,7 @@
     }
 
     #todo .selectCalendar {
-        top: 24%; // test
+        left: 15px; // test
     }
 
 }

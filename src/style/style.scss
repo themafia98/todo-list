@@ -50,7 +50,7 @@ body {
 
 .selectDay{
     background: green;
-    color:red;
+    color: $importantColor;
 }
 
 
@@ -82,7 +82,7 @@ body {
         border: 1px solid black;
         display: grid;
         grid-template-rows: 3rem auto;
-        position: relative;
+        position: absolute;
         margin:0;
 
         .calendarController{
@@ -93,7 +93,6 @@ body {
             cursor: pointer;
             position: $abs;
             font-size: 15px;
-            top: 18%;
         }
         span:hover {
         color: $importantColor;
@@ -119,8 +118,8 @@ body {
             transition: all 0.3s linear;
         }
 
-        h3 {
-            display: inline-block;
+        h3.calendarDate {
+            position: relative;
             vertical-align: sub;
             width: 100%;
             text-align: center;

@@ -72,7 +72,7 @@
 
     gulp.task('js:build', function (callback){
       gulp
-        .src(['src/js/todoModal.js','src/js/todoView.js','src/js/todoController.js', 'src/js/appInit.js'])
+        .src(['src/js/modernizr-touch.js', 'src/js/todoModal.js','src/js/todoView.js','src/js/todoController.js', 'src/js/appInit.js'])
         .pipe(babel({
           presets: ['@babel/preset-env']
         }))

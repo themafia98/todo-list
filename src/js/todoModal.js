@@ -185,8 +185,12 @@ class Calendar {
         this.todayYear = new Date().getFullYear();
         this.todayMonth = new Date().getMonth();
         this.totalDay = null;
+
         this.dateWeek = ['Mon', 'Tue', 'Wed', 'Thu','Fr','Sat','Sun'];
-        this.monthName = ['January', 'February', 'March', 'April', 'May', 'June', 'July','August','September','October','November','December'];
+
+        this.monthName = ['January', 'February', 'March', 'April',
+                          'May','June', 'July','August','September',
+                          'October','November','December'];
 
         this.dateNow = Date.now();
         this.currentDate = new Date(this.dateNow);
@@ -199,25 +203,42 @@ class Calendar {
 
         this.firstDay = null;
         this.weekDay = null;
+        this.one = 1; // support
 
     }
 
-    parseCalendarData(changeYear = 0, changeMonth = 0){
+    parseCalendarData(changeYear = 0, changeMonth = 0,target = false){
 
-        this.currentYear = this.currentYear + changeYear;
-        this.currentMonth = this.currentMonth + changeMonth;
-        this.firstDay = new Date(this.currentYear,this.currentMonth-1);
+        if (this.currentMonth === 1){
+
+        this.currentYear = target === 'prewMonth' ? this.currentYear + changeMonth : this.currentYear;
+        this.currentMonth = target === 'prewMonth' ? 12 : this.currentMonth + changeMonth;
+
+        ((target === 'prew') || (target === 'next')) && (this.currentYear = this.currentYear + changeYear);
+
+        } else if (this.currentMonth === 12){
+
+        this.currentYear = target === 'prewMonth' ? this.currentYear : this.currentYear + changeMonth;
+        this.currentMonth = target === 'prewMonth' ? this.currentMonth : target === 'nextMonth' ? (this.one) : this.currentMonth;
+
+        ((target === 'prew') || (target === 'next')) && (this.currentYear = this.currentYear + changeYear);
+        } else {
+
+            this.currentYear = this.currentYear + changeYear;
+            this.currentMonth = this.currentMonth + changeMonth;
+        }
+
+
+        this.firstDay = new Date(this.currentYear,this.currentMonth);
         this.weekDay = this.firstDay.getDay();
 
         this.totalDay = new Date(this.currentYear,this.currentMonth,0).getDate();
-        console.log(this.firstDay + ' ' + this.weekDay);
-        // (this.currentMonth-1 === 0) && (this.totalDay = 31);
-        // (this.currentMonth-1 === 1) && (this.totalDay = 31);
+
     }
 
     saveCalendarData(date){
-        
-        localStorage.bufferSelectData = date;
+
+        sessionStorage.bufferSelectData = date;
     }
 }
 

@@ -306,14 +306,6 @@ class Todo extends View {
 
         calendarWrapper.dataset.current = `${zeroDay + dateObject.currentDay}.${zeroMonth + dateObject.currentMonth}.${dateObject.currentYear}`;
 
-        let calendarName = document.createElement('h3');
-        calendarName.innerHTML = monthName  + ' ' + dateObject.currentYear;
-    
-        let ulCalendar = document.createElement('ul');
-        ulCalendar.classList.add('calendarList');
-
-        let calendarController = document.createElement('div');
-
         let spanPrew = document.createElement('span');
         spanPrew.dataset.move = 'prew';
         spanPrew.innerHTML = '<==';
@@ -329,6 +321,16 @@ class Todo extends View {
         let spanMonthNext = document.createElement('span');
         spanMonthNext.dataset.move = 'nextMonth';
         spanMonthNext.innerHTML = '=>';
+
+        let calendarName = document.createElement('h3');
+        calendarName.classList.add('calendarDate');
+        calendarName.innerHTML =  monthName  + ' ' + dateObject.currentYear;
+    
+        let ulCalendar = document.createElement('ul');
+        ulCalendar.classList.add('calendarList');
+
+        let calendarController = document.createElement('div');
+
 
         calendarController.classList.add('calendarController');
 
@@ -378,11 +380,11 @@ class Todo extends View {
             }
         }
     
+        calendarController.appendChild(calendarName);
         calendarController.appendChild(spanPrew);
         calendarController.appendChild(spanMonthPrew);
         calendarController.appendChild(spanNext);
         calendarController.appendChild(spanMonthNext);
-        calendarController.appendChild(calendarName);
         calendarWrapper.appendChild(calendarController);
         calendarWrapper.appendChild(ulCalendar);
         controllers.appendChild(calendarWrapper);

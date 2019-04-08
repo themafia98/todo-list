@@ -32,27 +32,27 @@ class TodoControl extends Storage{
 
                    if (target.dataset.move === 'prew'){
 
-                        datePicker.parseCalendarData(-1);
+                        datePicker.parseCalendarData(-1,null,target.dataset.move);
                         todoView.buildCalendar(datePicker);
 
                     }
                     
                     if (target.dataset.move === 'next'){
-                        datePicker.parseCalendarData(+1);
+                        datePicker.parseCalendarData(+1,null,target.dataset.move);
                         todoView.buildCalendar(datePicker);
 
                     }
 
                     if (target.dataset.move === 'prewMonth'){
                         
-                        datePicker.parseCalendarData(null, -1);
+                        datePicker.parseCalendarData(null, -1,target.dataset.move);
                         todoView.buildCalendar(datePicker);
 
                     }
 
                     if (target.dataset.move === 'nextMonth'){
                         
-                        datePicker.parseCalendarData(null, +1);
+                        datePicker.parseCalendarData(null, +1,target.dataset.move);
                         todoView.buildCalendar(datePicker);
 
                     }
@@ -60,9 +60,9 @@ class TodoControl extends Storage{
                 }
 
                 if (target.dataset.day){
-                    
+                    let timerDeleteCalendar = null;
                     let days = document.querySelectorAll('[data-day]');
-                    let date = target.parentElement.parentElement.dataset.current.split('.');
+                    let date = modalWindow.dataset.current.split('.');
 
                     date[0] = target.dataset.day;
                     days.forEach((element)=> { 
@@ -70,6 +70,8 @@ class TodoControl extends Storage{
                     });
                     target.classList.add('selectDay');
                     datePicker.saveCalendarData(date.join().replace(/\,/g,'.'));
+
+                   timerDeleteCalendar = setTimeout( () => modalWindow.remove() ,300);
                 }
 
                 (target.classList[1] === 'sortAfter') &&
@@ -181,8 +183,9 @@ class TodoControl extends Storage{
 
         };
 
-        document.addEventListener('click',clickEvent,false);
-        document.addEventListener('touchend',clickEvent,false);
+        console.log('touchevents detected:' + Modernizr.touchevents);
+        Modernizr.touchevents && document.addEventListener('touchend',clickEvent,false);
+        !Modernizr.touchevents && document.addEventListener('click',clickEvent,false);
 
         let drag = null;
 

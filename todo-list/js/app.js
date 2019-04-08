@@ -2,6 +2,124 @@
 
 function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
+/*! modernizr 3.6.0 (Custom Build) | MIT *
+ * https://modernizr.com/download/?-touchevents-setclasses !*/
+!function (e, n, t) {
+  function o(e) {
+    var n = u.className,
+        t = Modernizr._config.classPrefix || "";
+
+    if (p && (n = n.baseVal), Modernizr._config.enableJSClass) {
+      var o = new RegExp("(^|\\s)" + t + "no-js(\\s|$)");
+      n = n.replace(o, "$1" + t + "js$2");
+    }
+
+    Modernizr._config.enableClasses && (n += " " + t + e.join(" " + t), p ? u.className.baseVal = n : u.className = n);
+  }
+
+  function s(e, n) {
+    return _typeof(e) === n;
+  }
+
+  function a() {
+    var e, n, t, o, a, i, r;
+
+    for (var l in c) {
+      if (c.hasOwnProperty(l)) {
+        if (e = [], n = c[l], n.name && (e.push(n.name.toLowerCase()), n.options && n.options.aliases && n.options.aliases.length)) for (t = 0; t < n.options.aliases.length; t++) {
+          e.push(n.options.aliases[t].toLowerCase());
+        }
+
+        for (o = s(n.fn, "function") ? n.fn() : n.fn, a = 0; a < e.length; a++) {
+          i = e[a], r = i.split("."), 1 === r.length ? Modernizr[r[0]] = o : (!Modernizr[r[0]] || Modernizr[r[0]] instanceof Boolean || (Modernizr[r[0]] = new Boolean(Modernizr[r[0]])), Modernizr[r[0]][r[1]] = o), f.push((o ? "" : "no-") + r.join("-"));
+        }
+      }
+    }
+  }
+
+  function i() {
+    return "function" != typeof n.createElement ? n.createElement(arguments[0]) : p ? n.createElementNS.call(n, "http://www.w3.org/2000/svg", arguments[0]) : n.createElement.apply(n, arguments);
+  }
+
+  function r() {
+    var e = n.body;
+    return e || (e = i(p ? "svg" : "body"), e.fake = !0), e;
+  }
+
+  function l(e, t, o, s) {
+    var a,
+        l,
+        f,
+        c,
+        d = "modernizr",
+        p = i("div"),
+        h = r();
+    if (parseInt(o, 10)) for (; o--;) {
+      f = i("div"), f.id = s ? s[o] : d + (o + 1), p.appendChild(f);
+    }
+    return a = i("style"), a.type = "text/css", a.id = "s" + d, (h.fake ? h : p).appendChild(a), h.appendChild(p), a.styleSheet ? a.styleSheet.cssText = e : a.appendChild(n.createTextNode(e)), p.id = d, h.fake && (h.style.background = "", h.style.overflow = "hidden", c = u.style.overflow, u.style.overflow = "hidden", u.appendChild(h)), l = t(p, e), h.fake ? (h.parentNode.removeChild(h), u.style.overflow = c, u.offsetHeight) : p.parentNode.removeChild(p), !!l;
+  }
+
+  var f = [],
+      c = [],
+      d = {
+    _version: "3.6.0",
+    _config: {
+      classPrefix: "",
+      enableClasses: !0,
+      enableJSClass: !0,
+      usePrefixes: !0
+    },
+    _q: [],
+    on: function on(e, n) {
+      var t = this;
+      setTimeout(function () {
+        n(t[e]);
+      }, 0);
+    },
+    addTest: function addTest(e, n, t) {
+      c.push({
+        name: e,
+        fn: n,
+        options: t
+      });
+    },
+    addAsyncTest: function addAsyncTest(e) {
+      c.push({
+        name: null,
+        fn: e
+      });
+    }
+  },
+      Modernizr = function Modernizr() {};
+
+  Modernizr.prototype = d, Modernizr = new Modernizr();
+  var u = n.documentElement,
+      p = "svg" === u.nodeName.toLowerCase(),
+      h = d._config.usePrefixes ? " -webkit- -moz- -o- -ms- ".split(" ") : ["", ""];
+  d._prefixes = h;
+  var m = d.testStyles = l;
+  Modernizr.addTest("touchevents", function () {
+    var t;
+    if ("ontouchstart" in e || e.DocumentTouch && n instanceof DocumentTouch) t = !0;else {
+      var o = ["@media (", h.join("touch-enabled),("), "heartz", ")", "{#modernizr{top:9px;position:absolute}}"].join("");
+      m(o, function (e) {
+        t = 9 === e.offsetTop;
+      });
+    }
+    return t;
+  }), a(), o(f), delete d.addTest, delete d.addAsyncTest;
+
+  for (var v = 0; v < Modernizr._q.length; v++) {
+    Modernizr._q[v]();
+  }
+
+  e.Modernizr = Modernizr;
+}(window, document);
+"use strict";
+
+function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+
 function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
 
 function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
@@ -232,6 +350,7 @@ function () {
     this.currentYear = parseInt(this.LocalTimeFormat[2]);
     this.firstDay = null;
     this.weekDay = null;
+    this.one = 1; // support
   }
 
   _createClass(Calendar, [{
@@ -239,18 +358,29 @@ function () {
     value: function parseCalendarData() {
       var changeYear = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
       var changeMonth = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
-      this.currentYear = this.currentYear + changeYear;
-      this.currentMonth = this.currentMonth + changeMonth;
-      this.firstDay = new Date(this.currentYear, this.currentMonth - 1);
+      var target = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+      if (this.currentMonth === 1) {
+        this.currentYear = target === 'prewMonth' ? this.currentYear + changeMonth : this.currentYear;
+        this.currentMonth = target === 'prewMonth' ? 12 : this.currentMonth + changeMonth;
+        (target === 'prew' || target === 'next') && (this.currentYear = this.currentYear + changeYear);
+      } else if (this.currentMonth === 12) {
+        this.currentYear = target === 'prewMonth' ? this.currentYear : this.currentYear + changeMonth;
+        this.currentMonth = target === 'prewMonth' ? this.currentMonth : target === 'nextMonth' ? this.one : this.currentMonth;
+        (target === 'prew' || target === 'next') && (this.currentYear = this.currentYear + changeYear);
+      } else {
+        this.currentYear = this.currentYear + changeYear;
+        this.currentMonth = this.currentMonth + changeMonth;
+      }
+
+      this.firstDay = new Date(this.currentYear, this.currentMonth);
       this.weekDay = this.firstDay.getDay();
       this.totalDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
-      console.log(this.firstDay + ' ' + this.weekDay); // (this.currentMonth-1 === 0) && (this.totalDay = 31);
-      // (this.currentMonth-1 === 1) && (this.totalDay = 31);
     }
   }, {
     key: "saveCalendarData",
     value: function saveCalendarData(date) {
-      localStorage.bufferSelectData = date;
+      sessionStorage.bufferSelectData = date;
     }
   }]);
 
@@ -523,11 +653,6 @@ function (_View) {
       var zeroMonth = dateObject.currentMonth < 10 ? '0' : '';
       var zeroDay = dateObject.currentDay < 10 ? '0' : '';
       calendarWrapper.dataset.current = "".concat(zeroDay + dateObject.currentDay, ".").concat(zeroMonth + dateObject.currentMonth, ".").concat(dateObject.currentYear);
-      var calendarName = document.createElement('h3');
-      calendarName.innerHTML = monthName + ' ' + dateObject.currentYear;
-      var ulCalendar = document.createElement('ul');
-      ulCalendar.classList.add('calendarList');
-      var calendarController = document.createElement('div');
       var spanPrew = document.createElement('span');
       spanPrew.dataset.move = 'prew';
       spanPrew.innerHTML = '<==';
@@ -540,6 +665,12 @@ function (_View) {
       var spanMonthNext = document.createElement('span');
       spanMonthNext.dataset.move = 'nextMonth';
       spanMonthNext.innerHTML = '=>';
+      var calendarName = document.createElement('h3');
+      calendarName.classList.add('calendarDate');
+      calendarName.innerHTML = monthName + ' ' + dateObject.currentYear;
+      var ulCalendar = document.createElement('ul');
+      ulCalendar.classList.add('calendarList');
+      var calendarController = document.createElement('div');
       calendarController.classList.add('calendarController');
       var controllers = document.querySelector('.controllers');
 
@@ -579,11 +710,11 @@ function (_View) {
         }
       }
 
+      calendarController.appendChild(calendarName);
       calendarController.appendChild(spanPrew);
       calendarController.appendChild(spanMonthPrew);
       calendarController.appendChild(spanNext);
       calendarController.appendChild(spanMonthNext);
-      calendarController.appendChild(calendarName);
       calendarWrapper.appendChild(calendarController);
       calendarWrapper.appendChild(ulCalendar);
       controllers.appendChild(calendarWrapper);
@@ -702,35 +833,39 @@ function (_Storage) {
 
           if (target.dataset.move) {
             if (target.dataset.move === 'prew') {
-              datePicker.parseCalendarData(-1);
+              datePicker.parseCalendarData(-1, null, target.dataset.move);
               todoView.buildCalendar(datePicker);
             }
 
             if (target.dataset.move === 'next') {
-              datePicker.parseCalendarData(+1);
+              datePicker.parseCalendarData(+1, null, target.dataset.move);
               todoView.buildCalendar(datePicker);
             }
 
             if (target.dataset.move === 'prewMonth') {
-              datePicker.parseCalendarData(null, -1);
+              datePicker.parseCalendarData(null, -1, target.dataset.move);
               todoView.buildCalendar(datePicker);
             }
 
             if (target.dataset.move === 'nextMonth') {
-              datePicker.parseCalendarData(null, +1);
+              datePicker.parseCalendarData(null, +1, target.dataset.move);
               todoView.buildCalendar(datePicker);
             }
           }
 
           if (target.dataset.day) {
+            var timerDeleteCalendar = null;
             var days = document.querySelectorAll('[data-day]');
-            var date = target.parentElement.parentElement.dataset.current.split('.');
+            var date = modalWindow.dataset.current.split('.');
             date[0] = target.dataset.day;
             days.forEach(function (element) {
               element.classList[0] === 'selectDay' && element.classList.toggle('selectDay');
             });
             target.classList.add('selectDay');
             datePicker.saveCalendarData(date.join().replace(/\,/g, '.'));
+            timerDeleteCalendar = setTimeout(function () {
+              return modalWindow.remove();
+            }, 300);
           }
 
           target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
@@ -831,8 +966,9 @@ function (_Storage) {
         }
       };
 
-      document.addEventListener('click', clickEvent, false);
-      document.addEventListener('touchend', clickEvent, false);
+      console.log('touchevents detected:' + Modernizr.touchevents);
+      Modernizr.touchevents && document.addEventListener('touchend', clickEvent, false);
+      !Modernizr.touchevents && document.addEventListener('click', clickEvent, false);
       var drag = null;
       document.addEventListener('dragstart', function (e) {
         drag = e.target;
