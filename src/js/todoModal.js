@@ -170,10 +170,16 @@ class todoOne extends ListModal {
 
     constructor(value){
         super();
+        this.changeNote = false;
         this.value = value;
         this.save = false;
         this.uniqueId = `id${ Math.floor((((Math.random()+5)-5).toFixed(7))*10000000)}`;
         this.note  = 'click for add note';
+    }
+
+    updateChangeNote(item){
+
+        (item.changeNote) && (item.changeNote = false);
     }
 }
 

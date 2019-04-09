@@ -78,7 +78,7 @@ class Todo extends View {
         let selectCalendar = document.createElement('input');
         selectCalendar.setAttribute('type','button');
         selectCalendar.classList.add('selectCalendar');
-        selectCalendar.value = 'select data';
+        selectCalendar.value = 'select date';
 
         let sortBtnBefore = document.createElement('input');
         sortBtnBefore.setAttribute('type','button');
@@ -285,6 +285,33 @@ class Todo extends View {
         modalBg.appendChild(modal);
         getList.appendChild(modalBg);
 
+    }
+
+    showWarning(ctx){
+
+
+        let modal = document.createElement('div');
+        modal.classList.add('warning');
+
+        let question = document.createElement('p');
+        question.classList.add('question');
+        question.innerHTML = 'Save changes?';
+
+        let save = document.createElement('input');
+        save.setAttribute('type','button');
+        save.classList.add('save');
+        save.value = 'save';
+
+        let cancel = document.createElement('input');
+        cancel.setAttribute('type','button');
+        cancel.classList.add('cancel');
+        cancel.value = 'cancel';
+
+        modal.appendChild(question);
+        modal.appendChild(save);
+        modal.appendChild(cancel);
+
+        ctx.appendChild(modal);
     }
 
     buildCalendar(...date){

@@ -120,16 +120,27 @@ class TodoControl extends Storage{
             if (todoState.getState('modal')){
                 
 
-                (target.classList[0] === 'addNotes') && (todoView.createEditInput(target));
+                let modal = document.querySelector('[data-modal-num]');
+                let notes = document.querySelector('.addNotes');
+                let parent = target.parentNode;
+
+                let item = JSON.parse(localStorage.list);
+                let index = item.findIndex(item => modal.dataset.modalNum === item.uniqueId);
+
+                
+                if (target.classList[0] === 'addNotes'){
+
+                    todoView.createEditInput(target);
+                    item[index].changeNote = true;
+                    localStorage.list = JSON.stringify(item);
+                }
                 
                 if(target.classList[0] === 'editButton'){
-                    
-                    let modal = document.querySelector('[data-modal-num]');
-                    let notes = document.querySelector('.addNotes');
-                    let item =  JSON.parse(localStorage.list);
-                    let index = item.findIndex(item => modal.dataset.modalNum === item.uniqueId);
+
+
                     notes.innerHTML = target.previousSibling.value;
                     item[index].note = target.previousSibling.value;
+
                     localStorage.list = JSON.stringify(item);
                     notes.classList.toggle('visibility');
                     target.previousSibling.remove();
@@ -137,29 +148,55 @@ class TodoControl extends Storage{
 
                 }
 
-                if (target.classList[0] === 'close' || target.classList[0] === 'background-modal'){
-                    todoState.setState('main',true);
-                    todoState.setState('modal',false);
-                }
 
                 if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
-                    
 
-                    modal = document.querySelector('[data-modal-num]').parentNode;
-                    modal.classList.toggle('animateOpen');
+                    modal = modal.parentNode;
 
-                    modal.classList.add('animateHide');
-                    let timer = setTimeout(()=>{
+                    if (item[index].changeNote) {
+
+                        todoView.showWarning(modal);
+
+                    } else {
+
+                        todoState.setState('main',true);
+                        todoState.setState('modal',false);
+                        modal.classList.toggle('animateOpen');
+                        modal.classList.add('animateHide');
+                        let timer = setTimeout(()=>{
                         modal.style.display = 'none';
                         modal.remove();
-                    },400);
+                        },400);
+                    }
+
                 }
+
+
+                
+                if (target.classList[0] === 'save') {
+
+
+                    todoState.setState('main',true);
+                    todoState.setState('modal',false);
+
+                    target.parentNode.remove();
+    
+                    modal.classList.toggle('animateOpen');
+                    modal.classList.add('animateHide');
+
+                    item.forEach( item => (item.changeNote) && (item.changeNote = false));
+                    localStorage.list = JSON.stringify(item);
+
+                    let timer = setTimeout(()=>{
+                    modal.style.display = 'none';
+                    modal.parentNode.remove();
+                    modal.remove();
+                    },400);
+                } else  if (target.classList[0] === 'cancel') target.parentNode.remove();
 
 
                 if(target.classList[0] === 'delete'){
-                    
-                    
-                    let parent = target.parentNode;
+
                     let todoDelete = document.querySelector(`[data-unique="${parent.dataset.modalNum}"]`);
                     let numDelete =  todoDelete.dataset.unique;
 
@@ -268,7 +305,12 @@ class TodoControl extends Storage{
 
         window.addEventListener('DOMContentLoaded',() =>{
 
-            (localStorage.list) && (todoView.showNewTodo(JSON.parse(localStorage.list)));
+            if (!localStorage.list) return;
+
+                let item = JSON.parse(localStorage.list);
+                item.forEach( item => (item.changeNote) && (item.changeNote = false));
+                localStorage.list = JSON.stringify(item);
+                todoView.showNewTodo(item);
 
         },false);
     }

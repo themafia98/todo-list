@@ -317,12 +317,20 @@ function (_ListModal) {
     _classCallCheck(this, todoOne);
 
     _this2 = _possibleConstructorReturn(this, _getPrototypeOf(todoOne).call(this));
+    _this2.changeNote = false;
     _this2.value = value;
     _this2.save = false;
     _this2.uniqueId = "id".concat(Math.floor((Math.random() + 5 - 5).toFixed(7) * 10000000));
     _this2.note = 'click for add note';
     return _this2;
   }
+
+  _createClass(todoOne, [{
+    key: "updateChangeNote",
+    value: function updateChangeNote(item) {
+      item.changeNote && (item.changeNote = false);
+    }
+  }]);
 
   return todoOne;
 }(ListModal);
@@ -457,7 +465,7 @@ function (_View) {
       var selectCalendar = document.createElement('input');
       selectCalendar.setAttribute('type', 'button');
       selectCalendar.classList.add('selectCalendar');
-      selectCalendar.value = 'select data';
+      selectCalendar.value = 'select date';
       var sortBtnBefore = document.createElement('input');
       sortBtnBefore.setAttribute('type', 'button');
       sortBtnBefore.classList.add('sort');
@@ -632,6 +640,27 @@ function (_View) {
       modal.appendChild(weatherList);
       modalBg.appendChild(modal);
       getList.appendChild(modalBg);
+    }
+  }, {
+    key: "showWarning",
+    value: function showWarning(ctx) {
+      var modal = document.createElement('div');
+      modal.classList.add('warning');
+      var question = document.createElement('p');
+      question.classList.add('question');
+      question.innerHTML = 'Save changes?';
+      var save = document.createElement('input');
+      save.setAttribute('type', 'button');
+      save.classList.add('save');
+      save.value = 'save';
+      var cancel = document.createElement('input');
+      cancel.setAttribute('type', 'button');
+      cancel.classList.add('cancel');
+      cancel.value = 'cancel';
+      modal.appendChild(question);
+      modal.appendChild(save);
+      modal.appendChild(cancel);
+      ctx.appendChild(modal);
     }
   }, {
     key: "buildCalendar",
@@ -903,16 +932,22 @@ function (_Storage) {
         }
 
         if (todoState.getState('modal')) {
-          target.classList[0] === 'addNotes' && todoView.createEditInput(target);
+          var _modal = document.querySelector('[data-modal-num]');
+
+          var notes = document.querySelector('.addNotes');
+          var parent = target.parentNode;
+          var item = JSON.parse(localStorage.list);
+          var index = item.findIndex(function (item) {
+            return _modal.dataset.modalNum === item.uniqueId;
+          });
+
+          if (target.classList[0] === 'addNotes') {
+            todoView.createEditInput(target);
+            item[index].changeNote = true;
+            localStorage.list = JSON.stringify(item);
+          }
 
           if (target.classList[0] === 'editButton') {
-            var _modal = document.querySelector('[data-modal-num]');
-
-            var notes = document.querySelector('.addNotes');
-            var item = JSON.parse(localStorage.list);
-            var index = item.findIndex(function (item) {
-              return _modal.dataset.modalNum === item.uniqueId;
-            });
             notes.innerHTML = target.previousSibling.value;
             item[index].note = target.previousSibling.value;
             localStorage.list = JSON.stringify(item);
@@ -922,22 +957,50 @@ function (_Storage) {
           }
 
           if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
+            _modal = _modal.parentNode;
+
+            if (item[index].changeNote) {
+              todoView.showWarning(_modal);
+            } else {
+              todoState.setState('main', true);
+              todoState.setState('modal', false);
+
+              _modal.classList.toggle('animateOpen');
+
+              _modal.classList.add('animateHide');
+
+              var timer = setTimeout(function () {
+                _modal.style.display = 'none';
+
+                _modal.remove();
+              }, 400);
+            }
+          }
+
+          if (target.classList[0] === 'save') {
             todoState.setState('main', true);
             todoState.setState('modal', false);
-          }
+            target.parentNode.remove();
 
-          if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
-            modal = document.querySelector('[data-modal-num]').parentNode;
-            modal.classList.toggle('animateOpen');
-            modal.classList.add('animateHide');
-            var timer = setTimeout(function () {
-              modal.style.display = 'none';
-              modal.remove();
+            _modal.classList.toggle('animateOpen');
+
+            _modal.classList.add('animateHide');
+
+            item.forEach(function (item) {
+              return item.changeNote && (item.changeNote = false);
+            });
+            localStorage.list = JSON.stringify(item);
+
+            var _timer = setTimeout(function () {
+              _modal.style.display = 'none';
+
+              _modal.parentNode.remove();
+
+              _modal.remove();
             }, 400);
-          }
+          } else if (target.classList[0] === 'cancel') target.parentNode.remove();
 
           if (target.classList[0] === 'delete') {
-            var parent = target.parentNode;
             var todoDelete = document.querySelector("[data-unique=\"".concat(parent.dataset.modalNum, "\"]"));
             var numDelete = todoDelete.dataset.unique;
             var splits = JSON.parse(localStorage.list);
@@ -1038,7 +1101,13 @@ function (_Storage) {
         } else target.style['border-top'] = '';
       });
       window.addEventListener('DOMContentLoaded', function () {
-        localStorage.list && todoView.showNewTodo(JSON.parse(localStorage.list));
+        if (!localStorage.list) return;
+        var item = JSON.parse(localStorage.list);
+        item.forEach(function (item) {
+          return item.changeNote && (item.changeNote = false);
+        });
+        localStorage.list = JSON.stringify(item);
+        todoView.showNewTodo(item);
       }, false);
     }
   }]);
