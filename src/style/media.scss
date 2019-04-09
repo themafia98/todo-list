@@ -13,9 +13,7 @@
 
     #todo {
         height: 100%;
-        // max-width: 700px;
-        // min-height: 700px;
-        // max-height: 100%;
+
     }
 
     #todo .textArea .currentTodo {
@@ -34,13 +32,24 @@
 
     }
 
+    #todo .selectCalendar {
+        width: 160px;
+        height: 20px;
+        top: 41%;
+    }
+
 
     #todo .controllers .date {
-        top: 42%;
+        top: 70%;
     }
 
     #todo .controllers .setTodo {
-        top: 85%;
+        top: 100%;
+    }
+
+    #todo .controllers .setTodo {
+        width: 125px;
+        height: 30px;
     }
 
     #todo .background-modal .modal-window {
@@ -69,8 +78,5 @@
         width: 90%;
     }
 
-    #todo .selectCalendar {
-        left: 15px; // test
-    }
 
 }
