@@ -238,11 +238,6 @@ class Calendar {
         this.totalDay = new Date(this.currentYear,this.currentMonth,0).getDate();
 
     }
-
-    saveCalendarData(date){
-
-        sessionStorage.bufferSelectData = date;
-    }
 }
 
 

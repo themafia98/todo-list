@@ -20,8 +20,8 @@ class TodoControl extends Storage{
             if (todoState.getState('main')){
                 // todoView.buildCalendar(datePicker);
                 let todos = document.querySelectorAll('[data-unique]');
+                let date = document.querySelector('.date');
                 let currentTodos = null;
-
 
                 (target.classList[0] === 'selectCalendar') && (todoView.buildCalendar(datePicker));
                 
@@ -62,16 +62,20 @@ class TodoControl extends Storage{
                 if (target.dataset.day){
                     let timerDeleteCalendar = null;
                     let days = document.querySelectorAll('[data-day]');
+                    let dateInput = document.querySelector('.date');
                     let date = modalWindow.dataset.current.split('.');
 
                     date[0] = target.dataset.day;
                     days.forEach((element)=> { 
                         (element.classList[0] === 'selectDay') && (element.classList.toggle('selectDay'));
                     });
-                    target.classList.add('selectDay');
-                    datePicker.saveCalendarData(date.join().replace(/\,/g,'.'));
 
-                   timerDeleteCalendar = setTimeout( () => modalWindow.remove() ,300);
+                    target.classList.add('selectDay');
+                    let zeroDay = (date[0] < 10) ? '0' : '';
+
+                    date[0] = (zeroDay + date[0]).trim();
+                    dateInput.value = date.reverse().join().replace(/\,/g,'-');
+                    timerDeleteCalendar = setTimeout( () => modalWindow.remove() ,300);
                 }
 
                 (target.classList[1] === 'sortAfter') &&
@@ -186,6 +190,8 @@ class TodoControl extends Storage{
         console.log('touchevents detected:' + Modernizr.touchevents);
         Modernizr.touchevents && document.addEventListener('touchend',clickEvent,false);
         !Modernizr.touchevents && document.addEventListener('click',clickEvent,false);
+
+        document.addEventListener('keydown', (e) => {(e.target.classList[0] === 'date') && (e.preventDefault())},false);
 
         let drag = null;
 

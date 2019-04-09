@@ -377,11 +377,6 @@ function () {
       this.weekDay = this.firstDay.getDay();
       this.totalDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
     }
-  }, {
-    key: "saveCalendarData",
-    value: function saveCalendarData(date) {
-      sessionStorage.bufferSelectData = date;
-    }
   }]);
 
   return Calendar;
@@ -505,7 +500,8 @@ function (_View) {
       button.setAttribute('value', 'ADD');
       var datePick = document.createElement('input');
       datePick.classList.add('date');
-      datePick.setAttribute('type', 'date');
+      datePick.setAttribute('disabled', '');
+      datePick.setAttribute('type', 'text');
       datePick.setAttribute('value', time);
       footer.appendChild(titleName);
       todoControllers.appendChild(input);
@@ -653,18 +649,24 @@ function (_View) {
       var zeroMonth = dateObject.currentMonth < 10 ? '0' : '';
       var zeroDay = dateObject.currentDay < 10 ? '0' : '';
       calendarWrapper.dataset.current = "".concat(zeroDay + dateObject.currentDay, ".").concat(zeroMonth + dateObject.currentMonth, ".").concat(dateObject.currentYear);
-      var spanPrew = document.createElement('span');
+      var wrapperSpan = document.createElement('div');
+      wrapperSpan.classList.add('calendarControlBtns');
+      var spanPrew = document.createElement('input');
+      spanPrew.setAttribute('type', 'button');
       spanPrew.dataset.move = 'prew';
-      spanPrew.innerHTML = '<==';
-      var spanNext = document.createElement('span');
+      spanPrew.value = '<==';
+      var spanNext = document.createElement('input');
+      spanNext.setAttribute('type', 'button');
       spanNext.dataset.move = 'next';
-      spanNext.innerHTML = '==>';
-      var spanMonthPrew = document.createElement('span');
+      spanNext.value = '==>';
+      var spanMonthPrew = document.createElement('input');
+      spanMonthPrew.setAttribute('type', 'button');
       spanMonthPrew.dataset.move = 'prewMonth';
-      spanMonthPrew.innerHTML = '<=';
-      var spanMonthNext = document.createElement('span');
+      spanMonthPrew.value = '<=';
+      var spanMonthNext = document.createElement('input');
+      spanMonthNext.setAttribute('type', 'button');
       spanMonthNext.dataset.move = 'nextMonth';
-      spanMonthNext.innerHTML = '=>';
+      spanMonthNext.value = '=>';
       var calendarName = document.createElement('h3');
       calendarName.classList.add('calendarDate');
       calendarName.innerHTML = monthName + ' ' + dateObject.currentYear;
@@ -710,11 +712,12 @@ function (_View) {
         }
       }
 
+      wrapperSpan.appendChild(spanPrew);
+      wrapperSpan.appendChild(spanMonthPrew);
+      wrapperSpan.appendChild(spanMonthNext);
+      wrapperSpan.appendChild(spanNext);
       calendarController.appendChild(calendarName);
-      calendarController.appendChild(spanPrew);
-      calendarController.appendChild(spanMonthPrew);
-      calendarController.appendChild(spanNext);
-      calendarController.appendChild(spanMonthNext);
+      calendarController.appendChild(wrapperSpan);
       calendarWrapper.appendChild(calendarController);
       calendarWrapper.appendChild(ulCalendar);
       controllers.appendChild(calendarWrapper);
@@ -828,6 +831,7 @@ function (_Storage) {
         if (todoState.getState('main')) {
           // todoView.buildCalendar(datePicker);
           var todos = document.querySelectorAll('[data-unique]');
+          var date = document.querySelector('.date');
           var currentTodos = null;
           target.classList[0] === 'selectCalendar' && todoView.buildCalendar(datePicker);
 
@@ -856,13 +860,18 @@ function (_Storage) {
           if (target.dataset.day) {
             var timerDeleteCalendar = null;
             var days = document.querySelectorAll('[data-day]');
-            var date = modalWindow.dataset.current.split('.');
-            date[0] = target.dataset.day;
+            var dateInput = document.querySelector('.date');
+
+            var _date = modalWindow.dataset.current.split('.');
+
+            _date[0] = target.dataset.day;
             days.forEach(function (element) {
               element.classList[0] === 'selectDay' && element.classList.toggle('selectDay');
             });
             target.classList.add('selectDay');
-            datePicker.saveCalendarData(date.join().replace(/\,/g, '.'));
+            var zeroDay = _date[0] < 10 ? '0' : '';
+            _date[0] = (zeroDay + _date[0]).trim();
+            dateInput.value = _date.reverse().join().replace(/\,/g, '-');
             timerDeleteCalendar = setTimeout(function () {
               return modalWindow.remove();
             }, 300);
@@ -937,15 +946,15 @@ function (_Storage) {
             var numDelete = todoDelete.dataset.unique;
             var splits = JSON.parse(localStorage.list);
 
-            var _date = JSON.parse(localStorage.date);
+            var _date2 = JSON.parse(localStorage.date);
 
             var counter = splits.findIndex(function (element) {
               return element.uniqueId === numDelete;
             });
 
-            _date.splice(counter, 1);
+            _date2.splice(counter, 1);
 
-            localStorage.date = JSON.stringify(_date);
+            localStorage.date = JSON.stringify(_date2);
             var filter = splits.filter(function (v) {
               return v.uniqueId === numDelete;
             });
@@ -969,6 +978,9 @@ function (_Storage) {
       console.log('touchevents detected:' + Modernizr.touchevents);
       Modernizr.touchevents && document.addEventListener('touchend', clickEvent, false);
       !Modernizr.touchevents && document.addEventListener('click', clickEvent, false);
+      document.addEventListener('keydown', function (e) {
+        e.target.classList[0] === 'date' && e.preventDefault();
+      }, false);
       var drag = null;
       document.addEventListener('dragstart', function (e) {
         drag = e.target;

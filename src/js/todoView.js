@@ -128,7 +128,8 @@ class Todo extends View {
 
         let datePick = document.createElement('input');
         datePick.classList.add('date');
-        datePick.setAttribute('type','date');
+        datePick.setAttribute('disabled','');
+        datePick.setAttribute('type','text');
         datePick.setAttribute('value',time);
 
 
@@ -306,21 +307,29 @@ class Todo extends View {
 
         calendarWrapper.dataset.current = `${zeroDay + dateObject.currentDay}.${zeroMonth + dateObject.currentMonth}.${dateObject.currentYear}`;
 
-        let spanPrew = document.createElement('span');
+
+        let wrapperSpan = document.createElement('div');
+        wrapperSpan.classList.add('calendarControlBtns');
+
+        let spanPrew = document.createElement('input');
+        spanPrew.setAttribute('type','button');
         spanPrew.dataset.move = 'prew';
-        spanPrew.innerHTML = '<==';
+        spanPrew.value = '<==';
 
-        let spanNext = document.createElement('span');
+        let spanNext = document.createElement('input');
+        spanNext.setAttribute('type','button');
         spanNext.dataset.move = 'next';
-        spanNext.innerHTML = '==>';
+        spanNext.value = '==>';
 
-        let spanMonthPrew = document.createElement('span');
+        let spanMonthPrew = document.createElement('input');
+        spanMonthPrew.setAttribute('type','button');
         spanMonthPrew.dataset.move = 'prewMonth';
-        spanMonthPrew.innerHTML = '<=';
+        spanMonthPrew.value = '<=';
 
-        let spanMonthNext = document.createElement('span');
+        let spanMonthNext = document.createElement('input');
+        spanMonthNext.setAttribute('type','button');
         spanMonthNext.dataset.move = 'nextMonth';
-        spanMonthNext.innerHTML = '=>';
+        spanMonthNext.value = '=>';
 
         let calendarName = document.createElement('h3');
         calendarName.classList.add('calendarDate');
@@ -380,11 +389,12 @@ class Todo extends View {
             }
         }
     
+        wrapperSpan.appendChild(spanPrew);
+        wrapperSpan.appendChild(spanMonthPrew);
+        wrapperSpan.appendChild(spanMonthNext);
+        wrapperSpan.appendChild(spanNext);
         calendarController.appendChild(calendarName);
-        calendarController.appendChild(spanPrew);
-        calendarController.appendChild(spanMonthPrew);
-        calendarController.appendChild(spanNext);
-        calendarController.appendChild(spanMonthNext);
+        calendarController.appendChild(wrapperSpan);
         calendarWrapper.appendChild(calendarController);
         calendarWrapper.appendChild(ulCalendar);
         controllers.appendChild(calendarWrapper);
