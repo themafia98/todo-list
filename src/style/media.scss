@@ -11,6 +11,20 @@
         width: 85%;
     }
 
+    #todo .controllers .setTodo {
+        width: 100px;
+        height: 55px;
+        border-radius: 25px;
+        border: 2px solid brown;
+        text-align: center;
+        margin: 5px 0;
+    }
+
+    #todo .selectCalendar {
+        width: 140px;
+        height: 40px;
+    }
+
     #todo {
         height: 100%;
 
@@ -25,26 +39,6 @@
 
     #todo .title {
         margin: 0;
-    }
-
-    #todo .selectCalendar {
-        width: 160px;
-        height: 20px;
-        top: 41%;
-    }
-
-
-    #todo .controllers .date {
-        top: 70%;
-    }
-
-    #todo .controllers .setTodo {
-        top: 100%;
-    }
-
-    #todo .controllers .setTodo {
-        width: 125px;
-        height: 30px;
     }
 
     #todo .background-modal .modal-window {
