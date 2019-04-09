@@ -4,8 +4,8 @@ class ListModal{
 
     constructor(){
         this.states = {
-            main: () => false,
-            modal: () => false,
+            main: false,
+            modal: false,
         };
     }
 

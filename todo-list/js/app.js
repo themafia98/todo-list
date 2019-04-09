@@ -143,12 +143,8 @@ function () {
     _classCallCheck(this, ListModal);
 
     this.states = {
-      main: function main() {
-        return false;
-      },
-      modal: function modal() {
-        return false;
-      }
+      main: false,
+      modal: false
     };
   }
 

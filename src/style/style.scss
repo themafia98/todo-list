@@ -79,9 +79,8 @@ body {
     }
 
     .selectCalendar {
-        position: absolute;
-        top: 30%;
         border: 1px solid brown;
+        margin: 5px 0;
     }
 
     .selectCalendar:active {
@@ -169,16 +168,14 @@ body {
 
 
     .controllers {
-        position: $rel;
+        position: relative;
         display: flex;
+        flex-direction: column;
         justify-content: center;
-        width: 100%;
-        height: 20%;
-
-
+        align-items: center;
+        margin: 0 auto;
 
         .getTodo {
-            position: $abs;
             width: $inputMainTodoW;
             height: $inputMainTodoH;
             border-radius: 10px;
@@ -192,13 +189,12 @@ body {
         }
 
         .setTodo {
-            position: $abs;
             width: $buttonMainTodoW;
             height: $buttonMainTodoH;
             border-radius: $buttonMainTodoRadius;
             border: $inputMainTodoBorder;
             text-align: center;
-            top: 70%;
+            margin: 5px 0;
         }
 
         .setTodo:hover {
@@ -216,7 +212,6 @@ body {
         }
 
         .date {
-            position: $abs;
             width: $mainDateInputW;
             height: $mainDateInputH;
             text-align: center;

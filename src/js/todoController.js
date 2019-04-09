@@ -23,6 +23,7 @@ class TodoControl extends Storage{
                 let date = document.querySelector('.date');
                 let currentTodos = null;
 
+                
                 (target.classList[0] === 'selectCalendar') && (todoView.buildCalendar(datePicker));
                 
 
@@ -110,7 +111,6 @@ class TodoControl extends Storage{
 
                     todoState.getWeather(target,weatherList,modal);
 
-                    
                     todoState.setState('main',false);
                     todoState.setState('modal',true);
 
