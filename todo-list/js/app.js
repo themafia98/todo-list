@@ -793,186 +793,176 @@ function () {
   }
 
   _createClass(TodoControl, [{
+    key: "mainController",
+    value: function mainController(todoView, todoState, load, datePicker, store, target) {
+      var todos = document.querySelectorAll('[data-unique]');
+      var modalWindow = target.parentNode.parentNode;
+      var currentTodos = null;
+      var modal = null;
+      target.classList[0] === 'selectCalendar' && todoView.buildCalendar(datePicker);
+
+      if (target.dataset.move) {
+        if (target.dataset.move === 'prew') {
+          datePicker.parseCalendarData(-1, null, target.dataset.move);
+          todoView.buildCalendar(datePicker);
+        }
+
+        if (target.dataset.move === 'next') {
+          datePicker.parseCalendarData(+1, null, target.dataset.move);
+          todoView.buildCalendar(datePicker);
+        }
+
+        if (target.dataset.move === 'prewMonth') {
+          datePicker.parseCalendarData(null, -1, target.dataset.move);
+          todoView.buildCalendar(datePicker);
+        }
+
+        if (target.dataset.move === 'nextMonth') {
+          datePicker.parseCalendarData(null, +1, target.dataset.move);
+          todoView.buildCalendar(datePicker);
+        }
+      }
+
+      if (target.dataset.day) {
+        var timerDeleteCalendar = null;
+        var days = document.querySelectorAll('[data-day]');
+        var dateInput = document.querySelector('.date');
+        var date = modalWindow.dataset.current.split('.');
+        date[0] = target.dataset.day;
+        days.forEach(function (element) {
+          element.classList[0] === 'selectDay' && element.classList.toggle('selectDay');
+        });
+        target.classList.add('selectDay');
+        var zeroDay = date[0] < 10 ? '0' : '';
+        date[0] = (zeroDay + date[0]).trim();
+        dateInput.value = date.reverse().join().replace(/\,/g, '-');
+        timerDeleteCalendar = setTimeout(function () {
+          return modalWindow.remove();
+        }, 300);
+      }
+
+      target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
+      target.classList[1] === 'sortBefore' && (currentTodos = document.querySelectorAll('.unactive'));
+      target.classList[1] === 'sortCurrent' && (currentTodos = document.querySelectorAll('.today'));
+      target.classList[0] === 'sort' && todoView.sortTodos(todos, target.classList[1], currentTodos);
+
+      if (target.classList[0] === 'setTodo' && this.btnEnter.value) {
+        store.localeStorageUpdate(this.btnEnter.value);
+        store.dataParser(target);
+        todoView.showNewTodo(JSON.parse(localStorage.list));
+        this.btnEnter.value = '';
+      }
+
+      if (target.dataset.unique) {
+        var jsonObject = null;
+        localStorage.list && (jsonObject = JSON.parse(localStorage.list));
+        modal = todoView.showModal.call(target, jsonObject);
+        todoView.spinnerShow(modal, load.image[0]);
+        todoState.getWeather(target, document.querySelector('.weatherList'), modal);
+        todoState.setState('main', false);
+        todoState.setState('modal', true);
+      }
+    }
+  }, {
+    key: "modalController",
+    value: function modalController(todoView, todoState, store, target) {
+      var modal = document.querySelector('[data-modal-num]');
+      var notes = document.querySelector('.addNotes');
+      var timer = null;
+      var parent = target.parentNode;
+      var item = JSON.parse(localStorage.list);
+      var index = item.findIndex(function (item) {
+        return modal.dataset.modalNum === item.uniqueId;
+      });
+
+      if (target.classList[0] === 'addNotes') {
+        todoView.createEditInput();
+        item[index].changeNote = true;
+        localStorage.list = JSON.stringify(item);
+      }
+
+      if (target.classList[0] === 'editButton') {
+        notes.innerHTML = target.previousSibling.value;
+        item[index].note = target.previousSibling.value;
+        localStorage.list = JSON.stringify(item);
+        notes.classList.toggle('visibility');
+        target.previousSibling.remove();
+        target.remove();
+      }
+
+      if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
+        modal = modal.parentNode;
+
+        if (item[index].changeNote) {
+          todoView.showWarning(modal);
+        } else {
+          todoState.setState('main', true);
+          todoState.setState('modal', false);
+          modal.classList.toggle('animateOpen');
+          modal.classList.add('animateHide');
+          timer = setTimeout(function () {
+            modal.style.display = 'none';
+            modal.remove();
+          }, 400);
+        }
+      }
+
+      if (target.classList[0] === 'save') {
+        todoState.setState('main', true);
+        todoState.setState('modal', false);
+        target.parentNode.remove();
+        modal.classList.toggle('animateOpen');
+        modal.classList.add('animateHide');
+        item.forEach(function (item) {
+          return item.changeNote && (item.changeNote = false);
+        });
+        localStorage.list = JSON.stringify(item);
+        timer = setTimeout(function () {
+          modal.style.display = 'none';
+          modal.parentNode.remove();
+          modal.remove();
+        }, 400);
+      } else if (target.classList[0] === 'cancel') target.parentNode.remove();
+
+      if (target.classList[0] === 'delete') {
+        var todoDelete = document.querySelector("[data-unique=\"".concat(parent.dataset.modalNum, "\"]"));
+        var numDelete = todoDelete.dataset.unique;
+        var splits = JSON.parse(localStorage.list);
+        var date = JSON.parse(localStorage.date);
+        var counter = splits.findIndex(function (element) {
+          return element.uniqueId === numDelete;
+        });
+        date.splice(counter, 1);
+        localStorage.date = JSON.stringify(date);
+        var filter = splits.filter(function (v) {
+          return v.uniqueId === numDelete;
+        });
+        store.updateStorage(JSON.parse(localStorage.list), filter[0].uniqueId);
+        todoDelete.remove();
+        /* Switch state */
+
+        todoState.setState('main', true);
+        todoState.setState('modal', false);
+        modalWindow.remove();
+      }
+
+      var todos = document.querySelectorAll('[data-date]');
+      todos.forEach(function (element, i) {
+        return element.dataset.num = i;
+      });
+    }
+  }, {
     key: "setLsitener",
     value: function setLsitener(todoView, todoState, load, datePicker, store) {
       var _this = this;
 
-      var parentDnD = document.getElementsByClassName('todoList')[0];
+      var draggableZone = document.querySelector('.todoList');
+      /* Main states and modal todo controllers */
 
       var clickEvent = function clickEvent(e) {
         var target = e.target;
-        var modalWindow = target.parentNode.parentNode;
-        var modal = null;
-
-        if (todoState.getState('main')) {
-          var todos = document.querySelectorAll('[data-unique]');
-          var currentTodos = null;
-          target.classList[0] === 'selectCalendar' && todoView.buildCalendar(datePicker);
-
-          if (target.dataset.move) {
-            if (target.dataset.move === 'prew') {
-              datePicker.parseCalendarData(-1, null, target.dataset.move);
-              todoView.buildCalendar(datePicker);
-            }
-
-            if (target.dataset.move === 'next') {
-              datePicker.parseCalendarData(+1, null, target.dataset.move);
-              todoView.buildCalendar(datePicker);
-            }
-
-            if (target.dataset.move === 'prewMonth') {
-              datePicker.parseCalendarData(null, -1, target.dataset.move);
-              todoView.buildCalendar(datePicker);
-            }
-
-            if (target.dataset.move === 'nextMonth') {
-              datePicker.parseCalendarData(null, +1, target.dataset.move);
-              todoView.buildCalendar(datePicker);
-            }
-          }
-
-          if (target.dataset.day) {
-            var timerDeleteCalendar = null;
-            var days = document.querySelectorAll('[data-day]');
-            var dateInput = document.querySelector('.date');
-            var date = modalWindow.dataset.current.split('.');
-            date[0] = target.dataset.day;
-            days.forEach(function (element) {
-              element.classList[0] === 'selectDay' && element.classList.toggle('selectDay');
-            });
-            target.classList.add('selectDay');
-            var zeroDay = date[0] < 10 ? '0' : '';
-            date[0] = (zeroDay + date[0]).trim();
-            dateInput.value = date.reverse().join().replace(/\,/g, '-');
-            timerDeleteCalendar = setTimeout(function () {
-              return modalWindow.remove();
-            }, 300);
-          }
-
-          target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
-          target.classList[1] === 'sortBefore' && (currentTodos = document.querySelectorAll('.unactive'));
-          target.classList[1] === 'sortCurrent' && (currentTodos = document.querySelectorAll('.today'));
-          target.classList[0] === 'sort' && todoView.sortTodos(todos, target.classList[1], currentTodos);
-
-          if (target.classList[0] === 'setTodo' && _this.btnEnter.value) {
-            store.localeStorageUpdate(_this.btnEnter.value);
-            store.dataParser(target);
-            todoView.showNewTodo(JSON.parse(localStorage.list));
-            _this.btnEnter.value = '';
-          }
-
-          if (target.dataset.unique) {
-            var jsonObject = null;
-            localStorage.list && (jsonObject = JSON.parse(localStorage.list));
-            modal = todoView.showModal.call(target, jsonObject);
-            todoView.spinnerShow(modal, load.image[0]);
-            todoState.getWeather(target, document.querySelector('.weatherList'), modal);
-            todoState.setState('main', false);
-            todoState.setState('modal', true);
-          }
-        }
-
-        if (todoState.getState('modal')) {
-          var _modal = document.querySelector('[data-modal-num]');
-
-          var notes = document.querySelector('.addNotes');
-          var timer = null;
-          var parent = target.parentNode;
-          var item = JSON.parse(localStorage.list);
-          var index = item.findIndex(function (item) {
-            return _modal.dataset.modalNum === item.uniqueId;
-          });
-
-          if (target.classList[0] === 'addNotes') {
-            todoView.createEditInput();
-            item[index].changeNote = true;
-            localStorage.list = JSON.stringify(item);
-          }
-
-          if (target.classList[0] === 'editButton') {
-            notes.innerHTML = target.previousSibling.value;
-            item[index].note = target.previousSibling.value;
-            localStorage.list = JSON.stringify(item);
-            notes.classList.toggle('visibility');
-            target.previousSibling.remove();
-            target.remove();
-          }
-
-          if (target.classList[0] === 'close' || target.classList[0] === 'background-modal') {
-            _modal = _modal.parentNode;
-
-            if (item[index].changeNote) {
-              todoView.showWarning(_modal);
-            } else {
-              todoState.setState('main', true);
-              todoState.setState('modal', false);
-
-              _modal.classList.toggle('animateOpen');
-
-              _modal.classList.add('animateHide');
-
-              timer = setTimeout(function () {
-                _modal.style.display = 'none';
-
-                _modal.remove();
-              }, 400);
-            }
-          }
-
-          if (target.classList[0] === 'save') {
-            todoState.setState('main', true);
-            todoState.setState('modal', false);
-            target.parentNode.remove();
-
-            _modal.classList.toggle('animateOpen');
-
-            _modal.classList.add('animateHide');
-
-            item.forEach(function (item) {
-              return item.changeNote && (item.changeNote = false);
-            });
-            localStorage.list = JSON.stringify(item);
-            timer = setTimeout(function () {
-              _modal.style.display = 'none';
-
-              _modal.parentNode.remove();
-
-              _modal.remove();
-            }, 400);
-          } else if (target.classList[0] === 'cancel') target.parentNode.remove();
-
-          if (target.classList[0] === 'delete') {
-            var todoDelete = document.querySelector("[data-unique=\"".concat(parent.dataset.modalNum, "\"]"));
-            var numDelete = todoDelete.dataset.unique;
-            var splits = JSON.parse(localStorage.list);
-
-            var _date = JSON.parse(localStorage.date);
-
-            var counter = splits.findIndex(function (element) {
-              return element.uniqueId === numDelete;
-            });
-
-            _date.splice(counter, 1);
-
-            localStorage.date = JSON.stringify(_date);
-            var filter = splits.filter(function (v) {
-              return v.uniqueId === numDelete;
-            });
-            store.updateStorage(JSON.parse(localStorage.list), filter[0].uniqueId);
-            todoDelete.remove();
-            /* Switch state */
-
-            todoState.setState('main', true);
-            todoState.setState('modal', false);
-            modalWindow.remove();
-          }
-
-          var _todos = document.querySelectorAll('[data-date]');
-
-          _todos.forEach(function (element, i) {
-            return element.dataset.num = i;
-          });
-        }
+        todoState.getState('main') && _this.mainController(todoView, todoState, load, datePicker, store, target);
+        todoState.getState('modal') && _this.modalController(todoView, todoState, store, target);
       };
       /* -----------Modernizr----------- */
 
@@ -980,6 +970,8 @@ function () {
       console.log('touchevents detected:' + Modernizr.touchevents);
       Modernizr.touchevents && document.addEventListener('touchend', clickEvent, false);
       !Modernizr.touchevents && document.addEventListener('click', clickEvent, false);
+      /* disabled date input */
+
       document.addEventListener('keydown', function (e) {
         e.target.classList[0] === 'date' && e.preventDefault();
       }, false);
@@ -989,7 +981,7 @@ function () {
       document.addEventListener('dragstart', function (e) {
         drag = e.target;
       });
-      parentDnD.addEventListener('dragover', function (e) {
+      draggableZone.addEventListener('dragover', function (e) {
         e.preventDefault();
         var target = e.target;
         var bounding = target.getBoundingClientRect();
@@ -1002,12 +994,12 @@ function () {
           }
         }
       });
-      parentDnD.addEventListener('dragleave', function (e) {
+      draggableZone.addEventListener('dragleave', function (e) {
         e.preventDefault();
         e.target.style['border-bottom'] = '';
         e.target.style['border-top'] = '';
       });
-      parentDnD.addEventListener('drop', function (e) {
+      draggableZone.addEventListener('drop', function (e) {
         var target = e.target;
         var swapeDate = JSON.parse(localStorage.date);
         var swapeList = JSON.parse(localStorage.list);

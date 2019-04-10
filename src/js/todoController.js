@@ -6,219 +6,226 @@ class TodoControl{
     this.btnAdd = btn;
     }
 
+    mainController(todoView,todoState,load,datePicker,store,target){
+
+        const todos = document.querySelectorAll('[data-unique]');
+        let modalWindow = target.parentNode.parentNode;
+        let currentTodos = null;
+        let modal = null;
+
+        (target.classList[0] === 'selectCalendar') && (todoView.buildCalendar(datePicker));
+
+        if (target.dataset.move){
+
+            if (target.dataset.move === 'prew'){
+
+                datePicker.parseCalendarData(-1,null,target.dataset.move);
+                todoView.buildCalendar(datePicker);
+            }
+
+            if (target.dataset.move === 'next'){
+
+                datePicker.parseCalendarData(+1,null,target.dataset.move);
+                todoView.buildCalendar(datePicker);
+            }
+
+            if (target.dataset.move === 'prewMonth'){
+
+                datePicker.parseCalendarData(null, -1,target.dataset.move);
+                todoView.buildCalendar(datePicker);
+
+            }
+
+             if (target.dataset.move === 'nextMonth'){
+
+                datePicker.parseCalendarData(null, +1,target.dataset.move);
+                todoView.buildCalendar(datePicker);
+
+            }
+        }
+
+        if (target.dataset.day){
+
+            let timerDeleteCalendar = null;
+            const days = document.querySelectorAll('[data-day]');
+            const dateInput = document.querySelector('.date');
+
+            let date = modalWindow.dataset.current.split('.');
+
+            date[0] = target.dataset.day;
+
+            days.forEach((element)=>{
+
+                (element.classList[0] === 'selectDay') &&
+                (element.classList.toggle('selectDay'));
+            });
+
+            target.classList.add('selectDay');
+            let zeroDay = (date[0] < 10) ? '0' : '';
+
+            date[0] = (zeroDay + date[0]).trim();
+            dateInput.value = date.reverse().join().replace(/\,/g,'-');
+            timerDeleteCalendar = setTimeout( () => modalWindow.remove() ,300);
+        }
+
+        (target.classList[1] === 'sortAfter') &&
+        (currentTodos =  document.querySelectorAll('.future'));
+
+        (target.classList[1] === 'sortBefore') &&
+        (currentTodos =  document.querySelectorAll('.unactive'));
+
+        (target.classList[1] === 'sortCurrent') &&
+        (currentTodos =  document.querySelectorAll('.today'));
+
+        (target.classList[0] === 'sort') &&
+        (todoView.sortTodos(todos,target.classList[1],currentTodos));
+
+        if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)){
+
+            store.localeStorageUpdate(this.btnEnter.value);
+            store.dataParser(target);
+            todoView.showNewTodo(JSON.parse(localStorage.list));
+
+            this.btnEnter.value = '';
+        }
+
+        if(target.dataset.unique){
+
+            let jsonObject = null;
+
+            (localStorage.list) && (jsonObject = JSON.parse(localStorage.list));
+
+            modal = todoView.showModal.call(target,jsonObject);
+
+            todoView.spinnerShow(modal,load.image[0]);
+            todoState.getWeather(target,document.querySelector('.weatherList'),modal);
+
+            todoState.setState('main',false);
+            todoState.setState('modal',true);
+
+        }
+    }
+
+    modalController(todoView,todoState,store,target){
+
+
+        let modal = document.querySelector('[data-modal-num]');
+        let notes = document.querySelector('.addNotes');
+        let timer = null;
+        const parent = target.parentNode;
+
+        const item = JSON.parse(localStorage.list);
+        const index = item.findIndex(item => modal.dataset.modalNum === item.uniqueId);
+
+        if (target.classList[0] === 'addNotes'){
+
+            todoView.createEditInput();
+            item[index].changeNote = true;
+            localStorage.list = JSON.stringify(item);
+        }
+
+        if(target.classList[0] === 'editButton'){
+
+
+            notes.innerHTML = target.previousSibling.value;
+            item[index].note = target.previousSibling.value;
+
+            localStorage.list = JSON.stringify(item);
+            notes.classList.toggle('visibility');
+            target.previousSibling.remove();
+            target.remove();
+
+        }
+
+        if (target.classList[0] === 'close' || target.classList[0] === 'background-modal'){
+
+            modal = modal.parentNode;
+
+            if (item[index].changeNote){
+
+                todoView.showWarning(modal);
+
+            } else{
+
+                todoState.setState('main',true);
+                todoState.setState('modal',false);
+
+                modal.classList.toggle('animateOpen');
+                modal.classList.add('animateHide');
+
+                timer = setTimeout(()=>{
+                modal.style.display = 'none';
+                modal.remove();
+                },400);
+            }
+
+        }
+
+        if (target.classList[0] === 'save'){
+
+
+            todoState.setState('main',true);
+            todoState.setState('modal',false);
+
+            target.parentNode.remove();
+
+            modal.classList.toggle('animateOpen');
+            modal.classList.add('animateHide');
+
+            item.forEach( item => (item.changeNote) && (item.changeNote = false));
+            localStorage.list = JSON.stringify(item);
+
+            timer = setTimeout(()=>{
+
+            modal.style.display = 'none';
+            modal.parentNode.remove();
+            modal.remove();
+            },400);
+
+        } else  if (target.classList[0] === 'cancel') target.parentNode.remove();
+
+
+        if(target.classList[0] === 'delete'){
+
+            const todoDelete = document.querySelector(`[data-unique="${parent.dataset.modalNum}"]`);
+            const numDelete =  todoDelete.dataset.unique;
+
+            const splits = JSON.parse(localStorage.list);
+            const date = JSON.parse(localStorage.date);
+
+            const counter =  splits.findIndex(element =>  element.uniqueId === numDelete);
+
+            date.splice(counter,1);
+            localStorage.date = JSON.stringify(date);
+
+            const filter = splits.filter(v => (v.uniqueId === numDelete));
+
+            store.updateStorage(JSON.parse(localStorage.list),filter[0].uniqueId);
+            todoDelete.remove();
+
+            /* Switch state */
+            todoState.setState('main',true);
+            todoState.setState('modal',false);
+
+            modalWindow.remove();
+        }
+
+            const todos = document.querySelectorAll('[data-date]');
+            todos.forEach( (element,i) => element.dataset.num = i);
+    }
+
     setLsitener(todoView,todoState,load,datePicker,store){
 
-        let parentDnD = document.getElementsByClassName('todoList')[0];
+        let draggableZone = document.querySelector('.todoList');
 
+
+        /* Main states and modal todo controllers */
         let clickEvent = (e) =>{
 
             let target = e.target;
-            let modalWindow = target.parentNode.parentNode;
-            let modal = null;
 
-            if (todoState.getState('main')){
-
-                const todos = document.querySelectorAll('[data-unique]');
-                let currentTodos = null;
-
-                (target.classList[0] === 'selectCalendar') && (todoView.buildCalendar(datePicker));
-
-                if (target.dataset.move){
-
-                    if (target.dataset.move === 'prew'){
-
-                        datePicker.parseCalendarData(-1,null,target.dataset.move);
-                        todoView.buildCalendar(datePicker);
-                    }
-
-                    if (target.dataset.move === 'next'){
-                        datePicker.parseCalendarData(+1,null,target.dataset.move);
-                        todoView.buildCalendar(datePicker);
-                    }
-
-                    if (target.dataset.move === 'prewMonth'){
-
-                        datePicker.parseCalendarData(null, -1,target.dataset.move);
-                        todoView.buildCalendar(datePicker);
-
-                    }
-
-                    if (target.dataset.move === 'nextMonth'){
-
-                        datePicker.parseCalendarData(null, +1,target.dataset.move);
-                        todoView.buildCalendar(datePicker);
-
-                    }
-                }
-
-                if (target.dataset.day){
-
-                    let timerDeleteCalendar = null;
-                    const days = document.querySelectorAll('[data-day]');
-                    const dateInput = document.querySelector('.date');
-
-                    let date = modalWindow.dataset.current.split('.');
-
-                    date[0] = target.dataset.day;
-
-                    days.forEach((element)=>{
-                        (element.classList[0] === 'selectDay') &&
-                        (element.classList.toggle('selectDay'));
-                    });
-
-                    target.classList.add('selectDay');
-                    let zeroDay = (date[0] < 10) ? '0' : '';
-
-                    date[0] = (zeroDay + date[0]).trim();
-                    dateInput.value = date.reverse().join().replace(/\,/g,'-');
-                    timerDeleteCalendar = setTimeout( () => modalWindow.remove() ,300);
-                }
-
-                (target.classList[1] === 'sortAfter') &&
-                (currentTodos =  document.querySelectorAll('.future'));
-
-                (target.classList[1] === 'sortBefore') &&
-                (currentTodos =  document.querySelectorAll('.unactive'));
-
-                (target.classList[1] === 'sortCurrent') &&
-                (currentTodos =  document.querySelectorAll('.today'));
-
-                (target.classList[0] === 'sort') &&
-                (todoView.sortTodos(todos,target.classList[1],currentTodos));
-
-                if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)){
-
-                    store.localeStorageUpdate(this.btnEnter.value);
-                    store.dataParser(target);
-                    todoView.showNewTodo(JSON.parse(localStorage.list));
-
-                    this.btnEnter.value = '';
-                }
-
-                if(target.dataset.unique){
-
-                    let jsonObject = null;
-
-                    (localStorage.list) && (jsonObject = JSON.parse(localStorage.list));
-
-                    modal = todoView.showModal.call(target,jsonObject);
-
-                    todoView.spinnerShow(modal,load.image[0]);
-                    todoState.getWeather(target,document.querySelector('.weatherList'),modal);
-
-                    todoState.setState('main',false);
-                    todoState.setState('modal',true);
-
-                }
-            }
-
-            if (todoState.getState('modal')){
-
-                let modal = document.querySelector('[data-modal-num]');
-                let notes = document.querySelector('.addNotes');
-                let timer = null;
-                const parent = target.parentNode;
-
-                const item = JSON.parse(localStorage.list);
-                const index = item.findIndex(item => modal.dataset.modalNum === item.uniqueId);
-
-                if (target.classList[0] === 'addNotes'){
-
-                    todoView.createEditInput();
-                    item[index].changeNote = true;
-                    localStorage.list = JSON.stringify(item);
-                }
-
-                if(target.classList[0] === 'editButton'){
-
-
-                    notes.innerHTML = target.previousSibling.value;
-                    item[index].note = target.previousSibling.value;
-
-                    localStorage.list = JSON.stringify(item);
-                    notes.classList.toggle('visibility');
-                    target.previousSibling.remove();
-                    target.remove();
-
-                }
-
-                if (target.classList[0] === 'close' || target.classList[0] === 'background-modal'){
-
-                    modal = modal.parentNode;
-
-                    if (item[index].changeNote){
-
-                        todoView.showWarning(modal);
-
-                    } else{
-
-                        todoState.setState('main',true);
-                        todoState.setState('modal',false);
-
-                        modal.classList.toggle('animateOpen');
-                        modal.classList.add('animateHide');
-
-                        timer = setTimeout(()=>{
-                        modal.style.display = 'none';
-                        modal.remove();
-                        },400);
-                    }
-
-                }
-
-                if (target.classList[0] === 'save'){
-
-
-                    todoState.setState('main',true);
-                    todoState.setState('modal',false);
-
-                    target.parentNode.remove();
-
-                    modal.classList.toggle('animateOpen');
-                    modal.classList.add('animateHide');
-
-                    item.forEach( item => (item.changeNote) && (item.changeNote = false));
-                    localStorage.list = JSON.stringify(item);
-
-                    timer = setTimeout(()=>{
-
-                    modal.style.display = 'none';
-                    modal.parentNode.remove();
-                    modal.remove();
-                    },400);
-
-                } else  if (target.classList[0] === 'cancel') target.parentNode.remove();
-
-
-                if(target.classList[0] === 'delete'){
-
-                    const todoDelete = document.querySelector(`[data-unique="${parent.dataset.modalNum}"]`);
-                    const numDelete =  todoDelete.dataset.unique;
-
-                    const splits = JSON.parse(localStorage.list);
-                    const date = JSON.parse(localStorage.date);
-
-                    const counter =  splits.findIndex(element =>  element.uniqueId === numDelete);
-
-                    date.splice(counter,1);
-                    localStorage.date = JSON.stringify(date);
-
-                    const filter = splits.filter(v => (v.uniqueId === numDelete));
-
-                    store.updateStorage(JSON.parse(localStorage.list),filter[0].uniqueId);
-                    todoDelete.remove();
-
-                    /* Switch state */
-                    todoState.setState('main',true);
-                    todoState.setState('modal',false);
-
-                    modalWindow.remove();
-                }
-
-                    const todos = document.querySelectorAll('[data-date]');
-                    todos.forEach( (element,i) => element.dataset.num = i);
-                }
-
+            (todoState.getState('main')) && (this.mainController(todoView,todoState,load,datePicker,store,target));
+            (todoState.getState('modal')) && (this.modalController(todoView,todoState,store,target));
         };
 
         /* -----------Modernizr----------- */
@@ -226,6 +233,7 @@ class TodoControl{
         Modernizr.touchevents && document.addEventListener('touchend',clickEvent,false);
         !Modernizr.touchevents && document.addEventListener('click',clickEvent,false);
 
+        /* disabled date input */
         document.addEventListener('keydown', (e) =>{(e.target.classList[0] === 'date') && 
                                                             (e.preventDefault())},false);
 
@@ -238,7 +246,7 @@ class TodoControl{
         });
 
 
-        parentDnD.addEventListener('dragover', function(e){
+        draggableZone.addEventListener('dragover', function(e){
 
             e.preventDefault();
 
@@ -256,14 +264,14 @@ class TodoControl{
 
         });
 
-        parentDnD.addEventListener('dragleave', function(e){
+        draggableZone.addEventListener('dragleave', function(e){
 
             e.preventDefault();
             e.target.style['border-bottom'] = '';
             e.target.style['border-top'] = '';
         });
 
-        parentDnD.addEventListener('drop', function(e){
+        draggableZone.addEventListener('drop', function(e){
 
             let target = e.target;
 
