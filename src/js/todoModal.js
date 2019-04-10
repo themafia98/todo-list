@@ -71,12 +71,15 @@ class ListModal{
 
             this.weathersArray = [];
             for (let key in this.weatherHistory){
+
                 if (this.weatherHistory != {}){
-            let weatherView = document.createElement('li');
-            weatherView.classList.add('weather');
-            weatherView.innerHTML = `${key} : ${this.weatherHistory[key]}`;
-            this.weathersArray.push(weatherView);
-            weatherList.appendChild(weatherView);
+
+                    let weatherView = document.createElement('li');
+                    weatherView.classList.add('weather');
+                    weatherView.innerHTML = `${key} : ${this.weatherHistory[key]}`;
+                    this.weathersArray.push(weatherView);
+                    weatherList.appendChild(weatherView);
+
                 }
             }
 
@@ -166,15 +169,15 @@ class Storage{
     }
 }
 
-class todoOne extends ListModal {
+class todoOne {
 
     constructor(value){
-        super();
+
         this.changeNote = false;
-        this.value = value;
         this.save = false;
         this.uniqueId = `id${ Math.floor((((Math.random()+5)-5).toFixed(7))*10000000)}`;
         this.note  = 'click for add note';
+        this.value = value;
     }
 
     updateChangeNote(item){

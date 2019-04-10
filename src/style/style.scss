@@ -80,7 +80,7 @@ body {
         background: tomato;
         color: white;
         margin-bottom: 5px;
-        width: 50px;
+        width: 75px;
         height: 50px;
         margin: 5px;
         align-self: flex-end;
@@ -91,6 +91,7 @@ body {
         background: tomato;
         color: white;
         margin-bottom: 5px;
+        width: 75px;
         height: 50px;
         margin: 5px;
         align-self: flex-end;
@@ -399,8 +400,8 @@ body {
         .addNotes {
             transition: all .5s ease-in-out;
             border: $addNoteButtonBorder;
-            margin-top: 0;
             padding: 10px;
+            margin: 0 auto;
             cursor: pointer;
             overflow-wrap: break-word;
         }
