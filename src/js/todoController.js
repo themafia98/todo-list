@@ -19,7 +19,7 @@ class TodoControl{
             if (todoState.getState('main')){
 
                 const todos = document.querySelectorAll('[data-unique]');
-                const currentTodos = null;
+                let currentTodos = null;
 
                 (target.classList[0] === 'selectCalendar') && (todoView.buildCalendar(datePicker));
 

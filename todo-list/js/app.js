@@ -773,8 +773,6 @@ function (_View) {
 }(View);
 "use strict";
 
-function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
@@ -851,9 +849,9 @@ function () {
             }, 300);
           }
 
-          target.classList[1] === 'sortAfter' && (currentTodos = (_readOnlyError("currentTodos"), document.querySelectorAll('.future')));
-          target.classList[1] === 'sortBefore' && (currentTodos = (_readOnlyError("currentTodos"), document.querySelectorAll('.unactive')));
-          target.classList[1] === 'sortCurrent' && (currentTodos = (_readOnlyError("currentTodos"), document.querySelectorAll('.today')));
+          target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
+          target.classList[1] === 'sortBefore' && (currentTodos = document.querySelectorAll('.unactive'));
+          target.classList[1] === 'sortCurrent' && (currentTodos = document.querySelectorAll('.today'));
           target.classList[0] === 'sort' && todoView.sortTodos(todos, target.classList[1], currentTodos);
 
           if (target.classList[0] === 'setTodo' && _this.btnEnter.value) {
