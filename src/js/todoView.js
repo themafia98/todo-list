@@ -1,5 +1,5 @@
 
-class View {
+class View{
 
     constructor({appID,title}){
         this.ID = appID;
@@ -7,33 +7,32 @@ class View {
     }
 }
 
-class Todo extends View {
+class Todo extends View{
 
     constructor(settingsTodo){
         super(settingsTodo);
-        this.prewDate = [];
-        this.prewTime = [];
-        this.arrayTodo = [];
         this.arrayJSON = [];
-        this.saveP = [];
     }
 
-    spinnerShow(modal,load){
-        
-            let weatherBox = document.querySelector('.weather-box');
-            if (!weatherBox){
-                weatherBox = document.createElement('div');
-                weatherBox.classList.add('weather-box');
-            };
-            load.classList.add('center');
-            modal.appendChild(weatherBox);
-            weatherBox.appendChild(load);
+    spinnerShow(modal = document.createElement('div'),load = document.createElement('image')){
 
-            return weatherBox;
+        let weatherBox = document.querySelector('.weather-box');
+
+        if (!weatherBox){
+
+            weatherBox = document.createElement('div');
+            weatherBox.classList.add('weather-box');
+
+        };
+
+        load.classList.add('center');
+
+        modal.appendChild(weatherBox);
+        weatherBox.appendChild(load);
     }
 
     static checkEmpty(modal = document.createElement('div')){
-        
+
         let weatherLists = document.querySelector('.weatherList');
         let weatherBox = document.querySelector('.weather-box');
         let checkP = document.querySelectorAll('.weather');
@@ -57,36 +56,33 @@ class Todo extends View {
         (spinner) && (spinner.remove());
     }
 
-    build(){
-  
-        let time = new Date().toLocaleDateString().split('.').reverse().join().replace(/\,/g,'-');
-        
+    build(time){
 
-        let wrapper = document.createElement('div');
+        const wrapper = document.createElement('div');
         wrapper.classList.add('wrapper');
 
-        let footer = document.createElement('div');
+        const footer = document.createElement('div');
         footer.classList.add('footer');
 
-        let section = document.createElement('div');
+        const section = document.createElement('div');
         section.classList.add('section');
 
-        let sortWrapper = document.createElement('div');
+        const sortWrapper = document.createElement('div');
         sortWrapper.classList.add('sortWrapper');
 
 
-        let selectCalendar = document.createElement('input');
+        const selectCalendar = document.createElement('input');
         selectCalendar.setAttribute('type','button');
         selectCalendar.classList.add('selectCalendar');
         selectCalendar.value = 'select date';
 
-        let sortBtnBefore = document.createElement('input');
+        const sortBtnBefore = document.createElement('input');
         sortBtnBefore.setAttribute('type','button');
         sortBtnBefore.classList.add('sort');
         sortBtnBefore.classList.add('sortBefore');
         sortBtnBefore.value = 'past';
 
-        let sortBtnCurrent = document.createElement('input');
+        const sortBtnCurrent = document.createElement('input');
         sortBtnCurrent.setAttribute('type','button');
         sortBtnCurrent.classList.add('sort');
         sortBtnCurrent.classList.add('sortCurrent');
@@ -98,35 +94,35 @@ class Todo extends View {
         sortBtnAfter.classList.add('sortAfter');
         sortBtnAfter.value = 'future';
 
-        let sortBtnAll = document.createElement('input');
+        const sortBtnAll = document.createElement('input');
         sortBtnAll.setAttribute('type','button');
         sortBtnAll.classList.add('sort');
         sortBtnAll.classList.add('sortAll');
         sortBtnAll.value = 'all';
 
-        let todoList = document.createElement('div');
+        const todoList = document.createElement('div');
         todoList.classList.add('todoList');
 
-        let titleName = document.createElement('h1');
+        const titleName = document.createElement('h1');
         titleName.classList.add('title');
         titleName.innerHTML = this.title;
 
 
-        let todoControllers = document.createElement('div');
+        const todoControllers = document.createElement('div');
         todoControllers.classList.add('controllers');
 
-        let input = document.createElement('input');
+        const input = document.createElement('input');
         input.setAttribute('type','text');
         input.setAttribute('maxlength', '110');
         input.classList.add('getTodo');
         input.setAttribute('placeholder','What should you do?');
 
-        let button = document.createElement('input');
+        const button = document.createElement('input');
         button.setAttribute('type','button');
         button.classList.add('setTodo');
         button.setAttribute('value','ADD');
 
-        let datePick = document.createElement('input');
+        const datePick = document.createElement('input');
         datePick.classList.add('date');
         datePick.setAttribute('disabled','');
         datePick.setAttribute('type','text');
@@ -157,27 +153,29 @@ class Todo extends View {
 
     sortTodos(todo = [],type,currentTodos){
 
-        
-
         if (type != 'sortAll'){
-            
+
             todo.forEach(element =>  element.classList.add('hide'));
             currentTodos.forEach(element => element.classList.toggle('hide'));
+
             return;
-        }
+       }
 
         if (type === 'sortAll'){
-        todo.forEach( element => (element.classList[1] === 'hide') && (element.classList.toggle('hide')));
+
+            todo.forEach( element => (element.classList[1] === 'hide') &&
+                                     (element.classList.toggle('hide')));
         }
     }
 
     showNewTodo(value = false){
 
-    let here = document.querySelector('.todoList');
-    let oldTodo = document.querySelectorAll('p');
-    let todoList;
+    const mainList = document.querySelector('.todoList');
+    const oldTodo = document.querySelectorAll('p');
     const NOW = Date.now();
-        
+
+    let todoList = null;
+
     (oldTodo.length) && (oldTodo.forEach(element => element.remove()));
 
     for (let i = 0; i < value.length; i++){
@@ -197,79 +195,84 @@ class Todo extends View {
             let todoDay = new Date(dateNow[0],dateNow[1],dateNow[2]).getTime();
             let today = new Date(NOW).toLocaleDateString();
 
-            if (todoList.dataset.date === today) {
-                todoList.classList.add('today')
-            } else if (todoDay < NOW){
+            if (todoList.dataset.date === today){
+
+                todoList.classList.add('today');
+
+           } else if (todoDay < NOW){
+
                 todoList.classList.add('unactive');
-            } else if (todoDay > NOW){
+
+           } else if (todoDay > NOW){
+
                 todoList.classList.add('future');
-            }
+
+           }
 
             todoList.dataset.unique = value[i].uniqueId;
             todoList.innerHTML = value[i].value;
 
-            here.appendChild(todoList);
+            mainList.appendChild(todoList);
 
-        }
-    }
+       }
+   }
 
     localStorage.removeItem('newTime');
     localStorage.removeItem('newTodo');
-    }
+   }
 
     showModal(jsonObject = 'click for add note'){
 
 
-        let num = jsonObject.findIndex(element => element.uniqueId === this.dataset.unique);
+        const num = jsonObject.findIndex(element => element.uniqueId === this.dataset.unique);
 
-        let getList = document.getElementById('todo');
+        const getList = document.getElementById('todo');
 
-        let modalBg = document.createElement('div');
+        const modalBg = document.createElement('div');
         modalBg.classList.add('background-modal');
         modalBg.classList.add('animateOpen');
 
-        let modal = document.createElement('div');
+        const modal = document.createElement('div');
         modal.classList.add('modal-window');
         modal.classList.add('animateOpen');
         modal.dataset.modalNum = this.dataset.unique;
 
 
-        let closeBtn = document.createElement('input');
+        const closeBtn = document.createElement('input');
         closeBtn.setAttribute('type','button');
         closeBtn.setAttribute('value','X');
         closeBtn.classList.add('close');
 
-        let deleteBtn = document.createElement('input');
+        const deleteBtn = document.createElement('input');
         deleteBtn.setAttribute('type','button');
         deleteBtn.setAttribute('value','Delete todo');
         deleteBtn.classList.add('delete');
 
-        let noteZone = document.createElement('div');
+        const noteZone = document.createElement('div');
         noteZone.classList.add('textArea');
 
-        let currentTodo = document.createElement('p');
+        const currentTodo = document.createElement('p');
         currentTodo.classList.add('currentTodo');
         currentTodo.innerHTML = this.innerHTML;
 
-        let additionalNotesTitle = document.createElement('p');
+        const additionalNotesTitle = document.createElement('p');
         additionalNotesTitle.classList.add('addNotes__title');
         additionalNotesTitle.innerHTML = 'additional notes';
 
-        let edditableWrapper = document.createElement('div');
+        const edditableWrapper = document.createElement('div');
         edditableWrapper.classList.add('editWrapper');
-            
-        let additionalNotes = document.createElement('p');
+
+        const additionalNotes = document.createElement('p');
         additionalNotes.classList.add('addNotes');
         additionalNotes.innerHTML = jsonObject[num].note;
 
-        let weatherList = document.createElement('ul');
+        const weatherList = document.createElement('ul');
         weatherList.classList.add('weatherList');
- 
-        let showTodoDate = document.createElement('p');
+
+        const showTodoDate = document.createElement('p');
         showTodoDate.classList.add('modal-date');
         showTodoDate.innerHTML = this.dataset.date;
 
-        
 
         modal.appendChild(closeBtn);
         modal.appendChild(showTodoDate);
@@ -285,24 +288,27 @@ class Todo extends View {
         modalBg.appendChild(modal);
         getList.appendChild(modalBg);
 
-    }
+        
+
+        return document.querySelector('[data-modal-num]');
+
+   }
 
     showWarning(ctx){
 
-
-        let modal = document.createElement('div');
+        const modal = document.createElement('div');
         modal.classList.add('warning');
 
-        let question = document.createElement('p');
+        const question = document.createElement('p');
         question.classList.add('question');
         question.innerHTML = 'Save changes?';
 
-        let save = document.createElement('input');
+        const save = document.createElement('input');
         save.setAttribute('type','button');
         save.classList.add('save');
         save.value = 'save';
 
-        let cancel = document.createElement('input');
+        const cancel = document.createElement('input');
         cancel.setAttribute('type','button');
         cancel.classList.add('cancel');
         cancel.value = 'cancel';
@@ -312,16 +318,17 @@ class Todo extends View {
         modal.appendChild(cancel);
 
         ctx.appendChild(modal);
-    }
+   }
 
     buildCalendar(...date){
-        
 
         let dateObject = date[0];
-        let monthName = dateObject.monthName[dateObject.currentMonth-1];
+        let EmptyCount = 0;
 
-        let clearCalendar = document.querySelector('.calendar');
-        
+        const monthName = dateObject.monthName[dateObject.currentMonth-1];
+
+        const clearCalendar = document.querySelector('.calendar');
+
         if (clearCalendar) clearCalendar.remove();
 
         let calendarWrapper = document.querySelector('calendar') ?
@@ -329,92 +336,93 @@ class Todo extends View {
 
         calendarWrapper.classList.add('calendar');
 
-        let zeroMonth = (dateObject.currentMonth < 10) ? '0' : '';
-        let zeroDay = (dateObject.currentDay < 10) ? '0' : '';
+        const zeroMonth = (dateObject.currentMonth < 10) ? '0' : '';
+        const zeroDay = (dateObject.currentDay < 10) ? '0' : '';
 
         calendarWrapper.dataset.current = `${zeroDay + dateObject.currentDay}.${zeroMonth + dateObject.currentMonth}.${dateObject.currentYear}`;
 
 
-        let wrapperSpan = document.createElement('div');
+        const wrapperSpan = document.createElement('div');
         wrapperSpan.classList.add('calendarControlBtns');
 
-        let spanPrew = document.createElement('input');
+        const spanPrew = document.createElement('input');
         spanPrew.setAttribute('type','button');
         spanPrew.dataset.move = 'prew';
         spanPrew.value = '<==';
 
-        let spanNext = document.createElement('input');
+        const spanNext = document.createElement('input');
         spanNext.setAttribute('type','button');
         spanNext.dataset.move = 'next';
         spanNext.value = '==>';
 
-        let spanMonthPrew = document.createElement('input');
+        const spanMonthPrew = document.createElement('input');
         spanMonthPrew.setAttribute('type','button');
         spanMonthPrew.dataset.move = 'prewMonth';
         spanMonthPrew.value = '<=';
 
-        let spanMonthNext = document.createElement('input');
+        const spanMonthNext = document.createElement('input');
         spanMonthNext.setAttribute('type','button');
         spanMonthNext.dataset.move = 'nextMonth';
         spanMonthNext.value = '=>';
 
-        let calendarName = document.createElement('h3');
+        const calendarName = document.createElement('h3');
         calendarName.classList.add('calendarDate');
         calendarName.innerHTML =  monthName  + ' ' + dateObject.currentYear;
     
-        let ulCalendar = document.createElement('ul');
+        const ulCalendar = document.createElement('ul');
         ulCalendar.classList.add('calendarList');
 
-        let calendarController = document.createElement('div');
+        const calendarController = document.createElement('div');
 
 
         calendarController.classList.add('calendarController');
 
-        let controllers = document.querySelector('.controllers');
+        const controllers = document.querySelector('.controllers');
 
         for(let i = 0; i < dateObject.dateWeek.length; i++){
 
-            let dayWeek = document.createElement('li');
+            const dayWeek = document.createElement('li');
             dayWeek.dataset.week = dateObject.dateWeek[i];
             dayWeek.innerHTML = dateObject.dateWeek[i];
             ulCalendar.appendChild(dayWeek);
-        }
-
-        let EmptyCount = 0;
+       }
 
         for(let i = 1, j = 1; j <= dateObject.totalDay; i++){
             
 
-            if ((dateObject.weekDay === 0) && (EmptyCount === 0)) {
+            if (!dateObject.weekDay && !EmptyCount){
 
-                for(let i = 0; i < dateObject.dateWeek.length-1; i++){
+                for (let i = 0; i < dateObject.dateWeek.length-1; i++){
 
-                    let dempty = document.createElement('li');
+                    const dempty = document.createElement('li');
                     dempty.classList.add('empty');
                     ulCalendar.appendChild(dempty);
-                }
+               }
+
                 EmptyCount++;
-            }
+           }
 
             if (dateObject.weekDay <= i){
-                
-            let day = document.createElement('li');
+
+            const day = document.createElement('li');
+
             ((dateObject.currentDay === j) && (dateObject.todayYear === dateObject.currentYear) &&
                                            (dateObject.currentMonth === dateObject.todayMonth+1)) &&
                                                                     (day.classList.add('today'));
 
             day.dataset.day = j;
             day.innerHTML = j;
+
             ulCalendar.appendChild(day);
             j++;
 
-            } else {
+           } else{
 
-                let dempty = document.createElement('li');
+                const dempty = document.createElement('li');
                 dempty.classList.add('empty');
                 ulCalendar.appendChild(dempty);
-            }
-        }
+           }
+       }
     
         wrapperSpan.appendChild(spanPrew);
         wrapperSpan.appendChild(spanMonthPrew);
@@ -427,21 +435,21 @@ class Todo extends View {
         controllers.appendChild(calendarWrapper);
     }
 
-    createEditInput(target){
+    createEditInput(){
 
-        let addNotes = document.querySelector('.addNotes');
-        let textArea = document.querySelector('.textArea');
+        const addNotes = document.querySelector('.addNotes');
+        const textArea = document.querySelector('.textArea');
+        const edditableWrapper = document.querySelector('.editWrapper');
 
-        let edditableWrapper = document.querySelector('.editWrapper');
-        let inputEdit = document.createElement('textarea');
-        let buttonEdit = document.createElement('input');
+        const inputEdit = document.createElement('textarea');
+        const buttonEdit = document.createElement('input');
 
-
-        
         addNotes.classList.add('visibility');
+
         inputEdit.setAttribute('maxLength' ,'100');
         inputEdit.classList.add('edditable');
         inputEdit.value = addNotes.innerHTML;
+
         buttonEdit.setAttribute('type','button');
         buttonEdit.classList.add('editButton');
         buttonEdit.setAttribute('value','Edit');

@@ -249,30 +249,26 @@ function () {
     this.arrayList = [];
     this.lists = [];
     this.dateArray = [];
-    this.buffer = {};
+    this.buffer = [];
     this.number = 0;
   }
 
   _createClass(Storage, [{
-    key: "store",
-    value: function store(todo) {
-      todo.value && this.arrayList.push(todo.value);
-      localStorage.list = this.arrayList.join();
-      localStorage.newTodo && localStorage.removeItem('newTodo');
-    }
-  }, {
     key: "updateStorage",
     value: function updateStorage(list, num) {
       var newList = list.filter(function (v) {
         return v.uniqueId != num;
+      });
+      newList.forEach(function (e) {
+        return e.value > 0 && (e.value = e.value - 1);
       });
       localStorage.list = JSON.stringify(newList);
       return true;
     }
   }, {
     key: "localeStorageUpdate",
-    value: function localeStorageUpdate() {
-      localStorage.setItem('newTodo', this.btnEnter.value);
+    value: function localeStorageUpdate(btnValue) {
+      localStorage.setItem('newTodo', btnValue);
       var todo = new todoOne(localStorage.newTodo);
       todo.save = true;
       localStorage.list && (this.lists = JSON.parse(localStorage.list));
@@ -282,7 +278,8 @@ function () {
     }
   }, {
     key: "dataParser",
-    value: function dataParser(target) {
+    value: function dataParser() {
+      var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       localStorage.date && (this.buffer = JSON.parse(localStorage.date));
       var valueButton = target.previousSibling.value.slice(0, 10).split('-').reverse().join().replace(/\,/g, '.');
       !localStorage.date && (localStorage.date = JSON.stringify([valueButton]));
@@ -297,7 +294,9 @@ function () {
 var todoOne =
 /*#__PURE__*/
 function () {
-  function todoOne(value) {
+  function todoOne() {
+    var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+
     _classCallCheck(this, todoOne);
 
     this.changeNote = false;
@@ -408,17 +407,15 @@ function (_View) {
     _classCallCheck(this, Todo);
 
     _this = _possibleConstructorReturn(this, _getPrototypeOf(Todo).call(this, settingsTodo));
-    _this.prewDate = [];
-    _this.prewTime = [];
-    _this.arrayTodo = [];
     _this.arrayJSON = [];
-    _this.saveP = [];
     return _this;
   }
 
   _createClass(Todo, [{
     key: "spinnerShow",
-    value: function spinnerShow(modal, load) {
+    value: function spinnerShow() {
+      var modal = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : document.createElement('div');
+      var load = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : document.createElement('image');
       var weatherBox = document.querySelector('.weather-box');
 
       if (!weatherBox) {
@@ -430,12 +427,10 @@ function (_View) {
       load.classList.add('center');
       modal.appendChild(weatherBox);
       weatherBox.appendChild(load);
-      return weatherBox;
     }
   }, {
     key: "build",
-    value: function build() {
-      var time = new Date().toLocaleDateString().split('.').reverse().join().replace(/\,/g, '-');
+    value: function build(time) {
       var wrapper = document.createElement('div');
       wrapper.classList.add('wrapper');
       var footer = document.createElement('div');
@@ -532,10 +527,10 @@ function (_View) {
     key: "showNewTodo",
     value: function showNewTodo() {
       var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-      var here = document.querySelector('.todoList');
+      var mainList = document.querySelector('.todoList');
       var oldTodo = document.querySelectorAll('p');
-      var todoList;
       var NOW = Date.now();
+      var todoList = null;
       oldTodo.length && oldTodo.forEach(function (element) {
         return element.remove();
       });
@@ -561,7 +556,7 @@ function (_View) {
 
           todoList.dataset.unique = value[i].uniqueId;
           todoList.innerHTML = value[i].value;
-          here.appendChild(todoList);
+          mainList.appendChild(todoList);
         }
       }
 
@@ -622,6 +617,7 @@ function (_View) {
       modal.appendChild(weatherList);
       modalBg.appendChild(modal);
       getList.appendChild(modalBg);
+      return document.querySelector('[data-modal-num]');
     }
   }, {
     key: "showWarning",
@@ -648,6 +644,7 @@ function (_View) {
     key: "buildCalendar",
     value: function buildCalendar() {
       var dateObject = arguments.length <= 0 ? undefined : arguments[0];
+      var EmptyCount = 0;
       var monthName = dateObject.monthName[dateObject.currentMonth - 1];
       var clearCalendar = document.querySelector('.calendar');
       if (clearCalendar) clearCalendar.remove();
@@ -690,10 +687,8 @@ function (_View) {
         ulCalendar.appendChild(dayWeek);
       }
 
-      var EmptyCount = 0;
-
       for (var _i = 1, j = 1; j <= dateObject.totalDay; _i++) {
-        if (dateObject.weekDay === 0 && EmptyCount === 0) {
+        if (!dateObject.weekDay && !EmptyCount) {
           for (var _i2 = 0; _i2 < dateObject.dateWeek.length - 1; _i2++) {
             var dempty = document.createElement('li');
             dempty.classList.add('empty');
@@ -731,7 +726,7 @@ function (_View) {
     }
   }, {
     key: "createEditInput",
-    value: function createEditInput(target) {
+    value: function createEditInput() {
       var addNotes = document.querySelector('.addNotes');
       var textArea = document.querySelector('.textArea');
       var edditableWrapper = document.querySelector('.editWrapper');
@@ -778,7 +773,7 @@ function (_View) {
 }(View);
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _readOnlyError(name) { throw new Error("\"" + name + "\" is read-only"); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -786,47 +781,23 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _wrapNativeSuper(Class) { var _cache = typeof Map === "function" ? new Map() : undefined; _wrapNativeSuper = function _wrapNativeSuper(Class) { if (Class === null || !_isNativeFunction(Class)) return Class; if (typeof Class !== "function") { throw new TypeError("Super expression must either be null or a function"); } if (typeof _cache !== "undefined") { if (_cache.has(Class)) return _cache.get(Class); _cache.set(Class, Wrapper); } function Wrapper() { return _construct(Class, arguments, _getPrototypeOf(this).constructor); } Wrapper.prototype = Object.create(Class.prototype, { constructor: { value: Wrapper, enumerable: false, writable: true, configurable: true } }); return _setPrototypeOf(Wrapper, Class); }; return _wrapNativeSuper(Class); }
-
-function isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Date.prototype.toString.call(Reflect.construct(Date, [], function () {})); return true; } catch (e) { return false; } }
-
-function _construct(Parent, args, Class) { if (isNativeReflectConstruct()) { _construct = Reflect.construct; } else { _construct = function _construct(Parent, args, Class) { var a = [null]; a.push.apply(a, args); var Constructor = Function.bind.apply(Parent, a); var instance = new Constructor(); if (Class) _setPrototypeOf(instance, Class.prototype); return instance; }; } return _construct.apply(null, arguments); }
-
-function _isNativeFunction(fn) { return Function.toString.call(fn).indexOf("[native code]") !== -1; }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 var TodoControl =
 /*#__PURE__*/
-function (_Storage) {
-  _inherits(TodoControl, _Storage);
-
+function () {
   function TodoControl(_ref) {
-    var _this;
-
     var controllerEnter = _ref.controllerEnter,
         btn = _ref.btn;
 
     _classCallCheck(this, TodoControl);
 
-    _this = _possibleConstructorReturn(this, _getPrototypeOf(TodoControl).call(this));
-    _this.btnEnter = controllerEnter;
-    _this.btnAdd = btn;
-    return _this;
+    this.btnEnter = controllerEnter;
+    this.btnAdd = btn;
   }
 
   _createClass(TodoControl, [{
     key: "setLsitener",
-    value: function setLsitener(todoView, todoState, load, datePicker) {
-      var _this2 = this;
+    value: function setLsitener(todoView, todoState, load, datePicker, store) {
+      var _this = this;
 
       var parentDnD = document.getElementsByClassName('todoList')[0];
 
@@ -836,9 +807,7 @@ function (_Storage) {
         var modal = null;
 
         if (todoState.getState('main')) {
-          // todoView.buildCalendar(datePicker);
           var todos = document.querySelectorAll('[data-unique]');
-          var date = document.querySelector('.date');
           var currentTodos = null;
           target.classList[0] === 'selectCalendar' && todoView.buildCalendar(datePicker);
 
@@ -868,46 +837,38 @@ function (_Storage) {
             var timerDeleteCalendar = null;
             var days = document.querySelectorAll('[data-day]');
             var dateInput = document.querySelector('.date');
-
-            var _date = modalWindow.dataset.current.split('.');
-
-            _date[0] = target.dataset.day;
+            var date = modalWindow.dataset.current.split('.');
+            date[0] = target.dataset.day;
             days.forEach(function (element) {
               element.classList[0] === 'selectDay' && element.classList.toggle('selectDay');
             });
             target.classList.add('selectDay');
-            var zeroDay = _date[0] < 10 ? '0' : '';
-            _date[0] = (zeroDay + _date[0]).trim();
-            dateInput.value = _date.reverse().join().replace(/\,/g, '-');
+            var zeroDay = date[0] < 10 ? '0' : '';
+            date[0] = (zeroDay + date[0]).trim();
+            dateInput.value = date.reverse().join().replace(/\,/g, '-');
             timerDeleteCalendar = setTimeout(function () {
               return modalWindow.remove();
             }, 300);
           }
 
-          target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
-          target.classList[1] === 'sortBefore' && (currentTodos = document.querySelectorAll('.unactive'));
-          target.classList[1] === 'sortCurrent' && (currentTodos = document.querySelectorAll('.today'));
+          target.classList[1] === 'sortAfter' && (currentTodos = (_readOnlyError("currentTodos"), document.querySelectorAll('.future')));
+          target.classList[1] === 'sortBefore' && (currentTodos = (_readOnlyError("currentTodos"), document.querySelectorAll('.unactive')));
+          target.classList[1] === 'sortCurrent' && (currentTodos = (_readOnlyError("currentTodos"), document.querySelectorAll('.today')));
           target.classList[0] === 'sort' && todoView.sortTodos(todos, target.classList[1], currentTodos);
 
-          if (target.classList[0] === 'setTodo' && _this2.btnEnter.value) {
-            _this2.buffer = [];
-
-            _this2.localeStorageUpdate();
-
-            _this2.dataParser(target);
-
+          if (target.classList[0] === 'setTodo' && _this.btnEnter.value) {
+            store.localeStorageUpdate(_this.btnEnter.value);
+            store.dataParser(target);
             todoView.showNewTodo(JSON.parse(localStorage.list));
-            _this2.btnEnter.value = '';
+            _this.btnEnter.value = '';
           }
 
           if (target.dataset.unique) {
             var jsonObject = null;
             localStorage.list && (jsonObject = JSON.parse(localStorage.list));
-            todoView.showModal.call(target, jsonObject);
-            modal = document.querySelector('[data-modal-num]');
+            modal = todoView.showModal.call(target, jsonObject);
             todoView.spinnerShow(modal, load.image[0]);
-            var weatherList = document.querySelector('.weatherList');
-            todoState.getWeather(target, weatherList, modal);
+            todoState.getWeather(target, document.querySelector('.weatherList'), modal);
             todoState.setState('main', false);
             todoState.setState('modal', true);
           }
@@ -917,6 +878,7 @@ function (_Storage) {
           var _modal = document.querySelector('[data-modal-num]');
 
           var notes = document.querySelector('.addNotes');
+          var timer = null;
           var parent = target.parentNode;
           var item = JSON.parse(localStorage.list);
           var index = item.findIndex(function (item) {
@@ -924,7 +886,7 @@ function (_Storage) {
           });
 
           if (target.classList[0] === 'addNotes') {
-            todoView.createEditInput(target);
+            todoView.createEditInput();
             item[index].changeNote = true;
             localStorage.list = JSON.stringify(item);
           }
@@ -951,7 +913,7 @@ function (_Storage) {
 
               _modal.classList.add('animateHide');
 
-              var timer = setTimeout(function () {
+              timer = setTimeout(function () {
                 _modal.style.display = 'none';
 
                 _modal.remove();
@@ -972,8 +934,7 @@ function (_Storage) {
               return item.changeNote && (item.changeNote = false);
             });
             localStorage.list = JSON.stringify(item);
-
-            var _timer = setTimeout(function () {
+            timer = setTimeout(function () {
               _modal.style.display = 'none';
 
               _modal.parentNode.remove();
@@ -987,22 +948,22 @@ function (_Storage) {
             var numDelete = todoDelete.dataset.unique;
             var splits = JSON.parse(localStorage.list);
 
-            var _date2 = JSON.parse(localStorage.date);
+            var _date = JSON.parse(localStorage.date);
 
             var counter = splits.findIndex(function (element) {
               return element.uniqueId === numDelete;
             });
 
-            _date2.splice(counter, 1);
+            _date.splice(counter, 1);
 
-            localStorage.date = JSON.stringify(_date2);
+            localStorage.date = JSON.stringify(_date);
             var filter = splits.filter(function (v) {
               return v.uniqueId === numDelete;
             });
-
-            _this2.updateStorage(JSON.parse(localStorage.list), filter[0].uniqueId);
-
+            store.updateStorage(JSON.parse(localStorage.list), filter[0].uniqueId);
             todoDelete.remove();
+            /* Switch state */
+
             todoState.setState('main', true);
             todoState.setState('modal', false);
             modalWindow.remove();
@@ -1015,6 +976,8 @@ function (_Storage) {
           });
         }
       };
+      /* -----------Modernizr----------- */
+
 
       console.log('touchevents detected:' + Modernizr.touchevents);
       Modernizr.touchevents && document.addEventListener('touchend', clickEvent, false);
@@ -1022,6 +985,8 @@ function (_Storage) {
       document.addEventListener('keydown', function (e) {
         e.target.classList[0] === 'date' && e.preventDefault();
       }, false);
+      /* -----------DnD----------- */
+
       var drag = null;
       document.addEventListener('dragstart', function (e) {
         drag = e.target;
@@ -1082,6 +1047,8 @@ function (_Storage) {
           localStorage.list = JSON.stringify(swapeList);
         } else target.style['border-top'] = '';
       });
+      /* ----on window load---- */
+
       window.addEventListener('DOMContentLoaded', function () {
         if (!localStorage.list) return;
         var item = JSON.parse(localStorage.list);
@@ -1095,7 +1062,7 @@ function (_Storage) {
   }]);
 
   return TodoControl;
-}(_wrapNativeSuper(Storage));
+}();
 "use strict";
 
 var todoApp = function () {
@@ -1105,12 +1072,14 @@ var todoApp = function () {
       title: 'Todo-list'
     };
     var load = new Loader();
+    var time = new Date().toLocaleDateString().split('.').reverse().join().replace(/\,/g, '-');
     load.loading('image', '../img/spinner.gif', 'smallSpinner');
     var todoState = new ListModal();
+    var store = new Storage();
     todoState.getCoords();
     todoState.setState('main', true);
     var todoView = new Todo(settingsTodo);
-    todoView.build();
+    todoView.build(time);
     var datePicker = new Calendar();
     datePicker.parseCalendarData();
     var controllerSettings = {
@@ -1118,7 +1087,7 @@ var todoApp = function () {
       btn: document.querySelector('.setTodo')
     };
     var controller = new TodoControl(controllerSettings);
-    controller.setLsitener(todoView, todoState, load, datePicker);
+    controller.setLsitener(todoView, todoState, load, datePicker, store);
   }
 
   return {

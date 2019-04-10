@@ -1,17 +1,17 @@
 
 @import 'value';
 
-@mixin fullscreen {
+@mixin fullscreen{
     width: 100%;
     height: 100%;
 }
 
-%hoversBtn {
+%hoversBtn{
     cursor: pointer;
     color: $importantColor;
 }
 
-%absCenter {
+%absCenter{
 
     position: $abs;
     left: 0;
@@ -21,22 +21,22 @@
     margin: auto;
 }
 
-%fix {
+%fix{
     margin: 0;
     padding: 0;
 }
 
-%marginCenter {
+%marginCenter{
     text-align: center;
     margin: 0;
 }
 
-%max {
+%max{
     width: 100%;
     height: 100%;
 }
 
-body {
+body{
     background: $appBG;
     font-family: $mainFont;
 }
@@ -46,7 +46,7 @@ body {
     height: $spinnerW;
 }
 
-%sortButtons {
+%sortButtons{
     border: $sortButtonsBorder;
     font-weight: 600;
     margin: 2px;
@@ -58,7 +58,7 @@ body {
     color: $importantColor;
 }
 
-.warning {
+.warning{
     display: flex;
     justify-content: center;
     position: absolute;
@@ -71,9 +71,9 @@ body {
         position: absolute;
         color: black;
         word-wrap: break-word;
-    }
+   }
 
-    .save {
+    .save{
 
         border: 2px solid black;
         background: tomato;
@@ -83,9 +83,9 @@ body {
         height: 50px;
         margin: 5px;
         align-self: flex-end;
-    }
+   }
 
-    .cancel {
+    .cancel{
         border: 2px solid black;
         background: tomato;
         color: white;
@@ -95,58 +95,58 @@ body {
         margin: 5px;
         align-self: flex-end;
         
-    }
+   }
 
-    input:active {
+    input:active{
 
         border: 1px solid black;
-    }
+   }
 
-    input:hover {
+    input:hover{
         cursor: pointer;
         color: lightblue;
-    }
+   }
 }
 
 
 
 
-#todo {
+#todo{
 
-    .wrapper {
+    .wrapper{
         display: flex;
         flex-direction: column;
         position: $abs;
         @extend %max;
         margin: 0 auto;
-    }
+   }
 
-    .title {
+    .title{
         font-weight: 900;
         font-size: $appTitleFontSize;
         color: $appTitleColor;
         text-align: center;
         margin-bottom: 0;
-    }
+   }
 
-    .selectCalendar {
+    .selectCalendar{
         border: 1px solid brown;
         background: rgb(207, 205, 205);
         margin: 5px 0;
-    }
+   }
 
-    .selectCalendar:active {
+    .selectCalendar:active{
         background: green;
         border: 2px solid brown;
         color: $importantColor;
-    }
+   }
 
-    .selectCalendar:hover {
+    .selectCalendar:hover{
         cursor: pointer;
         color: $importantColor;
-    }
+   }
 
-    .calendar {
+    .calendar{
         background: white;
         border: 1px solid black;
         display: grid;
@@ -156,70 +156,70 @@ body {
 
         .calendarController{
         position: relative;
-        }
+       }
 
         .calendarControlBtns{
             text-align: center;
-        }
+       }
 
-        input {
+        input{
             cursor: pointer;
             border: 2px solid black;
             box-shadow: 0 0 2px;
             margin-left: 5px;
 
-        }
-        input:hover {
+       }
+        input:hover{
         background: green;
         color: $importantColor;
-        }
+       }
 
 
 
-        li {
+        li{
             transition: all 0.3s linear;
-        }
+       }
 
-        h3.calendarDate {
+        h3.calendarDate{
             position: relative;
             vertical-align: sub;
             width: 100%;
             text-align: center;
             color: $importantColor;
             margin: 0;
-        }
+       }
 
-    .calendarList {
+    .calendarList{
         border-top: 1px solid black;
         display: grid;
         grid-template-columns: repeat(7, 1fr);
         grid-row: 2;
         @extend %fix;
 
-        li[data-day] {
+        li[data-day]{
             text-align: center;
-        }
+       }
 
-        li[data-day]:hover {
+        li[data-day]:hover{
             cursor: pointer;
             background: green;
-        }
+       }
 
         li[data-week]{
             text-align: center;
             color: $importantColor;
-        }
+       }
 
-        .today {
+        .today{
             background: red;
             color: gold;
-        }
+       }
 
-    }
-    }
+   }
+   }
 
 
-    .controllers {
+    .controllers{
         position: relative;
         display: flex;
         flex-direction: column;
@@ -227,20 +227,20 @@ body {
         align-items: center;
         margin: 0 auto;
 
-        .getTodo {
+        .getTodo{
             width: $inputMainTodoW;
             height: $inputMainTodoH;
             border-radius: 10px;
             border: $inputMainTodoBorder;
             text-align: center;
-        }
+       }
 
-        .getTodo::placeholder {
+        .getTodo::placeholder{
             text-align: center;
             color: red;
-        }
+       }
 
-        .setTodo {
+        .setTodo{
             width: $buttonMainTodoW;
             height: $buttonMainTodoH;
             border-radius: $buttonMainTodoRadius;
@@ -248,23 +248,23 @@ body {
             border: $inputMainTodoBorder;
             text-align: center;
             margin: 5px 0;
-        }
+       }
 
-        .setTodo:hover {
+        .setTodo:hover{
            @extend %hoversBtn;
-        }
+       }
 
-        .setTodo::placeholder {
+        .setTodo::placeholder{
             text-align: center;
             color: $importantColor;
-        }
+       }
 
-        .setTodo:active {
+        .setTodo:active{
             background: $buttonMainTodoActiveBgColor;
             color: $buttonMainTodoActiveColor;
-        }
+       }
 
-        .date {
+        .date{
             width: $mainDateInputW;
             height: $mainDateInputH;
             background: rgb(207, 205, 205);
@@ -273,24 +273,24 @@ body {
             top: 50%;
             border-radius: 5px;
             border: $inputMainTodoBorder;
-        }
+       }
 
-        .date:disabled {
+        .date:disabled{
             opacity: 1;
             background: rgb(207, 205, 205);
             color: $importantColor;
-        }
+       }
 
-    }
+   }
 
-    .section {
+    .section{
         @extend %max;
         display: flex;
         flex-direction: column;
         justify-content: center;
-    }
+   }
 
-    .todoList {
+    .todoList{
         width: 70%;
         height: 90%;
         background: whitesmoke;
@@ -300,87 +300,87 @@ body {
         border: $todoListBorder;
         box-shadow: 0 0 10px;
 
-        .todoList__title {
+        .todoList__title{
             border-bottom: $todoListTittleBottomBorder;
             font-size: $todoListTittleSizeFont;
             text-align: center;
             font-weight: 600;
             color: $todoListTittleColor;
             margin-top: 0;
-        }
+       }
 
-        p {
+        p{
             word-wrap: break-word;
             font-size: $todoListItemFontSize;
             background: $todoListItemColor;
             text-align: center;
             margin-top: 0;
-        }
+       }
 
 
-        .unactive {
+        .unactive{
             background: $unactiveColor;
-        }
+       }
         
-        .today {
+        .today{
             background: $todayColor;
-        }
+       }
 
-        p:hover {
+        p:hover{
             transition: 0.5s ease-in-out;
             cursor: pointer;
             background: $todoHoverColorBg;
             color: $todoHoverTxtColor;
-        }
+       }
 
 
 
-        .dateAdd {
+        .dateAdd{
             text-align: center;
-        }
-    }
+       }
+   }
 
-    .sortWrapper {
+    .sortWrapper{
 
         display: flex;
         justify-content: center;
         flex: 0 0 30px;
         margin-bottom: 5px;
 
-        .sortBefore {
+        .sortBefore{
             @extend %sortButtons;
             background: $unactiveColor;
             color: $SortButtonsColor;
-        }
+       }
 
-        .sortCurrent {
+        .sortCurrent{
             @extend %sortButtons;
             background: $todayColor;
             color :$SortButtonsColor;
-        }
+       }
 
-        .sortAfter {
+        .sortAfter{
             @extend %sortButtons;
             background: $todoListItemColor;
             color: $SortButtonsColor;
-        }
+       }
 
-        .sortAll {
+        .sortAll{
             @extend %sortButtons;
             background: $todoAllColor;
             color: $SortButtonsColor;
-        }
+       }
 
-        .sort:active {
+        .sort:active{
             color: $importantColor;
-        }
+       }
 
-        .sortBefore:hover, .sortAfter:hover, .sortAll:hover, .sortCurrent:hover {
+        .sortBefore:hover, .sortAfter:hover, .sortAll:hover, .sortCurrent:hover{
             @extend %hoversBtn;
-        }
-    }
+       }
+   }
 
-    .textArea {
+    .textArea{
 
         width: 100%;
         text-align: center;
@@ -389,34 +389,34 @@ body {
         .currentTodo{
             font-size: $todoTitles;
             margin-bottom: 0;
-        }
+       }
 
         .addNotes__title{
         font-size: $addNoteTitle;
             color: grey;
-        }
+       }
 
-        .addNotes {
+        .addNotes{
             transition: all .5s ease-in-out;
             border: $addNoteButtonBorder;
             padding: 10px;
             margin: 0 auto;
             cursor: pointer;
             overflow-wrap: break-word;
-        }
+       }
 
-        .addNotes:hover {
+        .addNotes:hover{
             font-size: $addNoteHover;
             background: $addNoteHoverColorBg;
             color: $importantColor;
-        }
-    }
+       }
+   }
 
-    .important {
+    .important{
         color: $importantColor;
-    }
+   }
 
-    .weatherList {
+    .weatherList{
         width: 100%;
         position: $abs;
         bottom: 0;
@@ -424,31 +424,31 @@ body {
         list-style-type: none;
         column-count: 2;
         border-top: $weatherBorder;
-    }
+   }
 
-    .weatherNone {
+    .weatherNone{
 
         width: 100%;
         position: $abs;
         bottom: 0;
         padding-bottom: 10px;
-    }
+   }
 
     .center{
         display: block;
         @extend %absCenter;
-    }
+   }
 
-    ::-webkit-scrollbar {
+    ::-webkit-scrollbar{
         width: 15px;
         background: $scrollBarColor;
-    }
+   }
 
-    ::-webkit-scrollbar-thumb {
+    ::-webkit-scrollbar-thumb{
         background: $scrollBarThumbColor;
-    }
+   }
 
-    .background-modal {
+    .background-modal{
 
         @extend %max;
         display: flex;
@@ -458,7 +458,7 @@ body {
         background: $hideColor;
         z-index: 1;
 
-        .modal-window {
+        .modal-window{
             transition: width 3s linear;
             position: $rel;
             width: 65%;
@@ -467,7 +467,7 @@ body {
             box-shadow: $modalWindowShadow;
             border: $modalWindowBorder;
 
-            .close {
+            .close{
                 font-family: $closeBtnFont;
                 font-weight: bold;
                 font-size: 18px;
@@ -477,30 +477,30 @@ body {
                 background:  $closeBtnColor;
                 cursor: pointer;
 
-            }
+           }
 
-            .delete {
+            .delete{
                 display: block;
                 margin: 0 auto;
                 font-size: 20px;
                 border-radius: 5px;
                 background: tomato;
                 border: $deleteBtnBorder;
-            }
+           }
 
-            .modal-date {
+            .modal-date{
                 font-size: $modalDateFontSize;
                 @extend %marginCenter;
-            }
+           }
 
-            .weather {
+            .weather{
                 font-size: $weatherFontSize;
                 @extend %marginCenter;
-            }
-        }
-    }
+           }
+       }
+   }
 
-    .edditable {
+    .edditable{
         width: 75%;
         height: 70%;
         border: $edditableBorder;
@@ -510,49 +510,49 @@ body {
         left: 50%;
         margin-right: -50%;
         transform: $tranCenter;
-    }
+   }
 
-    .editButton {
+    .editButton{
         position: $abs;
         top: 100%;
         left: 50%;
         transform: $tranCenter;
         background: red;
         border: 1px solid brown;
-    }
+   }
 
-    .editWrapper {
+    .editWrapper{
         position: $abs;
         transform: $tranCenter;
         width: $editWrapperW;
         height: $editWrapperH;
         top: 50%;
         left: 50%;
-    }
+   }
 
-    .visibility {
+    .visibility{
         visibility: hidden;
         opacity: 0;
-    }
+   }
 
     .ResetCount{
         column-count: 1;
-    }
+   }
 
-    .hide {
+    .hide{
 
         position: absolute;
         visibility: hidden;
         opacity: 0;
-    }
+   }
 
     .animateHide{
         animation: opacityHide  0.4s linear;
-    }
+   }
 
     .animateOpen{
         animation: opacityOpen  0.4s linear;
-    }
+   }
 
 }
 
@@ -563,25 +563,25 @@ body {
     clear: both;
 }
 
-@keyframes opacityHide {
+@keyframes opacityHide{
 
-    from {
+    from{
         opacity: 1;
-    }
-    to {
+   }
+    to{
         opacity: 0;
         visibility: hidden;
-    }
+   }
 }
 
-@keyframes opacityOpen {
+@keyframes opacityOpen{
 
-    from {
+    from{
         opacity: 0;
-    }
-    to {
+   }
+    to{
         opacity: 1;
-    }
+   }
 }
 
 

@@ -3,7 +3,8 @@
 class ListModal{
 
     constructor(){
-        this.states = {
+
+        this.states ={
             main: false,
             modal: false,
         };
@@ -20,13 +21,14 @@ class ListModal{
     }
 
     getState(bind){
+
         if (bind === 'main') return this.states.main;
         if (bind === 'modal') return this.states.modal;
     }
 
     getCoords(){
 
-        this.weatherHistory = {};
+        this.weatherHistory ={};
         this.weathersArray = [];
 
 
@@ -34,45 +36,46 @@ class ListModal{
         .then( (response) => response.json())
         .then( (response) =>{
 
-            let coords = {
+            let coords ={
                 latitude: response.latitude,
                 longitude: response.longitude
             }
             localStorage.coords = JSON.stringify(coords);
         })
 
-        .catch ( error => {
+        .catch ( error =>{
             console.log(error);
         });
     }
-    
-    getWeather(target,weatherList,modal) {
+
+    getWeather(target,weatherList,modal){
 
         let coords = JSON.parse(localStorage.coords);
-        
+
         fetch(`http://api.openweathermap.org/data/2.5/forecast?lat=${coords.latitude}&lon=${coords.longitude}&APPID=${this.getKey()}`)
         .then((response) => response.json())
         .then((response) =>{
-            this.weatherHistory = {};
-            response.list.forEach(element => {
 
-                
+            this.weatherHistory ={};
+            response.list.forEach(element => {
                 let date = element.dt_txt.split(' ')[0].split('-').reverse().join().replace(/\,/g,'.');
                 let time = element.dt_txt.split(' ')[1].slice(0,5);
+
                 if (date === target.dataset.date){
 
-                    this.weatherHistory[`${time}`]= `<span class ='important'>${Math.floor((element.main.temp - 273.15))} C°</span>`;
+                    this.weatherHistory[`${time}`]=
+                    `<span class ='important'>${Math.floor((element.main.temp - 273.15))} C°</span>`;
                 }
             });
 
         })
 
-        .then (()=> {
+        .then (()=>{
 
             this.weathersArray = [];
             for (let key in this.weatherHistory){
 
-                if (this.weatherHistory != {}){
+                if (this.weatherHistory !={}){
 
                     let weatherView = document.createElement('li');
                     weatherView.classList.add('weather');
@@ -89,61 +92,57 @@ class ListModal{
             return true;
         })
 
-        .catch ( error => {
+        .catch ( error =>{
             console.log(error);
         });
     }
 
 }
 
-class Loader {
+class Loader{
 
-    constructor(){ 
+    constructor(){
 
         this.image = [];
     }
 
     loading(type,srcFile, css){
 
-        if (type === 'image') {
-        let image = new Image();
-        image.src = srcFile;
-        image.classList.add(css);
-        this.image.push(image);
-    }
+        if (type === 'image'){
+
+            let image = new Image();
+            image.src = srcFile;
+            image.classList.add(css);
+            this.image.push(image);
+
+        }
     }
 }
 
 class Storage{
+
     constructor(){
         this.arrayList = [];
         this.lists = [];
         this.dateArray = [];
-        this.buffer = {};
+        this.buffer = [];
         this.number = 0;
     }
 
-    store(todo){
-
-        (todo.value) && (this.arrayList.push(todo.value));
-        localStorage.list = this.arrayList.join();
-        (localStorage.newTodo) && (localStorage.removeItem('newTodo'));
-    }
-
     updateStorage(list,num){
-        
-        let newList = list.filter( (v) => { return v.uniqueId != num;});
+
+        let newList = list.filter( (v) =>{ return v.uniqueId != num;});
+
+        newList.forEach( e =>  (e.value > 0) && (e.value = e.value-1) );
 
         localStorage.list = JSON.stringify(newList);
 
         return true;
     }
 
-    localeStorageUpdate(){
+    localeStorageUpdate(btnValue){
 
-
-        localStorage.setItem('newTodo',this.btnEnter.value);
-        
+        localStorage.setItem('newTodo',btnValue);
         let todo = new todoOne(localStorage.newTodo);
 
         todo.save = true;
@@ -156,9 +155,10 @@ class Storage{
         return this.number;
     }
 
-    dataParser(target){
+    dataParser(target = null){
 
         (localStorage.date) && (this.buffer = JSON.parse(localStorage.date));
+
         let valueButton = target.previousSibling.value.slice(0,10).split('-').reverse()
                         .join().replace(/\,/g,'.');
 
@@ -169,9 +169,9 @@ class Storage{
     }
 }
 
-class todoOne {
+class todoOne{
 
-    constructor(value){
+    constructor(value = 0){
 
         this.changeNote = false;
         this.save = false;
@@ -180,14 +180,11 @@ class todoOne {
         this.value = value;
     }
 
-    updateChangeNote(item){
-
-        (item.changeNote) && (item.changeNote = false);
-    }
+    updateChangeNote(item){ (item.changeNote) && (item.changeNote = false) };
 }
 
 
-class Calendar {
+class Calendar{
 
     constructor(){
 
@@ -234,7 +231,8 @@ class Calendar {
                 (this.one) : this.currentMonth;
 
         ((target === 'prew') || (target === 'next')) && (this.currentYear = this.currentYear + changeYear);
-        } else {
+
+        } else{
 
             this.currentYear = this.currentYear + changeYear;
             this.currentMonth = this.currentMonth + changeMonth;
