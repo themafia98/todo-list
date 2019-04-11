@@ -215,6 +215,8 @@ body{
             color: gold;
        }
 
+    
+
    }
    }
 
@@ -325,6 +327,10 @@ body{
         .today{
             background: $todayColor;
        }
+
+       .todayDay{
+        background: $todayColor;
+    }
 
         p:hover{
             transition: 0.5s ease-in-out;

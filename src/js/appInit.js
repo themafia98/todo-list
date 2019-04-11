@@ -1,4 +1,3 @@
-
 let todoApp = (function(){
 
     function main(){
@@ -18,7 +17,7 @@ let todoApp = (function(){
         let datePicker = new Calendar();
         datePicker.parseCalendarData();
 
-        let controllerSettings ={
+        let controllerSettings = {
             controllerEnter: document.querySelector('.getTodo'),
             btn: document.querySelector('.setTodo')
        }
@@ -27,7 +26,7 @@ let todoApp = (function(){
 
    }
 
-    return{ init: main};
+    return{ init: main };
 })();
 
 

@@ -1,4 +1,3 @@
-
 class View{
 
     constructor({appID,title}){
@@ -155,6 +154,7 @@ class Todo extends View{
 
         if (type != 'sortAll'){
 
+            console.log(currentTodos);
             todo.forEach(element =>  element.classList.add('hide'));
             currentTodos.forEach(element => element.classList.toggle('hide'));
 
@@ -197,7 +197,7 @@ class Todo extends View{
 
             if (todoList.dataset.date === today){
 
-                todoList.classList.add('today');
+                todoList.classList.add('todayDay');
 
            } else if (todoDay < NOW){
 

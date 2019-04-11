@@ -9,9 +9,16 @@ class TodoControl{
     mainController(todoView,todoState,load,datePicker,store,target){
 
         const todos = document.querySelectorAll('[data-unique]');
+        const calendar = document.querySelector('.calendar');
         let modalWindow = target.parentNode.parentNode;
         let currentTodos = null;
+        let childrenCalendar = null;
         let modal = null;
+
+        
+        // (calendar) && (childrenCalendar = [...calendar.childNodes]);
+
+        (calendar && (target.classList[0] === 'wrapper' || target.classList[0] === 'todoList') ) && (calendar.remove());
 
         (target.classList[0] === 'selectCalendar') && (todoView.buildCalendar(datePicker));
 
@@ -36,7 +43,7 @@ class TodoControl{
 
             }
 
-             if (target.dataset.move === 'nextMonth'){
+            if (target.dataset.move === 'nextMonth'){
 
                 datePicker.parseCalendarData(null, +1,target.dataset.move);
                 todoView.buildCalendar(datePicker);
@@ -75,7 +82,7 @@ class TodoControl{
         (currentTodos =  document.querySelectorAll('.unactive'));
 
         (target.classList[1] === 'sortCurrent') &&
-        (currentTodos =  document.querySelectorAll('.today'));
+        (currentTodos =  document.querySelectorAll('.todayDay'));
 
         (target.classList[0] === 'sort') &&
         (todoView.sortTodos(todos,target.classList[1],currentTodos));
@@ -224,6 +231,7 @@ class TodoControl{
 
             let target = e.target;
 
+
             (todoState.getState('main')) && (this.mainController(todoView,todoState,load,datePicker,store,target));
             (todoState.getState('modal')) && (this.modalController(todoView,todoState,store,target));
         };
@@ -237,6 +245,33 @@ class TodoControl{
         document.addEventListener('keydown', (e) =>{(e.target.classList[0] === 'date') && 
                                                             (e.preventDefault())},false);
 
+
+        document.addEventListener('mouseover',(e) => {
+
+            let calendar = document.querySelector('.calendar');
+            if (!calendar) return;
+
+            let dateJSON = JSON.parse(localStorage.date);
+            let listName = JSON.parse(localStorage.list);
+
+            let answer = null;
+            let names = null;
+            let num = [];
+            let target = e.target;
+
+            if (calendar && target.dataset.day){
+
+                let date = calendar.dataset.current.split('.');
+                date[0] = target.dataset.day;
+                date = date.join().replace(/\,/g,'.');
+
+            answer = dateJSON.filter( (item,i) => (item === date) && (num.push(i)) );
+            names = listName.filter((item,i) => i = num[i]);
+
+            names.forEach ((item) => console.log(item.value));
+            }
+
+        },false);
 
         /* -----------DnD----------- */
         let drag = null;

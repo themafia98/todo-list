@@ -1,5 +1,3 @@
-
-
 class ListModal{
 
     constructor(){

@@ -508,6 +508,7 @@ function (_View) {
       var currentTodos = arguments.length > 2 ? arguments[2] : undefined;
 
       if (type != 'sortAll') {
+        console.log(currentTodos);
         todo.forEach(function (element) {
           return element.classList.add('hide');
         });
@@ -547,7 +548,7 @@ function (_View) {
           var today = new Date(NOW).toLocaleDateString();
 
           if (todoList.dataset.date === today) {
-            todoList.classList.add('today');
+            todoList.classList.add('todayDay');
           } else if (todoDay < NOW) {
             todoList.classList.add('unactive');
           } else if (todoDay > NOW) {
@@ -796,9 +797,13 @@ function () {
     key: "mainController",
     value: function mainController(todoView, todoState, load, datePicker, store, target) {
       var todos = document.querySelectorAll('[data-unique]');
+      var calendar = document.querySelector('.calendar');
       var modalWindow = target.parentNode.parentNode;
       var currentTodos = null;
-      var modal = null;
+      var childrenCalendar = null;
+      var modal = null; // (calendar) && (childrenCalendar = [...calendar.childNodes]);
+
+      calendar && (target.classList[0] === 'wrapper' || target.classList[0] === 'todoList') && calendar.remove();
       target.classList[0] === 'selectCalendar' && todoView.buildCalendar(datePicker);
 
       if (target.dataset.move) {
@@ -843,7 +848,7 @@ function () {
 
       target.classList[1] === 'sortAfter' && (currentTodos = document.querySelectorAll('.future'));
       target.classList[1] === 'sortBefore' && (currentTodos = document.querySelectorAll('.unactive'));
-      target.classList[1] === 'sortCurrent' && (currentTodos = document.querySelectorAll('.today'));
+      target.classList[1] === 'sortCurrent' && (currentTodos = document.querySelectorAll('.todayDay'));
       target.classList[0] === 'sort' && todoView.sortTodos(todos, target.classList[1], currentTodos);
 
       if (target.classList[0] === 'setTodo' && this.btnEnter.value) {
@@ -974,6 +979,31 @@ function () {
 
       document.addEventListener('keydown', function (e) {
         e.target.classList[0] === 'date' && e.preventDefault();
+      }, false);
+      document.addEventListener('mouseover', function (e) {
+        var calendar = document.querySelector('.calendar');
+        if (!calendar) return;
+        var dateJSON = JSON.parse(localStorage.date);
+        var listName = JSON.parse(localStorage.list);
+        var answer = null;
+        var names = null;
+        var num = [];
+        var target = e.target;
+
+        if (calendar && target.dataset.day) {
+          var date = calendar.dataset.current.split('.');
+          date[0] = target.dataset.day;
+          date = date.join().replace(/\,/g, '.');
+          answer = dateJSON.filter(function (item, i) {
+            return item === date && num.push(i);
+          });
+          names = listName.filter(function (item, i) {
+            return i = num[i];
+          });
+          names.forEach(function (item) {
+            return console.log(item.value);
+          });
+        }
       }, false);
       /* -----------DnD----------- */
 
