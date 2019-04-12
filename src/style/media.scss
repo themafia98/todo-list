@@ -3,7 +3,9 @@
     #todo .editWrapper {
         top: 60%;
     }
+
 }
+
 
 @media screen and (max-width: 700px){
 
@@ -78,5 +80,18 @@
         width: 90%;
    }
 
+}
+
+@media screen and (orientation: landscape) and (max-width: 750px){
+
+    #todo .selectCalendar {
+        width: 150px;
+        height: 40px;
+    }
+
+    #todo .controllers .setTodo {
+        width: 85px;
+        height: 55px;
+    }
 
 }
