@@ -2,6 +2,8 @@ class TodoControl{
 
     constructor({controllerEnter,btn}){
 
+    this.xMouse = null;
+    this.yMouse = null;
     this.btnEnter = controllerEnter;
     this.btnAdd = btn;
     }
@@ -118,6 +120,7 @@ class TodoControl{
 
         let modal = document.querySelector('[data-modal-num]');
         let notes = document.querySelector('.addNotes');
+        let modalWindow = target.parentNode.parentNode;
         let timer = null;
         const parent = target.parentNode;
 
@@ -249,29 +252,19 @@ class TodoControl{
         document.addEventListener('mouseover',(e) => {
 
             let calendar = document.querySelector('.calendar');
-            if (!calendar) return;
+            let clear = document.querySelectorAll('.wrapperNotification');
 
-            let dateJSON = JSON.parse(localStorage.date);
-            let listName = JSON.parse(localStorage.list);
+            clear.forEach((item) => item.remove());
+            if (!e.target.dataset.day) return;
 
-            let answer = null;
-            let names = null;
-            let num = [];
-            let target = e.target;
-
-            if (calendar && target.dataset.day){
-
-                let date = calendar.dataset.current.split('.');
-                date[0] = target.dataset.day;
-                date = date.join().replace(/\,/g,'.');
-
-            answer = dateJSON.filter( (item,i) => (item === date) && (num.push(i)) );
-            names = listName.filter((item,i) => i = num[i]);
-
-            names.forEach ((item) => console.log(item.value));
-            }
+            (datePicker.aboutTodo(e.target,calendar.dataset.current)) &&
+                (todoView.showCalendarNotification(datePicker,e.target));
 
         },false);
+
+
+        document.addEventListener('mousemove',(e) => { this.xMouse = e.clientX; this.yMouse = e.clientY; })
+
 
         /* -----------DnD----------- */
         let drag = null;

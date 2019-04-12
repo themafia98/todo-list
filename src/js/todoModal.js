@@ -186,6 +186,12 @@ class Calendar{
 
     constructor(){
 
+        this.selectDate = null;
+        this.selectDateName = null;
+        this.dateJSON = null;
+        this.listName = null;
+        this.numDate = [];
+
         this.todayYear = new Date().getFullYear();
         this.todayMonth = new Date().getMonth();
         this.totalDay = null;
@@ -242,6 +248,30 @@ class Calendar{
 
         this.totalDay = new Date(this.currentYear,this.currentMonth,0).getDate();
 
+    }
+
+
+    aboutTodo(target,date){
+
+        let check = false;
+        this.dateJSON = JSON.parse(localStorage.date);
+        this.listName = JSON.parse(localStorage.list);
+
+        this.selectDateName = [];
+        this.numDate = [];
+
+        date = date.split('.');
+        date[0] = target.dataset.day;
+        this.selectDate = date.join().replace(/\,/g,'.');
+        this.dateJSON.forEach( (item,i) => (item === this.selectDate) && (this.numDate.push(i)) );
+        this.selectDateName = this.listName.filter((item,i) => i = this.numDate[i]);
+
+        console.log(this.selectDate);
+        console.log(this.selectDateName);
+
+        (this.selectDateName.length) && (check = true);
+
+        return check;
     }
 }
 

@@ -1,3 +1,4 @@
+
 class View{
 
     constructor({appID,title}){
@@ -459,4 +460,32 @@ class Todo extends View{
         edditableWrapper.appendChild(buttonEdit);
         textArea.appendChild(edditableWrapper);
     }
+
+
+    showCalendarNotification(data,target){
+
+        let aboutElement = target.getBoundingClientRect();
+
+        let wrapperNotification = document.createElement('div');
+        wrapperNotification.classList.add('wrapperNotification');
+        wrapperNotification.dataset.show = data.selectDate;
+        wrapperNotification.style.left = aboutElement.left + 'px';
+        wrapperNotification.style.top = aboutElement.top + aboutElement.width + 'px';
+
+        let list = document.createElement('ul');
+
+        for (let i = 0; i < data.selectDateName.length; i++){
+            let about = document.createElement('li');
+            about.classList.add('notificationInfo');
+            about.innerHTML = data.selectDateName[i].value;
+
+            list.appendChild(about);
+        }
+
+        wrapperNotification.appendChild(list);
+
+        document.body.appendChild(wrapperNotification);
+
+    }
+
 }

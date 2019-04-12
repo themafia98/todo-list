@@ -322,6 +322,11 @@ function () {
   function Calendar() {
     _classCallCheck(this, Calendar);
 
+    this.selectDate = null;
+    this.selectDateName = null;
+    this.dateJSON = null;
+    this.listName = null;
+    this.numDate = [];
     this.todayYear = new Date().getFullYear();
     this.todayMonth = new Date().getMonth();
     this.totalDay = null;
@@ -361,6 +366,30 @@ function () {
       this.firstDay = new Date(this.currentYear, this.currentMonth);
       this.weekDay = this.firstDay.getDay();
       this.totalDay = new Date(this.currentYear, this.currentMonth, 0).getDate();
+    }
+  }, {
+    key: "aboutTodo",
+    value: function aboutTodo(target, date) {
+      var _this2 = this;
+
+      var check = false;
+      this.dateJSON = JSON.parse(localStorage.date);
+      this.listName = JSON.parse(localStorage.list);
+      this.selectDateName = [];
+      this.numDate = [];
+      date = date.split('.');
+      date[0] = target.dataset.day;
+      this.selectDate = date.join().replace(/\,/g, '.');
+      this.dateJSON.forEach(function (item, i) {
+        return item === _this2.selectDate && _this2.numDate.push(i);
+      });
+      this.selectDateName = this.listName.filter(function (item, i) {
+        return i = _this2.numDate[i];
+      });
+      console.log(this.selectDate);
+      console.log(this.selectDateName);
+      this.selectDateName.length && (check = true);
+      return check;
     }
   }]);
 
@@ -744,6 +773,27 @@ function (_View) {
       edditableWrapper.appendChild(buttonEdit);
       textArea.appendChild(edditableWrapper);
     }
+  }, {
+    key: "showCalendarNotification",
+    value: function showCalendarNotification(data, target) {
+      var aboutElement = target.getBoundingClientRect();
+      var wrapperNotification = document.createElement('div');
+      wrapperNotification.classList.add('wrapperNotification');
+      wrapperNotification.dataset.show = data.selectDate;
+      wrapperNotification.style.left = aboutElement.left + 'px';
+      wrapperNotification.style.top = aboutElement.top + aboutElement.width + 'px';
+      var list = document.createElement('ul');
+
+      for (var i = 0; i < data.selectDateName.length; i++) {
+        var about = document.createElement('li');
+        about.classList.add('notificationInfo');
+        about.innerHTML = data.selectDateName[i].value;
+        list.appendChild(about);
+      }
+
+      wrapperNotification.appendChild(list);
+      document.body.appendChild(wrapperNotification);
+    }
   }], [{
     key: "checkEmpty",
     value: function checkEmpty() {
@@ -789,6 +839,8 @@ function () {
 
     _classCallCheck(this, TodoControl);
 
+    this.xMouse = null;
+    this.yMouse = null;
     this.btnEnter = controllerEnter;
     this.btnAdd = btn;
   }
@@ -873,6 +925,7 @@ function () {
     value: function modalController(todoView, todoState, store, target) {
       var modal = document.querySelector('[data-modal-num]');
       var notes = document.querySelector('.addNotes');
+      var modalWindow = target.parentNode.parentNode;
       var timer = null;
       var parent = target.parentNode;
       var item = JSON.parse(localStorage.list);
@@ -982,29 +1035,17 @@ function () {
       }, false);
       document.addEventListener('mouseover', function (e) {
         var calendar = document.querySelector('.calendar');
-        if (!calendar) return;
-        var dateJSON = JSON.parse(localStorage.date);
-        var listName = JSON.parse(localStorage.list);
-        var answer = null;
-        var names = null;
-        var num = [];
-        var target = e.target;
-
-        if (calendar && target.dataset.day) {
-          var date = calendar.dataset.current.split('.');
-          date[0] = target.dataset.day;
-          date = date.join().replace(/\,/g, '.');
-          answer = dateJSON.filter(function (item, i) {
-            return item === date && num.push(i);
-          });
-          names = listName.filter(function (item, i) {
-            return i = num[i];
-          });
-          names.forEach(function (item) {
-            return console.log(item.value);
-          });
-        }
+        var clear = document.querySelectorAll('.wrapperNotification');
+        clear.forEach(function (item) {
+          return item.remove();
+        });
+        if (!e.target.dataset.day) return;
+        datePicker.aboutTodo(e.target, calendar.dataset.current) && todoView.showCalendarNotification(datePicker, e.target);
       }, false);
+      document.addEventListener('mousemove', function (e) {
+        _this.xMouse = e.clientX;
+        _this.yMouse = e.clientY;
+      });
       /* -----------DnD----------- */
 
       var drag = null;

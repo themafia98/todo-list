@@ -58,6 +58,30 @@ body{
     color: $importantColor;
 }
 
+.wrapperNotification{
+    counter-reset: title;
+    background: grey;
+    position: absolute;
+
+    .notificationInfo {
+        counter-increment: title;
+        margin: 0;
+        padding: 5px;
+        color: white;
+    }
+
+    .notificationInfo:before {
+
+        content: counter(title) '. ';
+    }
+
+    ul {
+        margin: 0;
+        padding: 0;
+    }
+}
+
+
 .warning{
     display: flex;
     justify-content: center;
