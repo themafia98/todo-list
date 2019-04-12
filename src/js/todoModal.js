@@ -124,6 +124,7 @@ class Storage{
         this.lists = [];
         this.dateArray = [];
         this.buffer = [];
+        this.valueButton = null;
         this.number = 0;
     }
 
@@ -138,11 +139,13 @@ class Storage{
         return true;
     }
 
-    localeStorageUpdate(btnValue){
+    localeStorageUpdate(btnValue,dates){
 
         localStorage.setItem('newTodo',btnValue);
-        let todo = new todoOne(localStorage.newTodo);
+        this.valueButton = dates.slice(0,10).split('-').reverse()
+        .join().replace(/\,/g,'.');
 
+        let todo = new todoOne(localStorage.newTodo,this.valueButton);
         todo.save = true;
 
         (localStorage.list) && (this.lists = JSON.parse(localStorage.list));
@@ -153,29 +156,25 @@ class Storage{
         return this.number;
     }
 
-    dataParser(target = null){
+    dataParser(){
 
         (localStorage.date) && (this.buffer = JSON.parse(localStorage.date));
-
-        let valueButton = target.previousSibling.value.slice(0,10).split('-').reverse()
-                        .join().replace(/\,/g,'.');
-
-        (!(localStorage.date)) && (localStorage.date = JSON.stringify([valueButton]));
-        (localStorage.date) && (this.buffer.push(valueButton));
+        (!localStorage.date) && (localStorage.date = JSON.stringify([this.valueButton]));
+        (localStorage.date) && (this.buffer.push(this.valueButton));
         (localStorage.date) && (localStorage.date = JSON.stringify(this.buffer));
-
     }
 }
 
 class todoOne{
 
-    constructor(value = 0){
+    constructor(value = 0, date = Date.now()){
 
         this.changeNote = false;
         this.save = false;
         this.uniqueId = `id${ Math.floor((((Math.random()+5)-5).toFixed(7))*10000000)}`;
         this.note  = 'click for add note';
         this.value = value;
+        this.date = date;
     }
 
     updateChangeNote(item){ (item.changeNote) && (item.changeNote = false) };
@@ -187,7 +186,7 @@ class Calendar{
     constructor(){
 
         this.selectDate = null;
-        this.selectDateName = null;
+        this.selectDateName = [];
         this.dateJSON = null;
         this.listName = null;
         this.numDate = [];
@@ -250,29 +249,25 @@ class Calendar{
 
     }
 
-
     aboutTodo(target,date){
+
 
         let check = false;
         this.dateJSON = JSON.parse(localStorage.date);
         this.listName = JSON.parse(localStorage.list);
 
-        this.selectDateName = [];
+        const zeroDay = (target.dataset.day < 10) ? '0' : '';
+
         this.numDate = [];
 
         date = date.split('.');
-        date[0] = target.dataset.day;
+        date[0] = zeroDay + target.dataset.day;
         this.selectDate = date.join().replace(/\,/g,'.');
         this.dateJSON.forEach( (item,i) => (item === this.selectDate) && (this.numDate.push(i)) );
-        this.selectDateName = this.listName.filter((item,i) => i = this.numDate[i]);
-
-        console.log(this.selectDate);
-        console.log(this.selectDateName);
+        this.selectDateName = this.listName.filter( (item) => {  return this.selectDate === item.date; });
 
         (this.selectDateName.length) && (check = true);
 
         return check;
     }
 }
-
-

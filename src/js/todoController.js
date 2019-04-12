@@ -91,7 +91,8 @@ class TodoControl{
 
         if ((target.classList[0] === 'setTodo') && (this.btnEnter.value)){
 
-            store.localeStorageUpdate(this.btnEnter.value);
+            
+            store.localeStorageUpdate(this.btnEnter.value,target.previousSibling.value);
             store.dataParser(target);
             todoView.showNewTodo(JSON.parse(localStorage.list));
 

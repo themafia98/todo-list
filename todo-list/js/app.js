@@ -250,6 +250,7 @@ function () {
     this.lists = [];
     this.dateArray = [];
     this.buffer = [];
+    this.valueButton = null;
     this.number = 0;
   }
 
@@ -267,9 +268,10 @@ function () {
     }
   }, {
     key: "localeStorageUpdate",
-    value: function localeStorageUpdate(btnValue) {
+    value: function localeStorageUpdate(btnValue, dates) {
       localStorage.setItem('newTodo', btnValue);
-      var todo = new todoOne(localStorage.newTodo);
+      this.valueButton = dates.slice(0, 10).split('-').reverse().join().replace(/\,/g, '.');
+      var todo = new todoOne(localStorage.newTodo, this.valueButton);
       todo.save = true;
       localStorage.list && (this.lists = JSON.parse(localStorage.list));
       this.lists.push(todo);
@@ -279,11 +281,9 @@ function () {
   }, {
     key: "dataParser",
     value: function dataParser() {
-      var target = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
       localStorage.date && (this.buffer = JSON.parse(localStorage.date));
-      var valueButton = target.previousSibling.value.slice(0, 10).split('-').reverse().join().replace(/\,/g, '.');
-      !localStorage.date && (localStorage.date = JSON.stringify([valueButton]));
-      localStorage.date && this.buffer.push(valueButton);
+      !localStorage.date && (localStorage.date = JSON.stringify([this.valueButton]));
+      localStorage.date && this.buffer.push(this.valueButton);
       localStorage.date && (localStorage.date = JSON.stringify(this.buffer));
     }
   }]);
@@ -296,6 +296,7 @@ var todoOne =
 function () {
   function todoOne() {
     var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
+    var date = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : Date.now();
 
     _classCallCheck(this, todoOne);
 
@@ -304,6 +305,7 @@ function () {
     this.uniqueId = "id".concat(Math.floor((Math.random() + 5 - 5).toFixed(7) * 10000000));
     this.note = 'click for add note';
     this.value = value;
+    this.date = date;
   }
 
   _createClass(todoOne, [{
@@ -323,7 +325,7 @@ function () {
     _classCallCheck(this, Calendar);
 
     this.selectDate = null;
-    this.selectDateName = null;
+    this.selectDateName = [];
     this.dateJSON = null;
     this.listName = null;
     this.numDate = [];
@@ -375,19 +377,17 @@ function () {
       var check = false;
       this.dateJSON = JSON.parse(localStorage.date);
       this.listName = JSON.parse(localStorage.list);
-      this.selectDateName = [];
+      var zeroDay = target.dataset.day < 10 ? '0' : '';
       this.numDate = [];
       date = date.split('.');
-      date[0] = target.dataset.day;
+      date[0] = zeroDay + target.dataset.day;
       this.selectDate = date.join().replace(/\,/g, '.');
       this.dateJSON.forEach(function (item, i) {
         return item === _this2.selectDate && _this2.numDate.push(i);
       });
-      this.selectDateName = this.listName.filter(function (item, i) {
-        return i = _this2.numDate[i];
+      this.selectDateName = this.listName.filter(function (item) {
+        return _this2.selectDate === item.date;
       });
-      console.log(this.selectDate);
-      console.log(this.selectDateName);
       this.selectDateName.length && (check = true);
       return check;
     }
@@ -904,7 +904,7 @@ function () {
       target.classList[0] === 'sort' && todoView.sortTodos(todos, target.classList[1], currentTodos);
 
       if (target.classList[0] === 'setTodo' && this.btnEnter.value) {
-        store.localeStorageUpdate(this.btnEnter.value);
+        store.localeStorageUpdate(this.btnEnter.value, target.previousSibling.value);
         store.dataParser(target);
         todoView.showNewTodo(JSON.parse(localStorage.list));
         this.btnEnter.value = '';
