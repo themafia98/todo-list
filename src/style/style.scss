@@ -418,6 +418,8 @@ body{
 
         .currentTodo{
             font-size: $todoTitles;
+            padding: 0 10px;
+            word-break: break-word;
             margin-bottom: 0;
        }
 
