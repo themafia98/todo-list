@@ -187,9 +187,7 @@ class Calendar{
 
         this.selectDate = null;
         this.selectDateName = [];
-        this.dateJSON = null;
         this.listName = null;
-        this.numDate = [];
 
         this.todayYear = new Date().getFullYear();
         this.todayMonth = new Date().getMonth();
@@ -253,17 +251,15 @@ class Calendar{
 
 
         let check = false;
-        this.dateJSON = JSON.parse(localStorage.date);
+
         this.listName = JSON.parse(localStorage.list);
 
         const zeroDay = (target.dataset.day < 10) ? '0' : '';
 
-        this.numDate = [];
-
         date = date.split('.');
         date[0] = zeroDay + target.dataset.day;
         this.selectDate = date.join().replace(/\,/g,'.');
-        this.dateJSON.forEach( (item,i) => (item === this.selectDate) && (this.numDate.push(i)) );
+
         this.selectDateName = this.listName.filter( (item) => {  return this.selectDate === item.date; });
 
         (this.selectDateName.length) && (check = true);

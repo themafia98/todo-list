@@ -72,12 +72,16 @@ body{
 
     .notificationInfo:before {
 
-        content: counter(title) '. ';
+        content: counter(title) '.';
+        color: #c9d33e;
+        padding-right: 5px;
     }
 
     ul {
         margin: 0;
         padding: 0;
+        max-width: 250px;
+        word-wrap: break-word;
     }
 }
 

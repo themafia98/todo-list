@@ -240,6 +240,7 @@ class TodoControl{
             (todoState.getState('modal')) && (this.modalController(todoView,todoState,store,target));
         };
 
+
         /* -----------Modernizr----------- */
         console.log('touchevents detected:' + Modernizr.touchevents);
         Modernizr.touchevents && document.addEventListener('touchend',clickEvent,false);
@@ -252,6 +253,7 @@ class TodoControl{
 
         document.addEventListener('mouseover',(e) => {
 
+            if (!Modernizr.touchevents){
             let calendar = document.querySelector('.calendar');
             let clear = document.querySelectorAll('.wrapperNotification');
 
@@ -260,6 +262,7 @@ class TodoControl{
 
             (datePicker.aboutTodo(e.target,calendar.dataset.current)) &&
                 (todoView.showCalendarNotification(datePicker,e.target));
+            }
 
         },false);
 

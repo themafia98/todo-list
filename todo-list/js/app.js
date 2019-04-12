@@ -326,9 +326,7 @@ function () {
 
     this.selectDate = null;
     this.selectDateName = [];
-    this.dateJSON = null;
     this.listName = null;
-    this.numDate = [];
     this.todayYear = new Date().getFullYear();
     this.todayMonth = new Date().getMonth();
     this.totalDay = null;
@@ -375,16 +373,11 @@ function () {
       var _this2 = this;
 
       var check = false;
-      this.dateJSON = JSON.parse(localStorage.date);
       this.listName = JSON.parse(localStorage.list);
       var zeroDay = target.dataset.day < 10 ? '0' : '';
-      this.numDate = [];
       date = date.split('.');
       date[0] = zeroDay + target.dataset.day;
       this.selectDate = date.join().replace(/\,/g, '.');
-      this.dateJSON.forEach(function (item, i) {
-        return item === _this2.selectDate && _this2.numDate.push(i);
-      });
       this.selectDateName = this.listName.filter(function (item) {
         return _this2.selectDate === item.date;
       });
@@ -1034,13 +1027,15 @@ function () {
         e.target.classList[0] === 'date' && e.preventDefault();
       }, false);
       document.addEventListener('mouseover', function (e) {
-        var calendar = document.querySelector('.calendar');
-        var clear = document.querySelectorAll('.wrapperNotification');
-        clear.forEach(function (item) {
-          return item.remove();
-        });
-        if (!e.target.dataset.day) return;
-        datePicker.aboutTodo(e.target, calendar.dataset.current) && todoView.showCalendarNotification(datePicker, e.target);
+        if (!Modernizr.touchevents) {
+          var calendar = document.querySelector('.calendar');
+          var clear = document.querySelectorAll('.wrapperNotification');
+          clear.forEach(function (item) {
+            return item.remove();
+          });
+          if (!e.target.dataset.day) return;
+          datePicker.aboutTodo(e.target, calendar.dataset.current) && todoView.showCalendarNotification(datePicker, e.target);
+        }
       }, false);
       document.addEventListener('mousemove', function (e) {
         _this.xMouse = e.clientX;
