@@ -7,11 +7,11 @@
       postcss = require('gulp-postcss'),
       autoprefixer = require('autoprefixer'),
       surge = require('gulp-surge'),
-      // rigger = require('rigger'),
+      uglify = require('gulp-uglify'),
+      rigger = require('gulp-rigger'),
       sourcemaps = require('gulp-sourcemaps'),
+      pipeline = require('readable-stream').pipeline,
       cssnano = require('cssnano'),
-      concat = require('gulp-concat'),
-      rimraf = require('rimraf'),
       browserSync = require('browser-sync'),
       preprocess = require('gulp-preprocess'),
       reload = browserSync.reload;
@@ -28,7 +28,7 @@
 
       src:{ // где лежит проект
         html: 'src/*.html', // файлы страниц
-        js: 'src/js/*.js', // скрипты
+        js: 'src/js/bundle.js', // скрипты
         css: 'src/style/style.scss', // файл стилей, в котором мы подключаем все наши компоненты
         img: 'src/img/**/*.*' // путь к картинкам
      },
@@ -72,14 +72,15 @@
 
     gulp.task('js:build', function (callback){
       gulp
-        .src(['src/js/modernizr-touch.js', 'src/js/todoModal.js','src/js/todoView.js','src/js/todoController.js', 'src/js/appInit.js'])
+        .src(path.src.js)
+        .pipe(rigger()) //Прогоним через rigger
         .pipe(babel({
           presets: ['@babel/preset-env']
-       }))
+       })).pipe(uglify())
         .pipe(sourcemaps.init())
-        .pipe(concat('app.js'))
         .pipe(sourcemaps.write('.'))
         // .pipe(rigger()) //Прогоним через rigger
+
         .pipe(gulp.dest(path.build.js))
         .pipe(reload({
           stream: true
