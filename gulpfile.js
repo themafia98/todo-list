@@ -54,8 +54,8 @@
     gulp.task('html:build', function (callback){
       gulp
         .src(path.src.html)
-        .pipe(preprocess()) // склейка шаблонов
-        .pipe(gulp.dest(path.build.html)) // переписываем в папку build
+        .pipe(preprocess()) 
+        .pipe(gulp.dest(path.build.html))
         .pipe(reload({
           stream: true
        })); // перезагружаем сервер
