@@ -306,7 +306,6 @@ class TodoControl{
 
         draggableZone.addEventListener('drop', function(e){
 
-            debugger;
             if(e.preventDefault) { e.preventDefault(); }
             if(e.stopPropagation) { e.stopPropagation(); }
         
