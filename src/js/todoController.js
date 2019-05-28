@@ -275,6 +275,7 @@ class TodoControl{
 
         document.addEventListener('dragstart', (e) =>{
             drag = e.target;
+            e.dataTransfer.setData('text', 'foo'); // firefox support
         });
 
 
@@ -305,6 +306,10 @@ class TodoControl{
 
         draggableZone.addEventListener('drop', function(e){
 
+            debugger;
+            if(e.preventDefault) { e.preventDefault(); }
+            if(e.stopPropagation) { e.stopPropagation(); }
+        
             let target = e.target;
 
             let swapeDate = JSON.parse(localStorage.date);
