@@ -204,7 +204,7 @@ class Calendar{
         this.currentDate = new Date(this.dateNow);
 
         this.LocalTimeFormat = this.currentDate.toLocaleDateString().split(/\.|\//g);
-        console.log(this.LocalTimeFormat);
+
         this.currentDay = parseInt(this.LocalTimeFormat[0]);
         this.currentMonth =  parseInt(this.LocalTimeFormat[1]);
         this.currentYear =  parseInt(this.LocalTimeFormat[2]);
