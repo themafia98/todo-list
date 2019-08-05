@@ -200,10 +200,11 @@ class Calendar{
                           'October','November','December'];
 
         this.dateNow = Date.now();
+
         this.currentDate = new Date(this.dateNow);
 
-        this.LocalTimeFormat = this.currentDate.toLocaleDateString().split('.');
-
+        this.LocalTimeFormat = this.currentDate.toLocaleDateString().split(/\.|\//g);
+        console.log(this.LocalTimeFormat);
         this.currentDay = parseInt(this.LocalTimeFormat[0]);
         this.currentMonth =  parseInt(this.LocalTimeFormat[1]);
         this.currentYear =  parseInt(this.LocalTimeFormat[2]);
@@ -215,7 +216,7 @@ class Calendar{
     }
 
     parseCalendarData(changeYear = 0, changeMonth = 0,target = false){
-
+ 
         if (this.currentMonth === 1){
 
         this.currentYear = target === 'prewMonth' ? this.currentYear + changeMonth : this.currentYear;
