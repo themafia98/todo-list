@@ -17,10 +17,12 @@ echo "<a href = '?'>main</a> <br/>";
 switch ($page){
     case "about": {
         echo " page about";
+        break;
     }
 
     case "todo": {
         echo "page todo";
+        break;
     }
 
     default: {
