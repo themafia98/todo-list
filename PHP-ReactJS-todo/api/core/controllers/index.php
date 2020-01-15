@@ -1,5 +1,8 @@
 <?php
 
+/**
+ * Application controllers
+ */
 namespace core\controllers;
 
 class AppController
