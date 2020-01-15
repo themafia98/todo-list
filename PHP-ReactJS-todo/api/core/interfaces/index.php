@@ -36,10 +36,20 @@ interface TodoList
 /**
  * Interface for class Router
  */
-namespace core\interfaces\models\Route;
+namespace core\interfaces\models\Router;
 
 interface Route 
 {
+    public function getRest();
+
+};
+
+/**
+ * Some http interfaces
+ */
+namespace core\interfaces\models\Http;
+
+interface HtttpServer {
 
 };
 

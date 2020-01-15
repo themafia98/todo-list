@@ -5,12 +5,21 @@
  */
 namespace core\models\Router;
 
-class Router 
+use core\interfaces\models\Router\Route as Route;
+
+class Router implements Route
 {
 
-    public function __construct()
+    private $rest = "/";
+
+    public function __construct($path)
     {
-        
+        $this -> rest = $path;
+    }
+
+    public function getRest()
+    {
+        return $this -> rest;
     }
 }
 
