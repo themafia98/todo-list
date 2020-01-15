@@ -18,4 +18,8 @@ $dbserver = "localhost";
 $dbport = "9000";
 $dbname = "todolistdb";
 
+namespace config\app\http;
+
+$rest = "/api";
+
 ?>
