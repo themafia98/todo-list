@@ -3,18 +3,13 @@
     "description": "todo-list",
     "type": "project",
     "license": "MIT",
-    "repositories": [
-        {
-            "type": "git",
-            "url": "https://github.com/themafia98/todo-list",
-            "reference": "master"
-        }
-    ],
     "authors": [
         {
             "name": "themafia98",
             "email": "gaara33377@gmail.com"
         }
     ],
-    "require": {}
+    "require": {
+        "ramsey/uuid": "^3.9"
+    }
 }
