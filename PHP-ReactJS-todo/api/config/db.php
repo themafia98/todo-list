@@ -1,6 +1,13 @@
 <?php
 
+/**
+ * Database config
+ */
 namespace config\db;
-/** Database config */
+
+$dbserver = "localhost";
+$dbport = "9000";
+$dbname = "todolistdb";
+
 
 ?>

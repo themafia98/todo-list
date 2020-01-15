@@ -12,12 +12,6 @@ require  "../vendor/autoload.php";
 $dotenv = Dotenv::createImmutable("../".__DIR__, "process.env");
 $dotenv -> load();
 
-namespace config\app\db;
-
-$dbserver = "localhost";
-$dbport = "9000";
-$dbname = "todolistdb";
-
 namespace config\app\http;
 
 $rest = "/api";
