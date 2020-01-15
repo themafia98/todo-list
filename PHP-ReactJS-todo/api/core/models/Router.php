@@ -12,7 +12,7 @@ class Router implements Route
 
     private $rest = "/";
 
-    public function __construct($path)
+    public function __construct(string $path)
     {
         $this -> rest = $path;
     }
