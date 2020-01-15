@@ -8,7 +8,7 @@
 namespace core\root;
 
 
-$page = isset($_GET['page']);
+$page = isset($_GET['page']) ? $_GET['page'] : "";
 
 echo "<a href = '?page=about'>about</a><br/>";
 echo "<a href = '?page=document'>document</a></br>";
