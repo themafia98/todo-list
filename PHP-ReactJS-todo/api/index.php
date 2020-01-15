@@ -20,8 +20,8 @@ switch ($page){
         break;
     }
 
-    case "todo": {
-        echo "page todo";
+    case "document": {
+        echo "page document";
         break;
     }
 
