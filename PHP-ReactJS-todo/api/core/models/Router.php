@@ -27,18 +27,24 @@ class Router /*implements Route */
         switch ($method){
             case "GET": {
                $res = new Response([$method]);
+               $res -> setJsonHeaders();
                return $res -> send();
+
             }
             case "POST": {
                 $res = new Response([$method]);
-                $res -> send();
+                $res -> setJsonHeaders();
+               return $res -> send();
             }
             case "PUT": {
                 $res = new Response([$method]);
-                $res -> send();
+                $res -> setJsonHeaders();
+                return $res -> send();
+
             }
             case "DELETE": {
                 $res = new Response([$method]);
+                $res -> setJsonHeaders();
                 return $res -> send();
             }
         }
@@ -46,7 +52,7 @@ class Router /*implements Route */
         $res = new Response([$method]);
         $res -> setJsonHeaders();
         if ($res -> getBody()) {
-            print_r($res -> getBody());
+           echo "empty";
         }
     }
 

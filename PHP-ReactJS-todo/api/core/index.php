@@ -8,9 +8,9 @@
 namespace core\root;
 require "../bootstrap.php";
 require "./models/Database.php";
-require  "./utils/headers.php";
+//require  "./utils/headers.php";
 require  "./controllers/index.php";
-use config\app\headers;
+
 use config\app\http;
 use core\controllers\AppController;
 /**

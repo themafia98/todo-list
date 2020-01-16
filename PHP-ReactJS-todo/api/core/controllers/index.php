@@ -52,22 +52,6 @@ class AppController
         return $this -> method;
     }
 
-    /**
-     *GET METHOD
-     */
-    public  function get($path, $callback)
-    {
-      if ($path) return $callback();
-    }
-
-    /**
-    * POST METHOD
-    */
-    public function POST($path, $callback)
-    {
-        if ($path) return $callback;
-    }
-
     public function getRoute()
     {
         return $this -> route;

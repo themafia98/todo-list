@@ -24,6 +24,16 @@ abstract class Http implements HttpServer
 
 }
 
+class JsonTest  {
+
+    public $res = [];
+
+    public function __construct()
+    {
+        $this -> res = [1,2,3];
+    }
+};
+
 class Response extends Http
 {
     public function __construct(array $props)
@@ -43,8 +53,24 @@ class Response extends Http
         header('Content-Type: application/json');
     }
 
+    /**
+     *GET METHOD
+     */
+    public  function get($path, $callback)
+    {
+        if ($path) return $callback();
+    }
+
+    /**
+     * POST METHOD
+     */
+    public function post($path, $callback)
+    {
+        if ($path) return $callback;
+    }
+
     public function send(){
-       print_r("send");
+        echo json_encode( new JsonTest(), JSON_FORCE_OBJECT );
     }
 
     static function factory(array $props){
