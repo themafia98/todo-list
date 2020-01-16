@@ -30,5 +30,5 @@ if (!$uri){
 
 $requestMethod = $_SERVER["REQUEST_METHOD"] ? $_SERVER["REQUEST_METHOD"] : "";
 $controller = new AppController(new Database(), $requestMethod, "\\");
-
+$controller -> runRequest();
 ?>

@@ -18,6 +18,7 @@ class AppController
      */
     private $route = null;
     private $method = null;
+    private $db = null;
 
     /**
      * AppController constructor.
@@ -29,6 +30,16 @@ class AppController
     {
 
         $this -> route = new Router($api);
+        $this -> method = $method;
+        $this -> db = $dbms;
+    }
+
+    /**
+     * get db interface
+     */
+    public function getDb()
+    {
+        return $this -> db;
     }
 
     /**
@@ -55,6 +66,16 @@ class AppController
     public function POST($path, $callback)
     {
         if ($path) return $callback;
+    }
+
+    public function getRoute()
+    {
+        return $this -> route;
+    }
+
+    public function runRequest()
+    {
+        $this -> getRoute() -> runProcessRequest($this -> getMethod());
     }
 }
 

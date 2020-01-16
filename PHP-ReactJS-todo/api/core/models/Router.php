@@ -16,9 +16,8 @@ class Router /*implements Route */
         $this -> route = $path;
     }
 
-    public function runProcessRequest(Controller $getMethod)
+    public function runProcessRequest($method)
     {
-        $method = $getMethod();
 
         switch ($method){
             case "GET": {
@@ -32,6 +31,9 @@ class Router /*implements Route */
             }
             case "DELETE": {
                 $res = null;
+            }
+            default: {
+                echo "request";
             }
         }
 
