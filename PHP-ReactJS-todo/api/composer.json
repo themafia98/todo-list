@@ -9,9 +9,15 @@
             "email": "gaara33377@gmail.com"
         }
     ],
+    "autoload": {
+        "psr-4": {
+            "Core\\": "core/"
+        }
+    },
     "require": {
         "ramsey/uuid": "^3.9",
         "vlucas/phpdotenv": "^4.1",
-      "ext-mysqli": "*"
+      "ext-mysqli": "*",
+        "ext-json": "*"
     }
 }

@@ -10,11 +10,11 @@ use Error;
 
 abstract class Http implements HttpServer
 {
-    private $methods = null;
+    private $methods;
 
     public function __construct(array $methodsProps)
     {
-        $this -> methods = $methodsProps;   
+        $this -> methods = $methodsProps;
     }
 
     public function getMethods()
@@ -24,7 +24,7 @@ abstract class Http implements HttpServer
 
 }
 
-class Request extends Http 
+class Response extends Http
 {
     public function __construct(array $props)
     {
@@ -36,12 +36,18 @@ class Request extends Http
         parent::__construct($props["methods"]);
     }
 
-    static function factory(array $props){
-        if (array_key_exists("methods", $props))
-        return new Request($props["methods"]);
-        else return null;
+   public function getJsonHeaders()
+    {
+        header( 'Cache-Control: no-cache, no-store, max-age=0, must-revalidate' );
+        header( 'Pragma: no-cache');
+        header('Content-Type: application/json');
     }
 
+    static function factory(array $props){
+        if (array_key_exists("methods", $props))
+        return new Req($props["methods"]);
+        else return null;
+    }
 }
 
 ?>

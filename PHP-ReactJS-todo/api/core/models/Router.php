@@ -4,22 +4,48 @@
  * Router for application controllers
  */
 namespace core\models\Router;
+use core\interfaces\models\Controller\{Controller};
+use core\interfaces\models\Router\Route;
 
-use core\interfaces\models\Router\Route as Route;
-
-class Router implements Route
+class Router /*implements Route */
 {
-
-    private $rest = "/";
+    private $route = "/";
 
     public function __construct(string $path)
     {
-        $this -> rest = $path;
+        $this -> route = $path;
     }
 
-    public function getRest()
+    public function runProcessRequest(Controller $getMethod)
     {
-        return $this -> rest;
+        $method = $getMethod();
+
+        switch ($method){
+            case "GET": {
+               $res = null;
+            }
+            case "POST": {
+                $res = null;
+            }
+            case "PUT": {
+                $res = null;
+            }
+            case "DELETE": {
+                $res = null;
+            }
+        }
+
+        header($res['status_code_header']);
+        if ($res['body']) {
+            echo $res['body'];
+        }
+    }
+
+
+    public function getRoute()
+    {
+
+        return $this -> route;
     }
 }
 

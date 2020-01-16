@@ -4,11 +4,11 @@
  * Managmnet database entity
  */
 namespace core\models\Database;
-
+use core\interfaces\models\Dbms\Dbms as Dbms;
 use Error;
 use Exception;
 use mysqli;
-class Database 
+class Database /*implements Dbms */
 {
 
     private $connect = null;

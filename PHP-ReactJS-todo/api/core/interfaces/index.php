@@ -40,7 +40,7 @@ namespace core\interfaces\models\Router;
 
 interface Route 
 {
-    public function getRest();
+    public function getRoute();
 
 };
 
@@ -52,5 +52,14 @@ namespace core\interfaces\models\Http;
 interface HtttpServer {
 
 };
+
+/**
+ * Controller interface
+ */
+namespace  core\interfaces\models\Controller;
+
+interface Controller {
+
+}
 
 ?>
