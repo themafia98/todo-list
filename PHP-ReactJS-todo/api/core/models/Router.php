@@ -4,8 +4,13 @@
  * Router for application controllers
  */
 namespace core\models\Router;
+require "Http.php";
+
 use core\interfaces\models\Controller\{Controller};
 use core\interfaces\models\Router\Route;
+use core\models\Http\Response as Response;
+
+
 
 class Router /*implements Route */
 {
@@ -21,25 +26,27 @@ class Router /*implements Route */
 
         switch ($method){
             case "GET": {
-               $res = null;
+               $res = new Response([$method]);
+               return $res -> send();
             }
             case "POST": {
-                $res = null;
+                $res = new Response([$method]);
+                $res -> send();
             }
             case "PUT": {
-                $res = null;
+                $res = new Response([$method]);
+                $res -> send();
             }
             case "DELETE": {
-                $res = null;
-            }
-            default: {
-                echo "request";
+                $res = new Response([$method]);
+                return $res -> send();
             }
         }
 
-        header($res['status_code_header']);
-        if ($res['body']) {
-            echo $res['body'];
+        $res = new Response([$method]);
+        $res -> setJsonHeaders();
+        if ($res -> getBody()) {
+            print_r($res -> getBody());
         }
     }
 
