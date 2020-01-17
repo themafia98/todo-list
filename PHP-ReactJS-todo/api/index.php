@@ -18,7 +18,7 @@ use core\controllers\AppController;
  */
 use core\models\Database\Database as Database;
 
-$uri = parse_url($_SERVER["REQUEST_URI"] ? $_SERVER["REQUEST_URI"] : "\\", PHP_URL_PATH);
+$uri = parse_url(isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : "\\", PHP_URL_PATH);
 $uri = explode("/", $uri);
 
 if (!$uri){
@@ -28,7 +28,7 @@ if (!$uri){
 
 
 
-$requestMethod = $_SERVER["REQUEST_METHOD"] ? $_SERVER["REQUEST_METHOD"] : "";
-$controller = new AppController(new Database(), $requestMethod, "\\");
+        $requestMethod = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : "";
+$controller = new AppController(new Database(), $requestMethod, "/rest");
 $controller -> runRequest();
 ?>
