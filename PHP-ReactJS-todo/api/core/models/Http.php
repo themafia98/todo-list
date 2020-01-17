@@ -4,9 +4,28 @@
  * Entity for requst/response managment
  */
 namespace core\models\Http;
-include "interfaces/index.php";
+include realpath("")."/core/interfaces/index.php";
 use core\interfaces\models\Http\HtttpServer as HttpServer;
 use Error;
+
+/**
+ * Class JsonBody
+ * @package core\models\Http
+ * For tests
+ */
+class JsonBody  {
+
+    private $priv = [];
+    protected $prot = [];
+    public $res = [];
+
+    public function __construct()
+    {
+        $this -> res = [1,2,3];
+        $this -> priv = [111,23];
+        $this -> prot = [12,232];
+    }
+};
 
 abstract class Http implements HttpServer
 {
@@ -22,17 +41,14 @@ abstract class Http implements HttpServer
         return $this -> body;
     }
 
-}
-
-class JsonTest  {
-
-    public $res = [];
-
-    public function __construct()
-    {
-        $this -> res = [1,2,3];
+    public function setBody($prop, $key, bool $encode){
+        if (!$this -> getBody()) return new JsonBody();
+        $this -> body[$key] = $prop;
+        if ($encode && $this -> getBody()){
+           return json_encode($this -> getBody());
+        } else return new JsonBody();
     }
-};
+}
 
 class Response extends Http
 {
@@ -70,7 +86,7 @@ class Response extends Http
     }
 
     public function send(){
-        echo json_encode( new JsonTest(), JSON_FORCE_OBJECT );
+        echo json_encode( new JsonBody(), JSON_OBJECT_AS_ARRAY );
     }
 
     static function factory(array $props){

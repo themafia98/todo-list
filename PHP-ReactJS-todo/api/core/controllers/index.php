@@ -4,7 +4,8 @@
  * Application controllers
  */
 namespace core\controllers;
-require "models/Router.php";
+
+require realpath("")."/core/models/Router.php";
 
 use core\models\Router\{Router};
 use core\interfaces\models\Dbms\{Dbms};

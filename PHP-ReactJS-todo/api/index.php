@@ -6,10 +6,10 @@
  */
 
 namespace core\root;
-require "../bootstrap.php";
-require "./models/Database.php";
+require "../api/bootstrap.php";
+require "./core/models/Database.php";
 //require  "./utils/headers.php";
-require  "./controllers/index.php";
+require "./core/controllers/index.php";
 
 use config\app\http;
 use core\controllers\AppController;
@@ -28,7 +28,7 @@ if (!$uri){
 
 
 
-        $requestMethod = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : "";
+$requestMethod = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : "";
 $controller = new AppController(new Database(), $requestMethod, "/rest");
 $controller -> runRequest();
 ?>
