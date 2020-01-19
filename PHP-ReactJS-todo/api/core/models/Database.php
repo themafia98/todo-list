@@ -48,5 +48,3 @@ class Database /*implements Dbms */
         }
     }
 }
-
-?>

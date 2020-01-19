@@ -61,5 +61,3 @@ namespace  core\interfaces\models\Controller;
 interface Controller {
 
 }
-
-?>

@@ -4,12 +4,13 @@
  * Entity for requst/response managment
  */
 namespace core\models\Http;
-include realpath("")."/core/interfaces/index.php";
+
+require realpath("")."/core/interfaces/index.php";
+require realpath("")."/core/utils/consts.php";
+
 use core\interfaces\models\Http\HtttpServer as HttpServer;
 use Error;
 use Ramsey\Uuid\Uuid;
-
-$processId = getmypid();
 
 /**
  * Class JsonBody
@@ -166,5 +167,3 @@ class Response extends Http
         else return null;
     }
 }
-
-?>

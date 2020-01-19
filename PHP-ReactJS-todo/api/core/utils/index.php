@@ -26,6 +26,3 @@ function queryToArray($qry)
 
         return empty($result) ? false : $result;
 }
-
-
-?>
