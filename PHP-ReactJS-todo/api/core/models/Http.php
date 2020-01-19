@@ -71,7 +71,6 @@ abstract class Http implements HttpServer
         } else {
             $this -> body["BODY"]["bodyResponse"] = [];
             $this -> body["BODY"]["bodyResponse"][$key] = $prop;
-            print_r($resBody[$key]);
         }
     }
 

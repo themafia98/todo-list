@@ -1,14 +1,17 @@
-import React from 'react';
+import React, { Fragment } from 'react';
 
+import Header from "../Header";
+import Main from "../Main";
 
 class App extends React.Component {
 
     state = {
-        testData: [],
+        todoList: [],
     }
 
     componentDidMount = async () => {
         const body = JSON.stringify({"ACTION": "$list", "TYPE": "all" });
+
         const response = await fetch("/api/",{
             method: "POST",
             headers: {
@@ -20,14 +23,19 @@ class App extends React.Component {
         if (!response.ok) return;
 
         const resJson = await response.json();
-       console.log(resJson);
+        if (resJson);
         this.setState({
-            testData: resJson
-        })
+            todoList: resJson
+        });
     }
 
     render(){
-    return <div>Todo-list{`${this.state.testData.res ? this.state.testData.res : null}`}</div>;
+        return (
+            <Fragment>
+                <Header />
+                <Main />
+            </Fragment>
+        );
     }
 }
 
