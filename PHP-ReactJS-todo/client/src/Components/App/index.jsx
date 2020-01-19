@@ -8,7 +8,14 @@ class App extends React.Component {
     }
 
     componentDidMount = async () => {
-        const response = await fetch("/api/");
+        const body = JSON.stringify({"ACTION": "$list", "TYPE": "all" });
+        const response = await fetch("/api/",{
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            }, 
+            body
+        });
         
         if (!response.ok) return;
 

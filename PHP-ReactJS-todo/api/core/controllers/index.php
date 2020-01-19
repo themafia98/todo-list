@@ -19,6 +19,7 @@ class AppController
      */
     private $route = null;
     private $method = null;
+    private $requestBody = null;
     private $db = null;
 
     /**
@@ -27,10 +28,10 @@ class AppController
      * @param string $method
      */
 
-    public function __construct($dbms, $method, $api)
+    public function __construct($dbms, $method, $body)
     {
-
-        $this -> route = new Router($api);
+        $this -> route = new Router($body["ACTION"]);
+        $this -> requestBody = $body;
         $this -> method = $method;
         $this -> db = $dbms;
     }
@@ -53,6 +54,12 @@ class AppController
         return $this -> method;
     }
 
+    public function getRequestBody()
+    {
+
+        return $this -> requestBody;
+    }
+
     public function getRoute()
     {
         return $this -> route;
@@ -60,7 +67,7 @@ class AppController
 
     public function runRequest()
     {
-        $this -> getRoute() -> runProcessRequest($this -> getMethod());
+        $this -> getRoute() -> runProcessRequest($this -> getMethod(), $this -> getRequestBody());
     }
 }
 

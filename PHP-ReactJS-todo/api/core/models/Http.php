@@ -36,12 +36,13 @@ abstract class Http implements HttpServer
         $this -> body = $props;
     }
 
-    public function getBody()
+    protected function getBody()
     {
         return $this -> body;
     }
 
-    public function setBody($prop, $key, bool $encode){
+    public function setBody($prop, $key, bool $encode)
+    {
         if (!$this -> getBody()) return new JsonBody();
         $this -> body[$key] = $prop;
         if ($encode && $this -> getBody()){
@@ -72,21 +73,45 @@ class Response extends Http
     /**
      *GET METHOD
      */
-    public  function get($path, $callback)
+    private  function get($actionPath)
     {
-        if ($path) return $callback();
+        echo json_encode(new JsonBody(), JSON_OBJECT_AS_ARRAY);
     }
 
     /**
      * POST METHOD
      */
-    public function post($path, $callback)
+    private function post($actionPath, $actionType)
     {
-        if ($path) return $callback;
+        switch ($actionType)
+        {
+            case "all": {
+                echo json_encode( new JsonBody(), JSON_OBJECT_AS_ARRAY);
+                break;
+            }
+        }
+
     }
 
     public function send(){
-        echo json_encode( new JsonBody(), JSON_OBJECT_AS_ARRAY );
+
+            $body = $this -> getBody()["BODY"];
+            $method = strtoupper($this -> getBody()["METHOD"]);
+            $actionType = $body["TYPE"] ? $body["TYPE"] : null;
+            $actionPath = $body["ACTION"] ? $body["ACTION"] : null;
+         
+            switch ($method){
+                case "DELETE":
+                case "PUT":
+                case "POST": {
+                    return $this -> post($actionPath, $actionType);
+                    break;
+                }
+                default: {
+                    return $this -> get($actionPath, $actionType);
+                }
+            }
+            // echo json_encode( new JsonBody(), JSON_OBJECT_AS_ARRAY);
     }
 
     static function factory(array $props){

@@ -14,53 +14,26 @@ use core\models\Http\Response as Response;
 
 class Router /*implements Route */
 {
-    private $route = "/";
+    private $action = "";
 
-    public function __construct(string $path)
+    public function __construct(string $action)
     {
-        $this -> route = $path;
+        $this -> action = $action;
     }
 
-    public function runProcessRequest($method)
+    public function runProcessRequest($method, $body)
     {
-
-        switch ($method){
-            case "GET": {
-               $res = new Response([$method]);
-               $res -> setJsonHeaders();
-               return $res -> send();
-
-            }
-            case "POST": {
-                $res = new Response([$method]);
-                $res -> setJsonHeaders();
-               return $res -> send();
-            }
-            case "PUT": {
-                $res = new Response([$method]);
-                $res -> setJsonHeaders();
-                return $res -> send();
-
-            }
-            case "DELETE": {
-                $res = new Response([$method]);
-                $res -> setJsonHeaders();
-                return $res -> send();
-            }
-        }
-
-        $res = new Response([$method]);
-        $res -> setJsonHeaders();
-        if ($res -> getBody()) {
-           echo "empty";
-        }
+      
+            $res = new Response(array('METHOD' => $method, "BODY" => $body ));
+            $res -> setJsonHeaders();
+            $res -> send();
     }
 
 
-    public function getRoute()
+    public function getAction()
     {
 
-        return $this -> route;
+        return $this -> action;
     }
 }
 
