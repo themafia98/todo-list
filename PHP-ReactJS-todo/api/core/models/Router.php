@@ -21,19 +21,18 @@ class Router /*implements Route */
         $this -> action = $action;
     }
 
-    public function runProcessRequest($method, $body)
+    protected function getAction()
+    {
+
+        return $this -> action;
+    }
+
+    public function run($method, $body)
     {
       
             $res = new Response(array('METHOD' => $method, "BODY" => $body ));
             $res -> setJsonHeaders();
             $res -> send();
-    }
-
-
-    public function getAction()
-    {
-
-        return $this -> action;
     }
 }
 

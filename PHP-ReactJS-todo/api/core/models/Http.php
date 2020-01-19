@@ -7,6 +7,9 @@ namespace core\models\Http;
 include realpath("")."/core/interfaces/index.php";
 use core\interfaces\models\Http\HtttpServer as HttpServer;
 use Error;
+use Ramsey\Uuid\Uuid;
+
+$processId = getmypid();
 
 /**
  * Class JsonBody
@@ -15,16 +18,11 @@ use Error;
  */
 class JsonBody  {
 
-    private $priv = [];
-    protected $prot = [];
-    public $res = [];
+    public $response = null;
+    public $actionPath = null;
+    public $actionType = null;
+    public $id = null;
 
-    public function __construct()
-    {
-        $this -> res = [1,2,3];
-        $this -> priv = [111,23];
-        $this -> prot = [12,232];
-    }
 };
 
 abstract class Http implements HttpServer
@@ -41,12 +39,53 @@ abstract class Http implements HttpServer
         return $this -> body;
     }
 
-    public function setBody($prop, $key, bool $encode)
+    protected function createResponseBody()
     {
-        if (!$this -> getBody()) return new JsonBody();
-        $this -> body[$key] = $prop;
-        if ($encode && $this -> getBody()){
-           return json_encode($this -> getBody());
+        if ($this -> getBody() && $this -> getBody()["BODY"]){
+         
+            $this -> body["BODY"]["bodyResponse"] = [];
+            var_dump($this -> body["BODY"]);
+        }
+    }
+
+    protected function getResponseBody()
+    {
+        if (is_array($this -> getBody()["BODY"]) && 
+            array_key_exists("bodyResponse", $this -> getBody()["BODY"]))
+        {
+            return $this -> getBody()["BODY"]['bodyResponse'];
+        }
+        else {
+           $this -> createResponseBody();
+            return $this -> getBody()["BODY"]['bodyResponse'];
+        }
+    }
+
+    protected function setPropResponseBody(string $key, $prop)
+    {
+
+        if (is_array($this -> getBody()["BODY"]) && 
+            array_key_exists("bodyResponse", $this -> getBody()["BODY"]))
+        {
+            $this -> body["BODY"]["bodyResponse"][$key] = $prop;
+        } else {
+            $this -> body["BODY"]["bodyResponse"] = [];
+            $this -> body["BODY"]["bodyResponse"][$key] = $prop;
+            print_r($resBody[$key]);
+        }
+    }
+
+    public function setBody($props)
+    {
+
+
+        $this -> setPropResponseBody("response", $props["response"]);
+        $this -> setPropResponseBody("id", Uuid::uuid4());
+        $this -> setPropResponseBody("actionPath", $props["actionPath"]);
+        $this -> setPropResponseBody("actionType", $props["actionType"]);
+
+        if ($this -> getResponseBody()){
+           return $this -> getResponseBody();
         } else return new JsonBody();
     }
 }
@@ -75,7 +114,7 @@ class Response extends Http
      */
     private  function get($actionPath)
     {
-        echo json_encode(new JsonBody(), JSON_OBJECT_AS_ARRAY);
+        /** No support */
     }
 
     /**
@@ -86,7 +125,14 @@ class Response extends Http
         switch ($actionType)
         {
             case "all": {
-                echo json_encode( new JsonBody(), JSON_OBJECT_AS_ARRAY);
+                $response = [1,2,3];
+                $res = array(
+                    "response" => $response, 
+                    "actionPath" => $actionPath, 
+                    "actionType" => $actionType
+                );
+
+                echo json_encode($this -> setBody($res), JSON_OBJECT_AS_ARRAY);
                 break;
             }
         }
@@ -96,6 +142,7 @@ class Response extends Http
     public function send(){
 
             $body = $this -> getBody()["BODY"];
+    
             $method = strtoupper($this -> getBody()["METHOD"]);
             $actionType = $body["TYPE"] ? $body["TYPE"] : null;
             $actionPath = $body["ACTION"] ? $body["ACTION"] : null;

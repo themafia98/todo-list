@@ -67,7 +67,11 @@ class AppController
 
     public function runRequest()
     {
-        $this -> getRoute() -> runProcessRequest($this -> getMethod(), $this -> getRequestBody());
+        $this -> getRoute() -> run(
+                $this -> getMethod(), 
+                $this -> getRequestBody(),
+                $this -> getDb()
+            );
     }
 }
 
