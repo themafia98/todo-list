@@ -4,3 +4,7 @@ section, header, footer {
     margin: 0 auto;
 
 }
+
+body {
+    background: repeat url($bg);
+}

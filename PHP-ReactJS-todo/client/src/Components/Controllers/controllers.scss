@@ -1,0 +1,29 @@
+.controllers {
+    width: 30%;
+    max-width: 30%;
+    min-width: 30%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    input {
+        outline: none;
+        text-align: center;
+        &::placeholder {
+            color: red;
+        }
+    }
+
+    .react-date-picker__wrapper {
+        background-color: #FFF;
+
+        .react-date-picker__inputGroup {
+            display: flex;
+            justify-content: center;
+
+            input {
+                color: red;
+            }
+        }
+    }
+}

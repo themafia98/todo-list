@@ -6,13 +6,13 @@ import Main from "../Main";
 class App extends React.Component {
 
     state = {
-        todoList: [],
+        todoListArray: [],
     }
 
     componentDidMount = async () => {
         const body = JSON.stringify({"ACTION": "$list", "TYPE": "all" });
 
-        const response = await fetch("/api/",{
+        const res = await fetch("/api/",{
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -20,20 +20,27 @@ class App extends React.Component {
             body
         });
         
-        if (!response.ok) return;
+        if (!res || !res.ok) return;
 
-        const resJson = await response.json();
-        if (resJson);
-        this.setState({
-            todoList: resJson
+        const { response } = await res.json();
+        if (response) this.setState({
+            todoList: response
         });
+    }
+    
+    onAdd = event => {
+        const { todoList = [] } = this.state;
+        this.setState({
+            todoList: [...todoList, ++todoList[todoList.length - 1]]
+        })
     }
 
     render(){
+        const { todoList = [] } = this.state;
         return (
             <Fragment>
-                <Header />
-                <Main />
+                <Header onAdd = {this.onAdd} />
+                <Main todoList = {todoList} />
             </Fragment>
         );
     }
