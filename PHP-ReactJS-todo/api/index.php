@@ -30,6 +30,8 @@ try
         exit();
     }
 
+    require "./config/db.php";
+
     $requestMethod = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : "";
     $body = $requestMethod !== "GET" ? json_decode(file_get_contents('php://input'), JSON_OBJECT_AS_ARRAY) : null;
 
@@ -38,7 +40,5 @@ try
     $controller -> runRequest();
 } catch(Exception $err)
 {
-    var_dump($err);
-    return;
+    var_export($err);
 }
-?>

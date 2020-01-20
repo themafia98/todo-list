@@ -30,7 +30,7 @@ class Router /*implements Route */
     public function run($method, $body)
     {
       
-            $res = new Response(array('METHOD' => $method, "BODY" => $body ));
+            $res = new Response(array('METHOD' => $method, "BODY_ACTION" => $body ));
             $res -> setJsonHeaders();
             $res -> send();
     }

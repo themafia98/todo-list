@@ -28,7 +28,8 @@ class JsonBody  {
 
 abstract class Http implements HttpServer
 {
-    private $body;
+    private $bodyRequest;
+    private $responseBody = array();
 
     public function __construct(array $props)
     {
@@ -40,38 +41,34 @@ abstract class Http implements HttpServer
         return $this -> body;
     }
 
-    protected function createResponseBody()
-    {
-        if ($this -> getBody() && $this -> getBody()["BODY"]){
-         
-            $this -> body["BODY"]["bodyResponse"] = [];
-            var_dump($this -> body["BODY"]);
-        }
-    }
 
     protected function getResponseBody()
     {
-        if (is_array($this -> getBody()["BODY"]) && 
-            array_key_exists("bodyResponse", $this -> getBody()["BODY"]))
+        if (is_array($this -> $responseBody))
         {
-            return $this -> getBody()["BODY"]['bodyResponse'];
+            return $this -> $responseBody;
         }
-        else {
-           $this -> createResponseBody();
-            return $this -> getBody()["BODY"]['bodyResponse'];
+        else 
+        {
+           $this -> $responseBody = array();
+            return $this -> $responseBody;
         }
     }
 
     protected function setPropResponseBody(string $key, $prop)
     {
 
-        if (is_array($this -> getBody()["BODY"]) && 
-            array_key_exists("bodyResponse", $this -> getBody()["BODY"]))
+        if (is_array($this -> $responseBody))
         {
-            $this -> body["BODY"]["bodyResponse"][$key] = $prop;
-        } else {
-            $this -> body["BODY"]["bodyResponse"] = [];
-            $this -> body["BODY"]["bodyResponse"][$key] = $prop;
+
+            $this -> $responseBody[$key] = $prop;
+
+        } else 
+        {
+
+            $this -> $responseBody = array();
+            $this ->$responseBody[$key] = $prop;
+
         }
     }
 
@@ -139,7 +136,8 @@ class Response extends Http
 
     }
 
-    public function send(){
+    public function send()
+    {
 
             $body = $this -> getBody()["BODY"];
     
@@ -158,10 +156,10 @@ class Response extends Http
                     return $this -> get($actionPath, $actionType);
                 }
             }
-            // echo json_encode( new JsonBody(), JSON_OBJECT_AS_ARRAY);
     }
 
-    static function factory(array $props){
+    static function factory(array $props)
+    {
         if (is_array($props))
         return new Response($props);
         else return null;
