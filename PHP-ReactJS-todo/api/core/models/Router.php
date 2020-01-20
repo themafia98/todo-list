@@ -27,12 +27,12 @@ class Router /*implements Route */
         return $this -> action;
     }
 
-    public function run($method, $body)
+    public function run($method, $body, callable $parseAction)
     {
-      
+
             $res = new Response(array('METHOD' => $method, "BODY_ACTION" => $body ));
             $res -> setJsonHeaders();
-            $res -> send();
+            $res -> active($parseAction);
     }
 }
 

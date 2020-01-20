@@ -37,9 +37,9 @@ class App extends React.Component {
     
     onAdd = event => {
         const { todoList = [] } = this.state;
-        this.setState({
-            todoList: [...todoList, ++todoList[todoList.length - 1]]
-        })
+        // this.setState({
+        //     todoList: [...todoList, ++todoList[todoList.length - 1]]
+        // })
     }
 
     render(){

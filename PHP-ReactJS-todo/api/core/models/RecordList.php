@@ -1,16 +1,23 @@
 <?php
 
+namespace core\models\lists;
+
 /**
  * Todo list entity
  */
-namespace core\models\RecordList;
-
 class RecordList 
 {
 
-    public function __construct()
+    public function fill(array $records, array $list)
     {
-        
+        foreach ($records as $key => $value) {
+            $this -> $list[$key] = $value;
+        }
     }
-}
+
+    public function createList():array
+    {
+        return array();
+    }
+};
 

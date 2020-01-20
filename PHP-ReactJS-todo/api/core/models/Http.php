@@ -28,46 +28,46 @@ class JsonBody  {
 
 abstract class Http implements HttpServer
 {
-    private $bodyRequest;
+    private $bodyRequest = array();
     private $responseBody = array();
 
     public function __construct(array $props)
     {
-        $this -> body = $props;
+        $this -> bodyRequest = $props;
     }
 
     protected function getBody()
     {
-        return $this -> body;
+        return $this -> bodyRequest;
     }
 
 
     protected function getResponseBody()
     {
-        if (is_array($this -> $responseBody))
+        if (is_array($this -> responseBody))
         {
-            return $this -> $responseBody;
+            return $this -> responseBody;
         }
         else 
         {
-           $this -> $responseBody = array();
-            return $this -> $responseBody;
+           $this -> responseBody = array();
+            return $this -> responseBody;
         }
     }
 
     protected function setPropResponseBody(string $key, $prop)
     {
 
-        if (is_array($this -> $responseBody))
+        if (is_array($this -> responseBody))
         {
 
-            $this -> $responseBody[$key] = $prop;
+            $this -> responseBody[$key] = $prop;
 
         } else 
         {
 
-            $this -> $responseBody = array();
-            $this ->$responseBody[$key] = $prop;
+            $this -> responseBody = array();
+            $this -> responseBody[$key] = $prop;
 
         }
     }
@@ -109,7 +109,7 @@ class Response extends Http
     /**
      *GET METHOD
      */
-    private  function get($actionPath)
+    private  function get(string $actionPath, string $actionType, $actionData)
     {
         /** No support */
     }
@@ -117,15 +117,14 @@ class Response extends Http
     /**
      * POST METHOD
      */
-    private function post($actionPath, $actionType)
+    private function post(string $actionPath,string $actionType, $actionData)
     {
 
         switch ($actionType)
         {
             case "all": {
-                $response = [1,2,3];
                 $res = array(
-                    "response" => $response, 
+                    "response" => $actionData, 
                     "actionPath" => $actionPath, 
                     "actionType" => $actionType
                 );
@@ -142,7 +141,7 @@ class Response extends Http
 
     }
 
-    public function send()
+    public function active(callable $parseAction)
     {
 
             $bodyAction = $this -> getBody()["BODY_ACTION"];
@@ -151,15 +150,18 @@ class Response extends Http
             $actionType = $bodyAction["TYPE"] ? $bodyAction["TYPE"] : null;
             $actionPath = $bodyAction["ACTION"] ? $bodyAction["ACTION"] : null;
 
+            $actionData = call_user_func($parseAction, $actionPath, $actionType);
+
+
             switch ($method){
                 case "DELETE":
                 case "PUT":
                 case "POST": {
-                    return $this -> post($actionPath, $actionType);
+                    return $this -> post($actionPath, $actionType, $actionData);
                     break;
                 }
                 default: {
-                    return $this -> get($actionPath, $actionType);
+                    return $this -> get($actionPath, $actionType, $actionData);
                 }
             }
     }

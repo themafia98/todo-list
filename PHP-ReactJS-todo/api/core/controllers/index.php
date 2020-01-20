@@ -6,10 +6,15 @@
 namespace core\controllers;
 
 require realpath("")."/core/models/Router.php";
+require realpath("")."/core/models/Record.php";
+require realpath("")."/core/models/RecordList.php";
 
 use core\models\Router\{Router};
 use core\interfaces\models\Dbms\{Dbms};
+use core\models\Records\{RecordManagment};
+use core\models\lists\{RecordList};
 use core\interfaces\models\Controller as Controller;
+use Exception;
 
 class AppController
 {
@@ -65,13 +70,40 @@ class AppController
         return $this -> route;
     }
 
+    public function parseAction(string $actionPath, string $actionType)
+    {
+        
+        $manager = new RecordManagment();
+        $recordList = new RecordList();
+
+        $list = $recordList -> createList();
+     
+        for ($i = 0; $i <= 20; $i++)
+        {
+            $manager -> create($i,"Random", "10.10.2019", "Test note");
+            array_push($list , $manager -> getRecord());
+        }
+
+        return $list;
+    }
+
     public function runRequest()
     {
-        $this -> getRoute() -> run(
-                $this -> getMethod(), 
+
+        try 
+        {
+            $callback = array($this, 'parseAction');
+
+            $this -> getRoute() -> run(
+                $this -> getMethod(),
                 $this -> getRequestBody(),
-                $this -> getDb()
+                $callback
             );
+
+        } catch(Exception $error)
+        {
+            echo $error -> getMessage();
+        }
     }
 }
 

@@ -53,12 +53,12 @@ class Main extends React.Component {
         return todoList.map((item, index) => {
             return (
                 <TodoItem 
-                    key = {index + item} 
+                    key = {index + item.recordName + item.id} 
                     itemUuid = {uuid()}
                     onChangeActiveTodo = {this.onChangeActiveTodo}
                     className = 'todo-item'
                 >
-                    <p>{item}</p>
+                    <p>{item.recordName}</p>
                 </TodoItem>
             );
         });
