@@ -1,7 +1,7 @@
 .main {
     width: 100%;
     display: flex;
-    height: calc(100vh - 155px);
+    height: calc(100vh - 200px);
     justify-content: center;
     .main-todoListBox {
         width: 90%;
@@ -10,12 +10,13 @@
         overflow-y: auto;
         max-width: 90%;
         min-width: 90%;
-        max-height: 90%;
-        min-height: 90%;
+        max-height: 95%;
+        min-height: 95%;
         margin: 5px auto;
         display: flex;
         flex-direction: column;
         .todo-item {
+            cursor: pointer;
             padding: 5px;
             background-color: #bbc2c7;
             transition: all 0.5s ease-in-out;

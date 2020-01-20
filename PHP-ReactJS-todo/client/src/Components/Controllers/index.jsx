@@ -26,6 +26,12 @@ class Controllers extends React.Component {
                         onChange={this.handleChange}
                 />
                 <input disabled = {!onAdd} onClick = {onAdd} type = 'button' value = 'add' />
+                <div className = 'sort-controllers'>
+                  <input className = 'btn-sort past' type = 'button' value = 'past' />
+                  <input className = 'btn-sort current' type = 'button' value = 'current' />
+                  <input className = 'btn-sort future' type = 'button' value = 'future' />
+                  <input className = 'btn-sort all' type = 'button' value = 'all' />
+                </div>
             </div>
         )
     }

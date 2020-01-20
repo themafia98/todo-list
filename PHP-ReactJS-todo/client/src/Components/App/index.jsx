@@ -28,7 +28,7 @@ class App extends React.Component {
 
             if (resJson) 
             this.setState({
-                todoList: resJson.response ?  resJson.response : null,
+                todoList: resJson.response ?  resJson.response : [],
             });
         } catch (err){
             console.error(err);
