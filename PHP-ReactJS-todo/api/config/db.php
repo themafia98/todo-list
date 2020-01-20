@@ -10,7 +10,6 @@ use Dotenv\Dotenv;
 $env = Dotenv::createImmutable(realpath(""));
 $env -> load();
 
-
 $dbserver = getenv("DB_SERVER");
 $dbport = getenv("DB_PORT");
 $dbname = getenv("DB_NAME");

@@ -10,22 +10,29 @@ class App extends React.Component {
     }
 
     componentDidMount = async () => {
-        const body = JSON.stringify({"ACTION": "$list", "TYPE": "all" });
 
-        const res = await fetch("/api/",{
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            }, 
-            body
-        });
-        
-        if (!res || !res.ok) return;
+        try {
+            const body = JSON.stringify({"ACTION": "$list", "TYPE": "all" });
 
-        const { response } = await res.json();
-        if (response) this.setState({
-            todoList: response
-        });
+            const res = await fetch("/api/",{
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                }, 
+                body
+            });
+            
+            if (!res || !res.ok) return;
+
+            const resJson = await res.json();
+
+            if (resJson) 
+            this.setState({
+                todoList: resJson.response ?  resJson.response : null,
+            });
+        } catch (err){
+            console.error(err);
+        }
     }
     
     onAdd = event => {

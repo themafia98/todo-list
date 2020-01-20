@@ -119,6 +119,7 @@ class Response extends Http
      */
     private function post($actionPath, $actionType)
     {
+
         switch ($actionType)
         {
             case "all": {
@@ -132,6 +133,11 @@ class Response extends Http
                 echo json_encode($this -> setBody($res), JSON_OBJECT_AS_ARRAY);
                 break;
             }
+
+            default: {
+                echo json_encode(new JsonBody(), JSON_OBJECT_AS_ARRAY);
+                break;
+            }
         }
 
     }
@@ -139,12 +145,12 @@ class Response extends Http
     public function send()
     {
 
-            $body = $this -> getBody()["BODY"];
-    
+            $bodyAction = $this -> getBody()["BODY_ACTION"];
             $method = strtoupper($this -> getBody()["METHOD"]);
-            $actionType = $body["TYPE"] ? $body["TYPE"] : null;
-            $actionPath = $body["ACTION"] ? $body["ACTION"] : null;
-         
+
+            $actionType = $bodyAction["TYPE"] ? $bodyAction["TYPE"] : null;
+            $actionPath = $bodyAction["ACTION"] ? $bodyAction["ACTION"] : null;
+
             switch ($method){
                 case "DELETE":
                 case "PUT":
