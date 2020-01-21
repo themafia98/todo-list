@@ -23,7 +23,9 @@ class App extends React.Component {
             const request = new Request();
             const res = await request.sendRequest(body);
             
-            if (!res || !res.ok) return;
+            if (!res || !res.ok) {
+               throw new Error("Invalid loading data");
+            }
 
             const resJson = await res.json();
 
@@ -34,6 +36,9 @@ class App extends React.Component {
             });
         } catch (err){
             console.error(err);
+            this.setState({
+                error: err.message
+            });
         }
     }
     
@@ -50,7 +55,9 @@ class App extends React.Component {
         const { isValid = false, date = null, value = "" } = controllersState;
         const dateParse = moment(date);
 
-        if (!isValid || !dateParse.isValid() || !value) return;
+        if (!isValid || !dateParse.isValid() || !value){
+            throw new Error("Date or record name is not valid");
+        }
 
         const dateFormat = dateParse.format("DD-M-YYYY");
 
@@ -81,7 +88,7 @@ class App extends React.Component {
             console.error(err);
             this.setState({
                 error: err.message
-            })
+            });
         }
     }
 
