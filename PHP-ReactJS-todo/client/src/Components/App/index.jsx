@@ -1,7 +1,7 @@
 import React, { Fragment } from 'react';
 import moment from 'moment';
 
-import Requst from "../../Request";
+import Request from "../../Request";
 
 import Header from "../Header";
 import Main from "../Main";
@@ -17,7 +17,7 @@ class App extends React.Component {
         try {
             const body = JSON.stringify({"ACTION": "list", "TYPE": "all" });
 
-            const request = new Requst();
+            const request = new Request();
             const res = await request.sendRequest(body);
             
             if (!res || !res.ok) return;
@@ -48,7 +48,7 @@ class App extends React.Component {
 
             const body = JSON.stringify({"ACTION": "add", "TYPE": "single_record" });
 
-            const request = new Requst();
+            const request = new Request();
             const res = await request.sendRequest(body);
 
             if (!res || !res.ok) return;
