@@ -68,7 +68,7 @@ class Controllers extends React.Component {
 					/>
                 </div>
             </div>
-        )
+        );
     }
 };
 

@@ -5,6 +5,7 @@ const ErrorShower = ({ message = "", cbClearError = null }) => {
     const [isShow, setShow] = useState(false);
     const [msg, setMsg] = useState(message);
 
+
     useEffect(() => {
         let update = null;
         if (!isShow && message && !msg){
@@ -24,6 +25,9 @@ const ErrorShower = ({ message = "", cbClearError = null }) => {
           }
         };
     }, [message, cbClearError]);
+
+    if (!isShow && !msg) return null;
+
 
     return (
         <div  

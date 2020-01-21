@@ -8,12 +8,36 @@
     padding: 10px;
     border: 1px solid black;
     background-color: #ff2600;
-
+  
     &.visible {
-        visibility: visible;
+        animation: show .2s forwards ease-in-out;
     }
 
     &.hidden {
-        visibility: hidden;
+        animation: hide .2s forwards ease-in-out;
+    }
+}
+
+@keyframes show {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes hide {
+    from {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+
+    to {
+        opacity: 0;
     }
 }

@@ -81,7 +81,7 @@ class Main extends React.Component {
                     clearConfig = {this.clearConfig}
                 />
             </Fragment>
-        )
+        );
     }
 };
 
