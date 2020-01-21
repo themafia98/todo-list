@@ -1,0 +1,19 @@
+.error-shower {
+    position: absolute;
+    top: 1%;
+    border-radius: 10px;
+    color: white;
+    left: 50%;
+    transform: translate(-50%, 0);
+    padding: 10px;
+    border: 1px solid black;
+    background-color: #ff2600;
+
+    &.visible {
+        visibility: visible;
+    }
+
+    &.hidden {
+        visibility: hidden;
+    }
+}

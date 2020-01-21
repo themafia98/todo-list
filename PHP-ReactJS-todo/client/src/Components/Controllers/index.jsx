@@ -1,7 +1,5 @@
 import React from 'react';
 import DatePicker from "react-date-picker";
-import moment from 'moment';
-
 
 class Controllers extends React.Component {
 
