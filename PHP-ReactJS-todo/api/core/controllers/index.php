@@ -65,8 +65,6 @@ class AppController implements Controller
     {
         if ($actionPath === "list" && $actionType === "all") 
         {
-
-            
             $manager = new RecordManagment();
             $recordList = new RecordList();
 

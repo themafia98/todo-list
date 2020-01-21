@@ -1,4 +1,7 @@
 import React, { Fragment } from 'react';
+import moment from 'moment';
+
+import Requst from "../../Request";
 
 import Header from "../Header";
 import Main from "../Main";
@@ -6,7 +9,7 @@ import Main from "../Main";
 class App extends React.Component {
 
     state = {
-        todoListArray: [],
+        todoList: [],
     }
 
     componentDidMount = async () => {
@@ -14,19 +17,15 @@ class App extends React.Component {
         try {
             const body = JSON.stringify({"ACTION": "list", "TYPE": "all" });
 
-            const res = await fetch("/api/",{
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                }, 
-                body
-            });
+            const request = new Requst();
+            const res = await request.sendRequest(body);
             
             if (!res || !res.ok) return;
 
             const resJson = await res.json();
 
-            if (resJson) 
+            if (!resJson) throw new Error("Invalid parse json.");
+
             this.setState({
                 todoList: resJson.response ?  resJson.response : [],
             });
@@ -35,11 +34,36 @@ class App extends React.Component {
         }
     }
     
-    onAdd = event => {
-        const { todoList = [] } = this.state;
-        // this.setState({
-        //     todoList: [...todoList, ++todoList[todoList.length - 1]]
-        // })
+    onAdd = async (controllersState) => {
+        debugger;
+        const { todoList: todoListState = [] } = this.state;
+        const { isValid = false, date = null, value = "" } = controllersState;
+        const dateParse = moment(date);
+
+        if (!isValid || !dateParse.isValid() || !value) return;
+
+        const dateFormat = dateParse.format("DD-M-YYYY");
+
+        try {
+
+            const body = JSON.stringify({"ACTION": "add", "TYPE": "single_record" });
+
+            const request = new Requst();
+            const res = await request.sendRequest(body);
+
+            if (!res || !res.ok) return;
+
+            const resJson = await res.json();
+
+            if (!resJson) throw new Error("Invalid parse json.");
+
+            const todoList = [...todoListState, resJson];
+
+            this.setState({ todoList });
+
+        } catch (err){
+            console.err(err);
+        }
     }
 
     render(){
