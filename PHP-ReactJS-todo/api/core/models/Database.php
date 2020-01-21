@@ -66,9 +66,8 @@ class Database
     
     public function connection()
     {
-        if (!is_array($this -> getConnect())) 
-        {
-            $connect = mysqli_connect(
+    
+        $connect = mysqli_connect(
                 $this -> getDbDataByKey("server"),
                 $this -> getDbDataByKey("user"),
                 $this -> getDbDataByKey("passwd"),
@@ -84,8 +83,7 @@ class Database
 
             $this -> setConnect($connect);
 
-            return $this -> $connect;
-        } else return $this -> getConnect();
+            return $this -> connect;
     }
 
     public function disconnection()
@@ -101,12 +99,11 @@ class Database
     {
         try {
             if (null === $this -> getConnect()) throw new Error ("Bad connect to bd"); 
-                $resultQuery = mysqli_query($this -> getConnect(), $query) or 
-                    die("Error:". mysqli_error($this -> getConnect()));
+                $resultQuery = $this -> getConnect() -> query($query);
             return $resultQuery;       
             
         } catch (Exception $error){
-            print_r($error);
+            var_dump($error);
         }
     }
 }

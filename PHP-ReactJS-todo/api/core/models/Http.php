@@ -144,7 +144,7 @@ class Response extends Http
     public function active(callable $parseAction)
     {
 
-        return;
+
             $bodyAction = $this -> getBody()["BODY_ACTION"];
             $method = strtoupper($this -> getBody()["METHOD"]);
 
@@ -152,7 +152,6 @@ class Response extends Http
             $actionPath = $bodyAction["ACTION"] ? $bodyAction["ACTION"] : null;
 
             $actionData = call_user_func($parseAction, $actionPath, $actionType);
-
 
             switch ($method){
                 case "DELETE":
