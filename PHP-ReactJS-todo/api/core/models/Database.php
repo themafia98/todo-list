@@ -75,13 +75,7 @@ class Database
                 $this -> getDbDataByKey("port") 
             ) or die(mysqli_error($connect));
 
-            if (mysqli_connect_errno()) 
-            {
-                printf("Подключение невозможно: %s\n", mysqli_connect_error());
-                exit();
-            }
-
-            $this -> setConnect($connect);
+            $this -> connect = $connect;
 
             return $this -> connect;
     }

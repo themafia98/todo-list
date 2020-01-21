@@ -54,7 +54,7 @@ class Main extends React.Component {
             return (
                 <TodoItem 
                     key = {index + item.recordName + item.id} 
-                    itemUuid = {uuid()}
+                    itemUuid = {item.id}
                     onChangeActiveTodo = {this.onChangeActiveTodo}
                     className = 'todo-item'
                 >
@@ -65,7 +65,7 @@ class Main extends React.Component {
     }
 
     render(){
-        const { popoverConfig = {} } = this.state;
+        const { popoverConfig = {}, todoList = [] } = this.state;
         return (
             <Fragment>
                 <section className = 'main'>
@@ -76,7 +76,8 @@ class Main extends React.Component {
                     </div>
                 </section>
                 <TodoPopover 
-                    popoverConfig = {popoverConfig} 
+                    popoverConfig = {popoverConfig}
+                    todoList = {todoList}
                     clearConfig = {this.clearConfig}
                 />
             </Fragment>

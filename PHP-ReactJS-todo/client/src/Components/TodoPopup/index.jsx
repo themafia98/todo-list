@@ -7,6 +7,7 @@ class TodoPopup extends React.Component {
         uuidTodo: null,
         visible: false,
         editMode: false,
+        currentRecordData: {}
     }
 
     static getDerivedStateFromProps = (props, state) => {
@@ -23,7 +24,7 @@ class TodoPopup extends React.Component {
     };
 
     componentDidMount = () => {
-        const { popoverConfig: { active = false, uuid = null } = {} } = this.props;
+        const { popoverConfig: { active = false, uuid = null, todoList = [] } = {} } = this.props;
         const { visible = false, uuidTodo = "" } = this.state;
 
         if (active !== visible && !_.isNull(uuid) && uuid === uuidTodo){
@@ -34,19 +35,32 @@ class TodoPopup extends React.Component {
     };
 
     componentDidUpdate = () => {
-        const { popoverConfig: { active = false, uuid = null } = {} } = this.props;
-        const { visible = false, uuidTodo = "" } = this.state;
+        const { popoverConfig: { active = false, uuid = null } = {}, todoList = [] } = this.props;
+        const { visible = false, uuidTodo = "", currentRecordData: currentRecordDataState = {} } = this.state;
 
         if (active !== visible && !_.isNull(uuid) && uuid === uuidTodo){
+
             this.setState({
-                visible: active
+                visible: active,
+                currentRecordData: currentRecordDataState
             });
         };
 
         if (!uuid && visible){
             return this.setState({
-                visible: false
+                visible: false,
+                currentRecordData: {}
             });
+        }
+
+        if (visible && active){
+            const currentRecordData = _.isEmpty(currentRecordDataState) && todoList && todoList.length ?
+            todoList.find(record => record && record.id === uuid) : currentRecordDataState;
+
+            if (!_.isEmpty(currentRecordData) && currentRecordDataState.id !== currentRecordData.id)
+            this.setState({
+                currentRecordData
+            })
         }
     };
 
@@ -109,8 +123,11 @@ class TodoPopup extends React.Component {
     }
 
     render(){
-        const { visible = false, editMode = false } = this.state;
-        const { additionalField = "" } = this.props;
+        const { visible = false, editMode = false, currentRecordData: {
+            additionalNote = "",
+            recordName = "",
+            time = ""
+        } = {} } = this.state;
 
         if (!visible) return null;
 
@@ -123,22 +140,24 @@ class TodoPopup extends React.Component {
                             className = 'popup-close-button'>
                         </div>
                         <div className = 'todo-popup-header'>
-                            <p className = 'todo-popup-date'>01.01.2019</p>
+                            <p className = 'todo-popup-date'>{time ? time : "No data"}</p>
                             <input type = "button" value = "delete todo" />
                         </div>
                         <div className = 'todo-popup-main'>
-                            <p className = 'todo-popup-title'></p>
+                        <p className = 'todo-popup-title'>{recordName ? recordName : "No title"}</p>
                             <p className = 'todo-popup-additionalTitle'>additional notes</p>
                             {!editMode ?
                             <div 
                                 onClick = {this.onEditNote} 
                                 className = 'additionalNote-field'
                             >
-                                {additionalField ? additionalField : "click for add note"}
+                                {additionalNote ? additionalNote : "click for add note"}
                             </div>
                             : 
                                 <Fragment>
-                                    <textarea className = 'additionalNote-field edit-mode' />
+                                    <textarea className = 'additionalNote-field edit-mode'>
+                                        {additionalNote ? additionalNote : ""}
+                                    </textarea>
                                     <input 
                                         className = 'popup-save-btn' 
                                         type = 'button' 

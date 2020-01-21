@@ -66,33 +66,29 @@ class AppController implements Controller
         if ($actionPath === "list" && $actionType === "all") 
         {
 
-            $connect = $this -> getDb() -> connection();
-            $this -> getDb() -> disconnection();
-
-            $sql = "SELECT * FROM `records`";
-            $query = $this -> getDb() -> makeQuery($sql);
-
-            var_export($query);
-            if ($query && $query -> num_rows > 0) 
-            {
-                // output data of each row
-                while($row = $query->fetch_assoc()) 
-                {
-                    var_dump($row);
-                }   
-            }
             
-            return;
-
-
             $manager = new RecordManagment();
             $recordList = new RecordList();
 
             $list = $recordList -> createList();
-     
-            for ($i = 0; $i <= 20; $i++) {
-                $manager -> create($i, "Random", "10.10.2019", "Test note");
-                array_push($list, $manager -> getRecord());
+
+            $this -> getDb() -> connection();
+
+            $sql = "SELECT * FROM `records`";
+            $query = $this -> getDb() -> makeQuery($sql);
+
+            $this -> getDb() -> disconnection();
+
+            if ($query && $query -> num_rows > 0) 
+            {
+                // output data of each row
+                while($row = $query -> fetch_assoc()) 
+                {
+                    $manager -> create($row["id"], $row["recordName"],
+                                       $row["time"], $row["additionalNote"]);
+
+                   array_push($list, $manager -> getRecord());
+                }   
             }
 
             return $list;
