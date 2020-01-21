@@ -3,18 +3,17 @@
 /**
  * Entity for requst/response managment
  */
-namespace core\models\Http;
+namespace core\models\server;
 
-require realpath("")."/core/interfaces/index.php";
 require realpath("")."/core/utils/consts.php";
 
-use core\interfaces\models\Http\HtttpServer as HttpServer;
+use core\interfaces\models\{HttpServer};
 use Error;
 use Ramsey\Uuid\Uuid;
 
 /**
  * Class JsonBody
- * @package core\models\Http
+ * @package core\models\server
  * For tests
  */
 class JsonBody  {
@@ -91,6 +90,7 @@ class Response extends Http
 {
     public function __construct(array $props)
     {
+
         if (!is_array($props))
         {
             throw new Error("Http constructor error");
@@ -144,6 +144,7 @@ class Response extends Http
     public function active(callable $parseAction)
     {
 
+        return;
             $bodyAction = $this -> getBody()["BODY_ACTION"];
             $method = strtoupper($this -> getBody()["METHOD"]);
 

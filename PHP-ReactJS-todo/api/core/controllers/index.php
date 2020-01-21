@@ -5,37 +5,33 @@
  */
 namespace core\controllers;
 
-require realpath("")."/core/models/Router.php";
+require realpath("")."/core/interfaces/index.php";
 require realpath("")."/core/models/Record.php";
 require realpath("")."/core/models/RecordList.php";
+require realpath("")."/core/models/Http.php";
 
-use core\models\Router\{Router};
-use core\interfaces\models\Dbms\{Dbms};
+use core\models\server\{Response};
 use core\models\Records\{RecordManagment};
 use core\models\lists\{RecordList};
-use core\interfaces\models\Controller as Controller;
+
+use core\interfaces\models\{Controller};
 use Exception;
 
-class AppController
+class AppController implements Controller
 {
 
-    /**
-     * Router api
-     */
-    private $route = null;
     private $method = null;
     private $requestBody = null;
     private $db = null;
 
     /**
      * AppController constructor.
-     * @param Dbms $dbms
+     * @param $dbms
      * @param string $method
      */
 
     public function __construct($dbms, $method, $body)
     {
-        $this -> route = new Router($body["ACTION"]);
         $this -> requestBody = $body;
         $this -> method = $method;
         $this -> db = $dbms;
@@ -65,26 +61,22 @@ class AppController
         return $this -> requestBody;
     }
 
-    public function getRoute()
-    {
-        return $this -> route;
-    }
-
     public function parseAction(string $actionPath, string $actionType)
     {
-        
-        $manager = new RecordManagment();
-        $recordList = new RecordList();
-
-        $list = $recordList -> createList();
-     
-        for ($i = 0; $i <= 20; $i++)
+        if ($actionPath === "list" && $actionType === "all") 
         {
-            $manager -> create($i,"Random", "10.10.2019", "Test note");
-            array_push($list , $manager -> getRecord());
-        }
+            $manager = new RecordManagment();
+            $recordList = new RecordList();
 
-        return $list;
+            $list = $recordList -> createList();
+     
+            for ($i = 0; $i <= 20; $i++) {
+                $manager -> create($i, "Random", "10.10.2019", "Test note");
+                array_push($list, $manager -> getRecord());
+            }
+
+            return $list;
+        }
     }
 
     public function runRequest()
@@ -92,13 +84,19 @@ class AppController
 
         try 
         {
+
             $callback = array($this, 'parseAction');
 
-            $this -> getRoute() -> run(
-                $this -> getMethod(),
-                $this -> getRequestBody(),
-                $callback
+            $props = array(
+                'METHOD' => $this -> getMethod(), 
+                "BODY_ACTION" => $this -> getRequestBody()
             );
+            
+     
+           $res = new Response($props);
+ 
+            $res -> setJsonHeaders();
+            $res -> active($callback);
 
         } catch(Exception $error)
         {

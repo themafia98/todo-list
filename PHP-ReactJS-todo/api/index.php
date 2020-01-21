@@ -6,20 +6,22 @@
  */
 
 namespace core\root;
+
 require "../api/bootstrap.php";
-require "./core/models/Database.php";
-//require  "./utils/headers.php";
+require realpath("")."/core/models/Database.php";
+// require  "./utils/headers.php";
 require "./core/controllers/index.php";
 require "./core/utils/index.php";
-
+require "./config/db.php";
+use Exception;
 use config\app\http;
-use core\controllers\AppController;
+use core\controllers\{AppController};
 
 /**
  * Database class init
  */
-
-use core\models\Database\Database as Database;
+ use core\models\Database\{Database};
+ use mysqli;
 
 try 
 {
@@ -30,14 +32,15 @@ try
         exit();
     }
 
-    require "./config/db.php";
-
     $requestMethod = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : "";
     $body = $requestMethod !== "GET" ? json_decode(file_get_contents('php://input'), JSON_OBJECT_AS_ARRAY) : null;
+ 
 
+    $db = new Database($dbserver, $dbuser, $dbpassword, $dbname, $dbport);
 
-    $controller = new AppController(new Database(), $requestMethod, $body);
+    $controller = new AppController($db, $requestMethod, $body);
     $controller -> runRequest();
+
 } catch(Exception $err)
 {
     var_export($err);
