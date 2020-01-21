@@ -9,26 +9,28 @@ namespace core\interfaces\models;
 /**
  * Interface for class Database
  */
-interface Dbms 
+interface Dbms
 {
-    public function __construct(string $dbserver, string $dbuser, 
-                                string $dbpassword, string $dbname, 
-                                string $dbport);
+    public function __construct(
+        string $dbserver,
+        string $dbuser,
+        string $dbpassword,
+        string $dbname,
+        string $dbport
+    );
     public function getConnect();
     public function getDbDataByKey(string $key);
     public function setConnect($cnt);
     public function connection();
     public function disconnection();
     public function makeQuery($query);
-
 }
 
 /**
  * Interface for class Record
  */
-interface TodoRecord 
+interface TodoRecord
 {
-
 };
 
 /**
@@ -37,7 +39,6 @@ interface TodoRecord
 
 interface TodoList
 {
-
 };
 
 
@@ -45,18 +46,18 @@ interface TodoList
  * Some http interfaces
  */
 
-interface HttpServer {
+interface HttpServer
+{
 
     public function __construct(array $props);
     public function setBody($props);
-
 };
 
 /**
  * Controller interface
  */
 
-interface Controller 
+interface Controller
 {
 
     public function __construct($dbms, $method, $body);
@@ -65,5 +66,4 @@ interface Controller
     public function getRequestBody();
     public function parseAction(string $actionPath, string $actionType);
     public function runRequest();
-
 }

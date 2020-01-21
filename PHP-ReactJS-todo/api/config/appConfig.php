@@ -8,5 +8,3 @@
 namespace config\app\http;
 
 $rest = "/api";
-
-?>

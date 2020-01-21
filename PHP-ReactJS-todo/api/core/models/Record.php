@@ -3,6 +3,7 @@
 /**
  * Todo record package
  */
+
 namespace core\models\Records;
 
 /**
@@ -18,30 +19,28 @@ class Record
 
     public function __construct(string $id, string $recordName, string $time, string $additionalNote)
     {
-        $this -> id = $id;
-        $this -> recordName = $recordName;
-        $this -> time = $time;
-        $this -> additionalNote = $additionalNote;
+        $this->id = $id;
+        $this->recordName = $recordName;
+        $this->time = $time;
+        $this->additionalNote = $additionalNote;
     }
-
 }
 
 /**
  * Record managment entity
  */
-class RecordManagment 
+class RecordManagment
 {
 
     private $record = null;
 
     public function create(string $id, string $recordName, string $time, string $additionalNote)
     {
-        $this -> record = new Record($id, $recordName, $time, $additionalNote);
+        $this->record = new Record($id, $recordName, $time, $additionalNote);
     }
 
     public function getRecord()
     {
-        return $this -> record;
+        return $this->record;
     }
 };
-

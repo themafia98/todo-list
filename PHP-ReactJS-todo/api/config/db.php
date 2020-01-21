@@ -3,12 +3,15 @@
 /**
  * Database config
  */
+
 namespace config\db;
+
 require 'vendor/autoload.php';
+
 use Dotenv\Dotenv;
 
 $env = Dotenv::createImmutable(realpath(""));
-$env -> load();
+$env->load();
 
 $dbserver = getenv("DB_SERVER");
 $dbport = getenv("DB_PORT");
