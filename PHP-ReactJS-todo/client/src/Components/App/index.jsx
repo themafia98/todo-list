@@ -58,7 +58,7 @@ class App extends React.Component {
                     error: err.message
                 });
 
-                this.intervalUpdateList = setTimeout(handleActionList, 0);
+                this.intervalUpdateList = setTimeout(handleActionList, 10000);
             }
         }
 
