@@ -63,37 +63,43 @@ class AppController implements Controller
         return $this->requestBody;
     }
 
+    public function getAllRecords($actionType)
+    {
+        if ($actionType !== "all" && $actionType !== "updateAfterInsert") return;
+        
+        $sql = "SELECT * FROM `records`";
+        $query = $this->getDb()->makeQuery($sql);
+
+        $this->getDb()->disconnection();
+
+        $manager = new RecordManagment();
+        $recordList = new RecordList();
+
+        $list = $recordList->createList();
+
+        if ($query && $query->num_rows > 0) {
+            // output data of each row
+            while ($row = $query->fetch_assoc()) {
+                $manager->create(
+                $row["id"],
+                $row["recordName"],
+                $row["time"],
+                $row["additionalNote"]
+            );
+
+                array_push($list, $manager->getRecord());
+            }
+        }
+
+        return $list;
+    }
+
     public function parseAction(string $actionPath, string $actionType, $data = null)
     {
         if ($actionPath === "list") {
             if ($actionType === "all") {
-                $manager = new RecordManagment();
-                $recordList = new RecordList();
-
-                $list = $recordList->createList();
-
                 $this->getDb()->connection();
-
-                $sql = "SELECT * FROM `records`";
-                $query = $this->getDb()->makeQuery($sql);
-
-                $this->getDb()->disconnection();
-
-                if ($query && $query->num_rows > 0) {
-                    // output data of each row
-                    while ($row = $query->fetch_assoc()) {
-                        $manager->create(
-                        $row["id"],
-                        $row["recordName"],
-                        $row["time"],
-                        $row["additionalNote"]
-                    );
-
-                        array_push($list, $manager->getRecord());
-                    }
-                }
-
-                return $list;
+                return $this->getAllRecords($actionType);
             }
         }
 
@@ -116,31 +122,7 @@ class AppController implements Controller
                     return "{'status': 'error', 'error': $error}";
                 }
 
-                $sql = "SELECT * FROM `records`";
-                $query = $this->getDb()->makeQuery($sql);
-
-                $this->getDb()->disconnection();
-
-                $manager = new RecordManagment();
-                $recordList = new RecordList();
-
-                $list = $recordList->createList();
-
-                if ($query && $query->num_rows > 0) {
-                    // output data of each row
-                    while ($row = $query->fetch_assoc()) {
-                        $manager->create(
-                        $row["id"],
-                        $row["recordName"],
-                        $row["time"],
-                        $row["additionalNote"]
-                    );
-
-                        array_push($list, $manager->getRecord());
-                    }
-                }
-
-                return $list;
+               return $this->getAllRecords("updateAfterInsert");
             }
         }
     }
