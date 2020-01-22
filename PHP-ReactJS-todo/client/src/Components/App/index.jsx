@@ -66,7 +66,7 @@ class App extends React.Component {
             const body = JSON.stringify({
                 "ACTION": "add",
                  "TYPE": "single_record" ,
-                 "data": { time: dateFormat, recordName: value }
+                 "DATA": { time: dateFormat, recordName: value }
             });
 
             const request = new Request();
@@ -80,7 +80,7 @@ class App extends React.Component {
                  throw new Error("Invalid parse json.");
             }
 
-            const todoList = [...todoListState, resJson];
+            const todoList = Array.isArray(resJson.response) ? [...resJson.response] : [...todoListState];
 
             this.setState({ todoList });
 

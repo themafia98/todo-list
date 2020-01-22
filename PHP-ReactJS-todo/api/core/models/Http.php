@@ -115,6 +115,7 @@ class Response extends Http
     {
 
         switch ($actionType) {
+            case "single_record":
             case "all": {
                     $res = array(
                         "response" => $actionData,
@@ -141,12 +142,13 @@ class Response extends Http
 
             $actionType = $bodyAction["TYPE"] ? $bodyAction["TYPE"] : null;
             $actionPath = $bodyAction["ACTION"] ? $bodyAction["ACTION"] : null;
+            $data = $bodyAction["DATA"] ? $bodyAction["DATA"] : null;
 
 
             if (!is_string($actionPath) || !is_string($actionType) || !is_callable($parseAction)) {
             }
 
-            $actionData = call_user_func($parseAction, $actionPath, $actionType);
+            $actionData = call_user_func($parseAction, $actionPath, $actionType, $data);
 
             // throw new Error(("Test error"));
 

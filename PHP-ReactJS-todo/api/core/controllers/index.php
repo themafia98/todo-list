@@ -11,6 +11,7 @@ require realpath("") . "/core/models/Record.php";
 require realpath("") . "/core/models/RecordList.php";
 require realpath("") . "/core/models/Http.php";
 
+use Ramsey\Uuid\Uuid;
 use core\models\server\{Response};
 use core\models\Records\{RecordManagment};
 use core\models\lists\{RecordList};
@@ -62,36 +63,85 @@ class AppController implements Controller
         return $this->requestBody;
     }
 
-    public function parseAction(string $actionPath, string $actionType)
+    public function parseAction(string $actionPath, string $actionType, $data = null)
     {
-        if ($actionPath === "list" && $actionType === "all") {
-            $manager = new RecordManagment();
-            $recordList = new RecordList();
+        if ($actionPath === "list") {
+            if ($actionType === "all") {
+                $manager = new RecordManagment();
+                $recordList = new RecordList();
 
-            $list = $recordList->createList();
+                $list = $recordList->createList();
 
-            $this->getDb()->connection();
+                $this->getDb()->connection();
 
-            $sql = "SELECT * FROM `records`";
-            $query = $this->getDb()->makeQuery($sql);
+                $sql = "SELECT * FROM `records`";
+                $query = $this->getDb()->makeQuery($sql);
 
-            $this->getDb()->disconnection();
+                $this->getDb()->disconnection();
 
-            if ($query && $query->num_rows > 0) {
-                // output data of each row
-                while ($row = $query->fetch_assoc()) {
-                    $manager->create(
+                if ($query && $query->num_rows > 0) {
+                    // output data of each row
+                    while ($row = $query->fetch_assoc()) {
+                        $manager->create(
                         $row["id"],
                         $row["recordName"],
                         $row["time"],
                         $row["additionalNote"]
                     );
 
-                    array_push($list, $manager->getRecord());
+                        array_push($list, $manager->getRecord());
+                    }
                 }
-            }
 
-            return $list;
+                return $list;
+            }
+        }
+
+        if ($actionPath === "add"){
+            if ($actionType === "single_record"){
+                if (is_null($data)) return;
+
+                $this->getDb()->connection();
+
+                $id = Uuid::uuid4();
+                $recordName = $data["recordName"];
+                $time = $data["time"];
+
+                $sql = "INSERT INTO records (id, recordName, time, additionalNote)
+                            VALUES ('$id', '$recordName' , '$time', '')";
+                $query = $this->getDb()->makeQuery($sql);
+
+                if (!$query){
+                    $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                    return "{'status': 'error', 'error': $error}";
+                }
+
+                $sql = "SELECT * FROM `records`";
+                $query = $this->getDb()->makeQuery($sql);
+
+                $this->getDb()->disconnection();
+
+                $manager = new RecordManagment();
+                $recordList = new RecordList();
+
+                $list = $recordList->createList();
+
+                if ($query && $query->num_rows > 0) {
+                    // output data of each row
+                    while ($row = $query->fetch_assoc()) {
+                        $manager->create(
+                        $row["id"],
+                        $row["recordName"],
+                        $row["time"],
+                        $row["additionalNote"]
+                    );
+
+                        array_push($list, $manager->getRecord());
+                    }
+                }
+
+                return $list;
+            }
         }
     }
 
