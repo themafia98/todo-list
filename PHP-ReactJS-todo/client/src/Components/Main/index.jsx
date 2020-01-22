@@ -1,5 +1,6 @@
 import React, { Fragment } from 'react';
-import uuid from 'uuid/v4';
+import _ from 'lodash';
+import moment from 'moment';
 import Scrollbars from 'react-custom-scrollbars';
 
 import TodoPopover from "../TodoPopup";
@@ -50,11 +51,17 @@ class Main extends React.Component {
 
     getTodos = () => {
         const { todoList = [] } = this.state;
+        const { getColorRecord = null } = this.props;
         return todoList.map((item, index) => {
+            const time = item.time ? item.time : null;
+
+            const color = getColorRecord ? getColorRecord(time) : null;
+
             return (
                 <TodoItem 
                     key = {index + item.recordName + item.id} 
                     itemUuid = {item.id}
+                    color = {color}
                     onChangeActiveTodo = {this.onChangeActiveTodo}
                     className = 'todo-item'
                 >

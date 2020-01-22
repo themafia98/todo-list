@@ -12,34 +12,125 @@ class App extends React.Component {
 
     state = {
         todoList: [],
+        filteredList: [],
+        sorter: null,
         error: null,
     }
 
+    intervalUpdateList = null;
+
     componentDidMount = async () => {
 
-        try {
-            const body = JSON.stringify({"ACTION": "list", "TYPE": "all" });
+        const handleActionList = async () => {
+            try {
+                const body = JSON.stringify({"ACTION": "list", "TYPE": "all" });
 
-            const request = new Request();
-            const res = await request.sendRequest(body);
-            
-            if (!res || !res.ok) {
-               throw new Error("Invalid loading data");
+                const request = new Request();
+                const res = await request.sendRequest(body);
+                    
+                if (!res || !res.ok) {
+                throw new Error("Invalid loading data");
+                }
+        
+                const resJson = await res.json();
+        
+                if (!resJson) throw new Error("Invalid parse json.");
+        
+                const list = resJson.response ? this.sortList(resJson.response)  : [];
+        
+                const isAll = !this.state.sorter || this.state.sorter === "all";
+
+                this.setState({ 
+                    todoList: list,
+                    filteredList: isAll ? [...list] : list.filter(it => {
+                        if (!this.state.sorter || this.state.sorter === "all"){
+                            return true;
+                        }
+                        return this.state.sorter === this.getColorRecord(it.time)
+                    }),
+                });
+
+                this.intervalUpdateList = setTimeout(handleActionList, 30000);
+
+            } catch (err){
+                console.error(err);
+                this.setState({
+                    error: err.message
+                });
+
+                this.intervalUpdateList = setTimeout(handleActionList, 0);
+            }
+        }
+
+
+        this.intervalUpdateList = setTimeout(handleActionList, 0);
+    }
+
+    componentWillUnmount = () => {
+        if (this.intervalUpdateList){
+            clearTimeout(this.intervalUpdateList);
+        }
+    }
+
+    sortList = (list = []) => {
+        const { filteredList = [] } = this.state;
+        if (!Array.isArray(list)) return filteredList;
+
+        return list.sort((a,b) => {
+            if (a.num && b.num || a.num === "0" & b.num === "0")
+            return Number(a.num) - Number(b.num);
+        });
+    }
+
+    componentDidUpdate = (prevProps, prevState) => {
+        const { sorter = null, todoList = [] } = this.state;
+        if (prevState.sorter !== sorter){
+  
+            if (!sorter || sorter === "all"){
+                return this.setState({
+                    filteredList: this.sortList([...todoList])
+                })
             }
 
-            const resJson = await res.json();
-
-            if (!resJson) throw new Error("Invalid parse json.");
-
-            this.setState({
-                todoList: resJson.response ?  resJson.response : [],
-            });
-        } catch (err){
-            console.error(err);
-            this.setState({
-                error: err.message
-            });
+            const records = [...todoList];
+            return this.setState({
+                filteredList: records.filter(it => {
+                    return this.state.sorter === this.getColorRecord(it.time)
+                })
+            })
         }
+    };
+
+    getColorRecord = (recordDate) => {
+        if (!_.isString(recordDate)) return null;
+
+        const recordTimeString = recordDate.trim();
+        const recordTime = moment(recordTimeString,"DD-M-YYYY");
+        const now = moment();
+
+        const currentTimeString = now.format("DD-M-YYYY").trim();
+       
+        if (currentTimeString === recordTimeString){
+            return "current";
+        }
+
+        if (now.isBefore(recordTime)){
+           return "future";
+        }
+
+        if (now.isAfter(recordTime)){
+            return "past";
+        }
+
+        return null;
+    }
+
+    onSort = event => {
+        const { currentTarget: { value = null } = {} } = event;
+        this.setState({
+            sorter: value
+        })
+        event.stopPropagation();
     }
     
 
@@ -50,7 +141,7 @@ class App extends React.Component {
     }
 
     onAdd = async (controllersState) => {
-        debugger;
+
         const { todoList: todoListState = [] } = this.state;
         const { isValid = false, date = null, value = "" } = controllersState;
         const dateParse = moment(date);
@@ -80,9 +171,21 @@ class App extends React.Component {
                  throw new Error("Invalid parse json.");
             }
 
-            const todoList = Array.isArray(resJson.response) ? [...resJson.response] : [...todoListState];
+            const todoList = Array.isArray(resJson.response) ? 
+                    this.sortList([...resJson.response]) : [...todoListState];
 
-            this.setState({ todoList });
+            const isAll = !this.state.sorter || this.state.sorter === "all";
+
+            this.setState({ 
+                todoList,
+                filteredList: isAll ? [...todoList] : todoList.filter(it => {
+                    if (!this.state.sorter || this.state.sorter === "all"){
+                        return true;
+                    }
+                    return this.state.sorter === this.getColorRecord(it.time)
+                }),
+                error: "Новая запись успешно добавлена"
+             });
 
         } catch (err){
             console.error(err);
@@ -95,15 +198,21 @@ class App extends React.Component {
     onAdd = _.debounce(this.onAdd, 500);
 
     render(){
-        const { todoList = [], error: message = "" } = this.state;
+        const { filteredList = [], error: message = "" } = this.state;
         return (
             <Fragment>
                 <ErrorShower
                     cbClearError = {this.onClearError}
                     message = {message} 
                 />
-                <Header onAdd = {this.onAdd} />
-                <Main todoList = {todoList} />
+                <Header 
+                    onSort = {this.onSort} 
+                    onAdd = {this.onAdd} 
+                />
+                <Main
+                    getColorRecord = {this.getColorRecord} 
+                    todoList = {filteredList} 
+                />
             </Fragment>
         );
     }

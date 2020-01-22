@@ -14,7 +14,20 @@ class Controllers extends React.Component {
 		const isValid = value && date;
 
         this.setState({ date, isValid });
-      };
+	  };
+	  
+	  onAdd = event => {
+		  const { isValid = false } = this.state;
+		  const { onAdd = null } = this.props;
+		  if (!isValid) return;
+		  if (onAdd) onAdd(this.state);
+
+		  this.setState({
+			  value: "",
+			  isValid: false,
+			  date: new Date()
+		  });
+	  }
 
       onChange = event => {
 		const { date = null } = this.state;
@@ -25,7 +38,8 @@ class Controllers extends React.Component {
 
     render(){
         const { date = new Date(), value, isValid = false } = this.state;
-        const { onAdd = null } = this.props;
+		const { onAdd = null, onSort = null } = this.props;
+
         return(
             <div className = 'controllers'>
 				<input 
@@ -41,30 +55,34 @@ class Controllers extends React.Component {
                 />
 				<input 
 					disabled = {!onAdd || !isValid} 
-					onClick = {onAdd ? onAdd.bind(this, this.state) : null} 
+					onClick = {onAdd ? this.onAdd : null} 
 					type = 'button'
 					value = 'add' 
 				/>
                 <div className = 'sort-controllers'>
 				 	<input 
-						className = 'btn-sort past' 
+						className = {['btn-sort', 'past', ].join(" ")} 
 						type = 'button' 
-						value = 'past' 
+						value = 'past'
+						onClick = {onSort}
 					/>
 				  	<input 
 						  className = 'btn-sort current' 
 						  type = 'button' 
 						  value = 'current' 
+						  onClick = {onSort}
 					/>
 				  	<input 
 						  className = 'btn-sort future' 
 						  type = 'button' 
 						  value = 'future' 
+						  onClick = {onSort}
 					/>
 					<input 
 						className = 'btn-sort all' 
 						type = 'button' 
 						value = 'all' 
+						onClick = {onSort}
 					/>
                 </div>
             </div>

@@ -81,6 +81,7 @@ class AppController implements Controller
             // output data of each row
             while ($row = $query->fetch_assoc()) {
                 $manager->create(
+                $row["num"],
                 $row["id"],
                 $row["recordName"],
                 $row["time"],

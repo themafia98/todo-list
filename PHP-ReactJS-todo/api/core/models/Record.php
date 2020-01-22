@@ -17,8 +17,9 @@ class Record
     public $time = null;
     public $additionalNote = null;
 
-    public function __construct(string $id, string $recordName, string $time, string $additionalNote)
+    public function __construct(string $num, string $id, string $recordName, string $time, string $additionalNote)
     {
+        $this->num = $num;
         $this->id = $id;
         $this->recordName = $recordName;
         $this->time = $time;
@@ -34,9 +35,9 @@ class RecordManagment
 
     private $record = null;
 
-    public function create(string $id, string $recordName, string $time, string $additionalNote)
+    public function create(string $num, string $id, string $recordName, string $time, string $additionalNote)
     {
-        $this->record = new Record($id, $recordName, $time, $additionalNote);
+        $this->record = new Record($num, $id, $recordName, $time, $additionalNote);
     }
 
     public function getRecord()

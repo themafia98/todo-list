@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 
-const TodoItem = ({ itemUuid, children, onChangeActiveTodo }) => {
+const TodoItem = ({ itemUuid, children, onChangeActiveTodo, color = "" }) => {
     const [UUID] = useState(itemUuid);
 
     const onOpenPopover = event => {
@@ -10,7 +10,7 @@ const TodoItem = ({ itemUuid, children, onChangeActiveTodo }) => {
     };
 
     return (
-        <div key = {UUID} onClick = {onOpenPopover} className = 'todo-item'>
+        <div key = {UUID} onClick = {onOpenPopover} className = {['todo-item', color].join(" ")}>
            {children}
         </div>
     );

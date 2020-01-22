@@ -5,11 +5,14 @@ import Controllers from "../Controllers";
 class Header extends React.Component {
 
     render(){
-        const { onAdd = null } = this.props;
+        const { onAdd = null, onSort = null } = this.props;
         return (
             <header>
                 <h1>Todo-list (React / PHP)</h1>
-                <Controllers onAdd = {onAdd} />
+                <Controllers 
+                    onSort = {onSort}
+                    onAdd = {onAdd} 
+                />
             </header>
         );
     }

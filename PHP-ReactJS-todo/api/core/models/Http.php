@@ -167,10 +167,8 @@ class Response extends Http
             var_export($error);
             return;
             $msg = $error->getMessage();
-            var_dump($msg);
             $props = array();
             $props["response"] = json_decode("{'error': $msg }");
-            echo "hi";
             echo json_encode(self::factory($props)->getBody());
             return;
         }
