@@ -152,6 +152,15 @@ class Response extends Http
             $isValid = $actionType && $actionPath;
 
             if (!is_string($actionPath) || !is_string($actionType) || !is_callable($parseAction)) {
+
+                $props["response"] = array(
+                    "parseAction" => $parseAction,
+                    "actionPath" => $actionPath,
+                    "actionType" => $actionType
+                );
+
+                echo json_encode(self::factory($props)->getBody());
+                return;
             }
 
 
