@@ -166,8 +166,6 @@ class Response extends Http
 
             $actionData = $isValid ? call_user_func($parseAction, $actionPath, $actionType, $data) : null;
 
-            // throw new Error(("Test error"));
-
             switch ($method) {
                 case "DELETE":
                 case "PUT":
