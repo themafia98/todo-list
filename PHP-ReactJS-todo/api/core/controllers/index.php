@@ -63,8 +63,8 @@ class AppController implements Controller
 
     public function getAllRecords($actionType)
     {
-        if ($actionType !== "all" && $actionType !== "updateAfterAction") {
-            return;
+        if ($actionType !== "all" && $actionType !== "updateAfterAction"){
+            return [];
         }
 
         $sql = "SELECT * FROM `records`";
@@ -80,15 +80,22 @@ class AppController implements Controller
         if ($query && $query->num_rows > 0) {
             // output data of each row
             while ($row = $query->fetch_assoc()) {
-                $manager->create(
-                    $row["num"],
-                    $row["id"],
-                    $row["recordName"],
-                    $row["time"],
-                    $row["additionalNote"]
-                );
+                
+                if (isset($row["num"]) &&
+                    isset($row["id"]) &&
+                    isset($row["recordName"]) &&
+                    isset($row["time"]) &&
+                    isset($row["additionalNote"])){
 
-                array_push($list, $manager->getRecord());
+                        $manager->create(
+                            $row["num"],
+                            $row["id"],
+                            $row["recordName"],
+                            $row["time"],
+                            $row["additionalNote"]
+                        );
+                        array_push($list, $manager->getRecord());
+                }
             }
         }
 
@@ -107,20 +114,27 @@ class AppController implements Controller
         if ($actionPath === "add") {
             if ($actionType === "single_record") {
                 if (is_null($data)) {
-                    return;
+                    http_response_code(404);
+                    return 'bad data';
                 }
 
                 $this->getDb()->connection();
 
                 $id = Uuid::uuid4();
-                $recordName = $data["recordName"];
-                $time = $data["time"];
+                $recordName = isset($data["recordName"]) ? $data["recordName"] : null;
+                $time = isset($data["time"]) ? $data["time"] : null;
+
+                if (!$recordName || !$time){
+                    http_response_code(404);
+                    return 'bad data';
+                }
 
                 $sql = "INSERT INTO records (id, recordName, time, additionalNote)
                             VALUES ('$id', '$recordName' , '$time', '')";
                 $query = $this->getDb()->makeQuery($sql);
 
                 if (!$query) {
+                    http_response_code(500);
                     $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
                     return "{'status': 'error', 'error': $error}";
                 }
@@ -132,18 +146,25 @@ class AppController implements Controller
         if ($actionPath === "delete") {
             if ($actionType === "single_record") {
                 if (is_null($data)) {
-                    return;
+                    http_response_code(404);
+                    return 'bad data';
                 }
 
                 $this->getDb()->connection();
 
-                $id = $data["id"];
+                $id = isset($data["id"]) ? $data["id"] : null;
+
+                if (!$id){
+                    http_response_code(404);
+                    return "invalid id";
+                }
 
                 $sql = "DELETE FROM records WHERE id = '$id'";
 
                 $query = $this->getDb()->makeQuery($sql);
 
                 if (!$query) {
+                    http_response_code(500);
                     $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
                     return "{'status': 'error', 'error': $error}";
                 }
@@ -169,6 +190,7 @@ class AppController implements Controller
             $res->setJsonHeaders();
             $res->active($callback);
         } catch (Exception $error) {
+            http_response_code(503);
             echo $error->getMessage();
         }
     }
