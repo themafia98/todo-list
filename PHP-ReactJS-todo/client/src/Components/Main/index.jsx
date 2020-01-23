@@ -1,6 +1,5 @@
 import React, { Fragment } from 'react';
-import _ from 'lodash';
-import moment from 'moment';
+
 import Scrollbars from 'react-custom-scrollbars';
 
 import TodoPopover from "../TodoPopup";

@@ -77,8 +77,10 @@ class App extends React.Component {
         if (!Array.isArray(list)) return filteredList;
 
         return list.sort((a,b) => {
-            if (a.num && b.num || a.num === "0" & b.num === "0")
-            return Number(a.num) - Number(b.num);
+            if ((a.num && b.num) || (a.num === "0" && b.num === "0")){
+                return Number(a.num) - Number(b.num);
+            }
+            return a - b;
         });
     }
 
@@ -196,9 +198,9 @@ class App extends React.Component {
     }
 
     onDeleteTodo = async (id = "") => {
-        const { todoList: todoListState = [] } = this.state;
-        console.log(id);
         try {
+
+            const { todoList: todoListState = [] } = this.state;
 
             if (!id){
                 throw new Error("Invalid delete id");

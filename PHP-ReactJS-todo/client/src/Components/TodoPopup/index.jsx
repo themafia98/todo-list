@@ -24,7 +24,7 @@ class TodoPopup extends React.Component {
     };
 
     componentDidMount = () => {
-        const { popoverConfig: { active = false, uuid = null, todoList = [] } = {} } = this.props;
+        const { popoverConfig: { active = false, uuid = null } = {} } = this.props;
         const { visible = false, uuidTodo = "" } = this.state;
 
         if (active !== visible && !_.isNull(uuid) && uuid === uuidTodo){

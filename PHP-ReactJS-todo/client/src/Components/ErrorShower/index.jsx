@@ -24,7 +24,7 @@ const ErrorShower = ({ message = "", cbClearError = null }) => {
               if (cbClearError) cbClearError();
           }
         };
-    }, [message, cbClearError]);
+    }, [message, cbClearError, isShow, msg]);
 
     if (!isShow && !msg) return null;
 
