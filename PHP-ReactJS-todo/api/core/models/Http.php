@@ -178,8 +178,6 @@ class Response extends Http
                     }
             }
         } catch (Exception $error) {
-            var_export($error);
-            return;
             $msg = $error->getMessage();
             $props = array();
             $props["response"] = json_decode("{'error': $msg }");
