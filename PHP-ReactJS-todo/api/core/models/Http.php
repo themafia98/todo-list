@@ -116,7 +116,9 @@ class Response extends Http
     private function post(string $actionPath, string $actionType, $actionData)
     {
 
-        switch ($actionType) {
+        $type = explode("__", $actionType);
+
+        switch ($type[0]) {
             case "single_record":
             case "all": {
                     $res = array(

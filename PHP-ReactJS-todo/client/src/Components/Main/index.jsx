@@ -1,5 +1,5 @@
 import React, { Fragment } from 'react';
-
+import _ from "lodash";
 import Scrollbars from 'react-custom-scrollbars';
 
 import TodoPopover from "../TodoPopup";
@@ -16,7 +16,11 @@ class Main extends React.Component {
     }
 
     static getDerivedStateFromProps = (props, state) => {
-        if (Array.isArray(props.todoList) && props.todoList.length !== state.todoList.length){
+
+        const isNewTodo = props.todoList.length !== state.todoList.length;
+    
+        if (Array.isArray(props.todoList) && 
+            (isNewTodo || !_.isEqual(props.todoList, state.todoList))){
             return {
                 ...state,
                 todoList: [...props.todoList]

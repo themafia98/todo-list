@@ -121,7 +121,8 @@ class AppController implements Controller
     {
         if (is_null($data)) {
             http_response_code(404);
-            return 'bad data';
+            echo 'bad data';
+            return;
         }
 
         if (strpos($actionType, "single_record") !== false) {
@@ -135,7 +136,8 @@ class AppController implements Controller
 
                         if (!$id) {
                             http_response_code(404);
-                            return "invalid id";
+                            echo "invalid id";
+                            return;
                         }
 
                         if (!isset($field[1])) return "lost field action";
@@ -147,7 +149,8 @@ class AppController implements Controller
                         $sql = $this -> getSqlQueryUpdateByCol($col, $content, $id);
 
                         if (!$sql){
-                            return "invalid sql query string";
+                            echo "invalid sql query string";
+                            return;
                         }
 
                         $query = $this->getDb()->makeQuery($sql);
@@ -155,17 +158,21 @@ class AppController implements Controller
                         if (!$query) {
                             http_response_code(500);
                             $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-                            return "{'status': 'error', 'error': $error}";
+                            var_export($error);
+                            return;
                         }
 
-                        return "done";
+                        return $this->getAllRecords("updateAfterAction");
+                        
                     }
                 case false: {
                       
-                        return;
-                    }
+                    return $this->getAllRecords("updateAfterAction");
+                }
+                default: {
+                    return $this->getAllRecords("updateAfterAction");
+                }
             }
-            return "done";
         }
     }
 
@@ -174,7 +181,8 @@ class AppController implements Controller
         if (strpos($actionType, "single_record") !== false) {
             if (is_null($data)) {
                 http_response_code(404);
-                return 'bad data';
+                echo 'bad data';
+                return;
             }
 
             $this->getDb()->connection();
@@ -183,7 +191,8 @@ class AppController implements Controller
 
             if (!$id) {
                 http_response_code(404);
-                return "invalid id";
+                echo "invalid id";
+                return;
             }
 
             $sql = "DELETE FROM records WHERE id = '$id'";
@@ -193,7 +202,8 @@ class AppController implements Controller
             if (!$query) {
                 http_response_code(500);
                 $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-                return "{'status': 'error', 'error': $error}";
+                var_export($error);
+                return;
             }
 
             return $this->getAllRecords("updateAfterAction");
@@ -205,7 +215,8 @@ class AppController implements Controller
         if (strpos($actionType, "single_record") !== false) {
             if (is_null($data)) {
                 http_response_code(404);
-                return 'bad data';
+                echo "bad data";
+                return;
             }
 
             $this->getDb()->connection();
@@ -216,7 +227,8 @@ class AppController implements Controller
 
             if (!$recordName || !$time) {
                 http_response_code(404);
-                return 'bad data';
+                echo 'bad data';
+                return;
             }
 
             $sql = "INSERT INTO records (id, recordName, time, additionalNote)
@@ -226,7 +238,8 @@ class AppController implements Controller
             if (!$query) {
                 http_response_code(500);
                 $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-                return "{'status': 'error', 'error': $error}";
+                var_export($error);
+                return;
             }
 
             return $this->getAllRecords("updateAfterAction");
@@ -244,6 +257,7 @@ class AppController implements Controller
                 $this->getDb()->connection();
                 return $this->getAllRecords($actionType);
             }
+            
         } elseif ($actionPath === "add") {
 
             return $this->addAction($data, $actionType, $isSingleField);

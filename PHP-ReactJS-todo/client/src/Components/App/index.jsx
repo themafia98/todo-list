@@ -215,10 +215,31 @@ class App extends React.Component {
             const res = await request.sendRequest(body);
 
             if (!res || !res.ok) {
-                throw new Error("Ошибка обновления поля.");
+                throw new Error("Ошибка обновления.");
             }
 
-           this.setState({ error: "Запись успешно обновлена" });
+            const resJson = await res.json();
+
+            if (!resJson || !resJson.response){
+                 throw new Error("Invalid parse json.");
+            }
+
+            
+            const todoList = Array.isArray(resJson.response) ? 
+                    this.sortList([...resJson.response]) : [...todoListState];
+
+            const isAll = !this.state.sorter || this.state.sorter === "all";
+
+            this.setState({ 
+                todoList,
+                filteredList: isAll ? [...todoList] : todoList.filter(it => {
+                    if (!this.state.sorter || this.state.sorter === "all"){
+                        return true;
+                    }
+                    return this.state.sorter === this.getColorRecord(it.time)
+                }),
+                error: "Запись успешно обновлена"
+             });
 
         } catch (err){
             console.error(err);
