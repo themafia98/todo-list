@@ -103,9 +103,11 @@ class Response extends Http
     /**
      *GET METHOD
      */
-    private  function get(string $actionPath, string $actionType, $actionData)
+    private  function get($actionPath, $actionType, $actionData)
     {
         /** No support */
+        $props["response"] = 'no support';
+        echo json_encode(self::factory($props)->getBody(), JSON_INVALID_UTF8_SUBSTITUTE);
     }
 
     /**
@@ -140,15 +142,18 @@ class Response extends Http
             $bodyAction = $this->getBody()["BODY_ACTION"];
             $method = strtoupper($this->getBody()["METHOD"]);
 
-            $actionType = $bodyAction["TYPE"] ? $bodyAction["TYPE"] : null;
-            $actionPath = $bodyAction["ACTION"] ? $bodyAction["ACTION"] : null;
-            $data = $bodyAction["DATA"] ? $bodyAction["DATA"] : null;
+            $actionType = $bodyAction && array_key_exists("TYPE", $bodyAction) ? $bodyAction["TYPE"] : null;
+            $actionPath = $bodyAction && array_key_exists("ACTION", $bodyAction) ? $bodyAction["ACTION"] : null;
+            $data = $bodyAction && array_key_exists("DATA", $bodyAction) ? $bodyAction["DATA"] : null;
 
+
+            $isValid = $actionType && $actionPath;
 
             if (!is_string($actionPath) || !is_string($actionType) || !is_callable($parseAction)) {
             }
 
-            $actionData = call_user_func($parseAction, $actionPath, $actionType, $data);
+
+            $actionData = $isValid ? call_user_func($parseAction, $actionPath, $actionType, $data) : null;
 
             // throw new Error(("Test error"));
 

@@ -15,6 +15,8 @@ require "./core/controllers/index.php";
 require "./core/utils/index.php";
 require "./config/db.php";
 
+require_once "./core/utils/logger.php";
+
 use Exception;
 use config\app\http;
 use core\controllers\{AppController};
@@ -24,11 +26,12 @@ use core\controllers\{AppController};
  */
 
 use core\models\Database\{Database};
-use mysqli;
 
 try {
+    
     $uri = parse_url(isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : "\\", PHP_URL_PATH);
     $uri = explode("/", $uri);
+    
     if (!$uri || !$uri[2] === "api") {
         header("HTTP/1.1 404 Not Found");
         exit();
