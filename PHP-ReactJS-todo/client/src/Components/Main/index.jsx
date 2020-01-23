@@ -73,6 +73,7 @@ class Main extends React.Component {
 
     render(){
         const { popoverConfig = {}, todoList = [] } = this.state;
+        const { onDelete = null } = this.props;
         return (
             <Fragment>
                 <section className = 'main'>
@@ -86,6 +87,7 @@ class Main extends React.Component {
                     popoverConfig = {popoverConfig}
                     todoList = {todoList}
                     clearConfig = {this.clearConfig}
+                    onDelete = {onDelete}
                 />
             </Fragment>
         );

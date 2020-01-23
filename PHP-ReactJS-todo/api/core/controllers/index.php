@@ -21,7 +21,6 @@ use Exception;
 
 class AppController implements Controller
 {
-
     private $method = null;
     private $requestBody = null;
     private $db = null;
@@ -59,14 +58,15 @@ class AppController implements Controller
 
     public function getRequestBody()
     {
-
         return $this->requestBody;
     }
 
     public function getAllRecords($actionType)
     {
-        if ($actionType !== "all" && $actionType !== "updateAfterInsert") return;
-        
+        if ($actionType !== "all" && $actionType !== "updateAfterAction") {
+            return;
+        }
+
         $sql = "SELECT * FROM `records`";
         $query = $this->getDb()->makeQuery($sql);
 
@@ -81,12 +81,12 @@ class AppController implements Controller
             // output data of each row
             while ($row = $query->fetch_assoc()) {
                 $manager->create(
-                $row["num"],
-                $row["id"],
-                $row["recordName"],
-                $row["time"],
-                $row["additionalNote"]
-            );
+                    $row["num"],
+                    $row["id"],
+                    $row["recordName"],
+                    $row["time"],
+                    $row["additionalNote"]
+                );
 
                 array_push($list, $manager->getRecord());
             }
@@ -104,9 +104,11 @@ class AppController implements Controller
             }
         }
 
-        if ($actionPath === "add"){
-            if ($actionType === "single_record"){
-                if (is_null($data)) return;
+        if ($actionPath === "add") {
+            if ($actionType === "single_record") {
+                if (is_null($data)) {
+                    return;
+                }
 
                 $this->getDb()->connection();
 
@@ -118,21 +120,42 @@ class AppController implements Controller
                             VALUES ('$id', '$recordName' , '$time', '')";
                 $query = $this->getDb()->makeQuery($sql);
 
-                if (!$query){
+                if (!$query) {
                     $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
                     return "{'status': 'error', 'error': $error}";
                 }
 
-               return $this->getAllRecords("updateAfterInsert");
+                return $this->getAllRecords("updateAfterAction");
+            }
+        }
+
+        if ($actionPath === "delete") {
+            if ($actionType === "single_record") {
+                if (is_null($data)) {
+                    return;
+                }
+
+                $this->getDb()->connection();
+
+                $id = $data["id"];
+
+                $sql = "DELETE FROM records WHERE id = '$id'";
+
+                $query = $this->getDb()->makeQuery($sql);
+
+                if (!$query) {
+                    $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                    return "{'status': 'error', 'error': $error}";
+                }
+
+                return $this->getAllRecords("updateAfterAction");
             }
         }
     }
 
     public function runRequest()
     {
-
         try {
-
             $callback = array($this, 'parseAction');
 
             $props = array(

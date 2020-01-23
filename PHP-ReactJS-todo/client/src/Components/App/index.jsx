@@ -142,17 +142,17 @@ class App extends React.Component {
 
     onAdd = async (controllersState) => {
 
-        const { todoList: todoListState = [] } = this.state;
-        const { isValid = false, date = null, value = "" } = controllersState;
-        const dateParse = moment(date);
-
-        if (!isValid || !dateParse.isValid() || !value){
-            throw new Error("Date or record name is not valid");
-        }
-
-        const dateFormat = dateParse.format("DD-M-YYYY");
-
         try {
+
+            const { todoList: todoListState = [] } = this.state;
+            const { isValid = false, date = null, value = "" } = controllersState;
+            const dateParse = moment(date);
+    
+            if (!isValid || !dateParse.isValid() || !value){
+                throw new Error("Date or record name is not valid");
+            }
+    
+            const dateFormat = dateParse.format("DD-M-YYYY");
 
             const body = JSON.stringify({
                 "ACTION": "add",
@@ -161,7 +161,7 @@ class App extends React.Component {
             });
 
             const request = new Request();
-            const res = await request.sendRequest(body);
+            const res = await request.sendRequest(body, "PUT");
 
             if (!res || !res.ok) return;
 
@@ -195,6 +195,56 @@ class App extends React.Component {
         }
     }
 
+    onDeleteTodo = async (id = "") => {
+        const { todoList: todoListState = [] } = this.state;
+        console.log(id);
+        try {
+
+            if (!id){
+                throw new Error("Invalid delete id");
+            }
+
+            const body = JSON.stringify({
+                "ACTION": "delete",
+                 "TYPE": "single_record" ,
+                 "DATA": { id }
+            });
+
+            const request = new Request();
+            const res = await request.sendRequest(body, "DELETE");
+
+            if (!res || !res.ok) return;
+
+            const resJson = await res.json();
+
+            if (!resJson || !resJson.response){
+                 throw new Error("Invalid parse json.");
+            }
+
+            const todoList = Array.isArray(resJson.response) ? 
+                    this.sortList([...resJson.response]) : [...todoListState];
+
+            const isAll = !this.state.sorter || this.state.sorter === "all";
+
+            this.setState({ 
+                todoList,
+                filteredList: isAll ? [...todoList] : todoList.filter(it => {
+                    if (!this.state.sorter || this.state.sorter === "all"){
+                        return true;
+                    }
+                    return this.state.sorter === this.getColorRecord(it.time)
+                }),
+                error: "Запись успешно удалена"
+             });
+
+        } catch (err){
+            console.error(err);
+            this.setState({
+                error: err.message
+            });
+        }
+    }
+
     onAdd = _.debounce(this.onAdd, 500);
 
     render(){
@@ -212,6 +262,7 @@ class App extends React.Component {
                 <Main
                     getColorRecord = {this.getColorRecord} 
                     todoList = {filteredList} 
+                    onDelete = {this.onDeleteTodo}
                 />
             </Fragment>
         );

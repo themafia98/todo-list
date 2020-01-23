@@ -64,6 +64,20 @@ class TodoPopup extends React.Component {
         }
     };
 
+    onDelete = event => {
+        const { onDelete = null, clearConfig = null } = this.props;
+        const {  uuidTodo: id = "" } = this.state;
+        if (!onDelete) return;
+        onDelete(id);
+
+        this.setState({
+            visible: false,
+            editMode: false
+        }, () => {
+            if (clearConfig) clearConfig();
+          });
+    };
+
     onChangeVisible = event => {
         const { 
             target: { 
@@ -141,7 +155,7 @@ class TodoPopup extends React.Component {
                         </div>
                         <div className = 'todo-popup-header'>
                             <p className = 'todo-popup-date'>{time ? time : "No data"}</p>
-                            <input type = "button" value = "delete todo" />
+                            <input onClick = {this.onDelete} type = "button" value = "delete todo" />
                         </div>
                         <div className = 'todo-popup-main'>
                         <p className = 'todo-popup-title'>{recordName ? recordName : "No title"}</p>
