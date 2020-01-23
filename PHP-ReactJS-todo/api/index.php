@@ -8,14 +8,12 @@
 
 namespace core\root;
 
-require "../api/bootstrap.php";
-require realpath("") . "/core/models/Database.php";
-// require  "./utils/headers.php";
-require "./core/controllers/index.php";
-require "./core/utils/index.php";
-require "./config/db.php";
-
-require_once "./core/utils/logger.php";
+require_once "../api/bootstrap.php";
+require_once realpath("") . "/core/models/Database.php";
+// require_once  "./utils/headers.php"; /** includes this if you want use default headers */
+require_once "./core/controllers/index.php";
+require_once "./core/utils/index.php";
+require_once "./config/db.php";
 
 use Exception;
 use config\app\http;
@@ -46,5 +44,5 @@ try {
     $controller = new AppController($db, $requestMethod, $body);
     $controller->runRequest();
 } catch (Exception $err) {
-    $log->warning($err -> getMessage());
+    error_log($err -> getMessage(), 1, "gaara33377@gmail.com");
 }

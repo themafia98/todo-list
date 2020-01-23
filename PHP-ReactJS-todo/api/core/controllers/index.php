@@ -6,12 +6,15 @@
 
 namespace core\controllers;
 
-require realpath("") . "/core/interfaces/index.php";
-require realpath("") . "/core/models/Record.php";
-require realpath("") . "/core/models/RecordList.php";
-require realpath("") . "/core/models/Http.php";
+require_once realpath("") . "/core/interfaces/index.php";
+require_once realpath("") . "/core/models/Record.php";
+require_once realpath("") . "/core/models/RecordList.php";
+require_once realpath("") . "/core/models/Http.php";
 
+use Monolog\Logger as Logger;
+use Monolog\Handler\StreamHandler as StreamHandler;
 use Ramsey\Uuid\Uuid;
+
 use core\models\server\{Response};
 use core\models\Records\{RecordManagment};
 use core\models\lists\{RecordList};
@@ -24,6 +27,7 @@ class AppController implements Controller
     private $method = null;
     private $requestBody = null;
     private $db = null;
+    public $log = null;
 
     /**
      * AppController constructor.
@@ -36,6 +40,8 @@ class AppController implements Controller
         $this->requestBody = $body;
         $this->method = $method;
         $this->db = $dbms;
+        $this -> log = new Logger('todo-app');
+        $this -> log->pushHandler(new StreamHandler('controllerError.log', Logger::WARNING));
     }
 
     /**
@@ -119,7 +125,10 @@ class AppController implements Controller
 
     public function editAction($data, string $actionType, bool $isSingleField)
     {
+
         if (is_null($data)) {
+            $this -> log->error("editAction: !is_null(data)");
+
             http_response_code(404);
             echo 'bad data';
             return;
@@ -135,12 +144,17 @@ class AppController implements Controller
                         $id = isset($data["id"]) ? $data["id"] : null;
 
                         if (!$id) {
+                            $this -> log->error("editAction: id invalid");
+
                             http_response_code(404);
                             echo "invalid id";
                             return;
                         }
 
-                        if (!isset($field[1])) return "lost field action";
+                        if (!isset($field[1])) {
+                            $this -> log->error("editAction: !isset(field[1])");
+                            return "lost field action";
+                        }
 
                         $col = $field[1];
                         $content = $data[$col];
@@ -149,6 +163,8 @@ class AppController implements Controller
                         $sql = $this -> getSqlQueryUpdateByCol($col, $content, $id);
 
                         if (!$sql){
+                            $this -> log->error("editAction: invalid sql query string");
+
                             echo "invalid sql query string";
                             return;
                         }
@@ -156,8 +172,10 @@ class AppController implements Controller
                         $query = $this->getDb()->makeQuery($sql);
 
                         if (!$query) {
-                            http_response_code(500);
                             $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                            $this -> log->error("editAction: $error");
+
+                            http_response_code(500);
                             var_export($error);
                             return;
                         }
@@ -180,6 +198,8 @@ class AppController implements Controller
     {
         if (strpos($actionType, "single_record") !== false) {
             if (is_null($data)) {
+                $this -> log->error("deleteAction: bad data");
+
                 http_response_code(404);
                 echo 'bad data';
                 return;
@@ -190,6 +210,8 @@ class AppController implements Controller
             $id = isset($data["id"]) ? $data["id"] : null;
 
             if (!$id) {
+                $this -> log->error("deleteAction: invalid id");
+
                 http_response_code(404);
                 echo "invalid id";
                 return;
@@ -200,8 +222,10 @@ class AppController implements Controller
             $query = $this->getDb()->makeQuery($sql);
 
             if (!$query) {
-                http_response_code(500);
                 $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                $this -> log->error("deleteAction: $error");
+
+                http_response_code(500);
                 var_export($error);
                 return;
             }
@@ -214,6 +238,8 @@ class AppController implements Controller
     {
         if (strpos($actionType, "single_record") !== false) {
             if (is_null($data)) {
+                $this -> log->error("addAction: bad data is_null(data)");
+
                 http_response_code(404);
                 echo "bad data";
                 return;
@@ -226,6 +252,8 @@ class AppController implements Controller
             $time = isset($data["time"]) ? $data["time"] : null;
 
             if (!$recordName || !$time) {
+                $this -> log->error("addAction: bad data");
+
                 http_response_code(404);
                 echo 'bad data';
                 return;
@@ -236,8 +264,10 @@ class AppController implements Controller
             $query = $this->getDb()->makeQuery($sql);
 
             if (!$query) {
-                http_response_code(500);
                 $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                $this -> log->error("addAction: $error");
+
+                http_response_code(500);
                 var_export($error);
                 return;
             }
@@ -257,7 +287,7 @@ class AppController implements Controller
                 $this->getDb()->connection();
                 return $this->getAllRecords($actionType);
             }
-            
+
         } elseif ($actionPath === "add") {
 
             return $this->addAction($data, $actionType, $isSingleField);
@@ -291,8 +321,11 @@ class AppController implements Controller
             $res->setJsonHeaders();
             $res->active($callback);
         } catch (Exception $error) {
+            $msg = $error->getMessage();
+            $this -> log->error("global error handler: $msg");
+
             http_response_code(503);
-            echo $error->getMessage();
+            echo $msg;
         }
     }
 }

@@ -6,7 +6,7 @@
 
 namespace core\models\server;
 
-require realpath("") . "/core/utils/consts.php";
+require_once realpath("") . "/core/utils/consts.php";
 
 use core\interfaces\models\{HttpServer};
 use Error;
