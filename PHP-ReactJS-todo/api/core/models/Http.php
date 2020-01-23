@@ -130,7 +130,7 @@ class Response extends Http
                     echo json_encode($this->setBody($res), JSON_OBJECT_AS_ARRAY);
                     break;
                 }
-                
+
             default: {
                     echo json_encode(new JsonBody(), JSON_OBJECT_AS_ARRAY);
                     break;

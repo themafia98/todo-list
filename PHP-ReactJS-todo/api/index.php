@@ -26,10 +26,10 @@ use core\controllers\{AppController};
 use core\models\Database\{Database};
 
 try {
-    
+
     $uri = parse_url(isset($_SERVER["REQUEST_URI"]) ? $_SERVER["REQUEST_URI"] : "\\", PHP_URL_PATH);
     $uri = explode("/", $uri);
-    
+
     if (!$uri || isset($uri[2]) && !$uri[2] === "api") {
         header("HTTP/1.1 404 Not Found");
         exit();
@@ -44,5 +44,5 @@ try {
     $controller = new AppController($db, $requestMethod, $body);
     $controller->runRequest();
 } catch (Exception $err) {
-    error_log($err -> getMessage(), 1, "gaara33377@gmail.com");
+    error_log($err->getMessage(), 1, "gaara33377@gmail.com");
 }
