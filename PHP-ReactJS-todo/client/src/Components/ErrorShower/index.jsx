@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 
 
 const ErrorShower = ({ message = "", cbClearError = null }) => {
     const [isShow, setShow] = useState(false);
     const [msg, setMsg] = useState(message);
 
+
+    const clearError = useCallback(cbClearError, [msg]);
 
     useEffect(() => {
         let update = null;
@@ -14,17 +16,17 @@ const ErrorShower = ({ message = "", cbClearError = null }) => {
             update = setTimeout(() => {
                 setMsg("");
                 setShow(false);
-               if (cbClearError) cbClearError();
+               if (clearError) clearError();
             },3000);
         }
         return () => {
 
           if (update) {
               clearTimeout(update);
-              if (cbClearError) cbClearError();
+              if (clearError) clearError();
           }
         };
-    }, [message, cbClearError, isShow, msg]);
+    }, [message, cbClearError]);
 
     if (!isShow && !msg) return null;
 

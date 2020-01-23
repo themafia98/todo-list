@@ -7,7 +7,7 @@ class TodoPopup extends React.Component {
         uuidTodo: null,
         visible: false,
         editMode: false,
-        currentRecordData: {}
+        currentRecordData: {} // container for popup data
     }
 
     static getDerivedStateFromProps = (props, state) => {
@@ -49,6 +49,7 @@ class TodoPopup extends React.Component {
         if (!uuid && visible){
             return this.setState({
                 visible: false,
+                wasChange: false,
                 currentRecordData: {}
             });
         }
@@ -72,11 +73,55 @@ class TodoPopup extends React.Component {
 
         this.setState({
             visible: false,
-            editMode: false
+            editMode: false,
+            wasChange: false,
         }, () => {
             if (clearConfig) clearConfig();
           });
     };
+
+    onEditNoteField = event => {
+        const { 
+            editMode = false, 
+            wasChange: wasChangeState = false,
+            uuidTodo = "",
+            currentRecordData: { additionalNote = "" } = {}, 
+        } = this.state;
+
+        const { onEditField = null } = this.props;
+        let wasChange = wasChangeState;
+
+        if (!editMode || !additionalNote || !wasChange){
+            return this.setState({ editMode: false });
+        }
+
+        if (onEditField && uuidTodo && wasChange){
+            wasChange = false;
+             onEditField(additionalNote, uuidTodo);
+        }
+
+        this.setState({ editMode: false, wasChange });
+    }
+
+    onChangeNoteField = event => {
+        const { target: { value = "" } = {} } = event;
+        const { 
+            currentRecordData: { additionalNote = "" } = {}, 
+            currentRecordData = {}
+        } = this.state;
+
+        if (additionalNote === value){
+            return;
+        }
+
+        this.setState({
+            currentRecordData: {
+                ...currentRecordData,
+                additionalNote: value,
+            },
+            wasChange: true,
+        });
+    }
 
     onChangeVisible = event => {
         const { 
@@ -87,8 +132,15 @@ class TodoPopup extends React.Component {
                 className = null } = {} 
         } = event;
 
-        const { visible = false, editMode = false } = this.state;
-        const {  clearConfig = null } = this.props;
+        const { 
+            visible = false, 
+            editMode = false, 
+            wasChange: wasChangeState = false,
+            uuidTodo = "",
+            currentRecordData: { additionalNote = "" } = {}
+         } = this.state;
+        const {  clearConfig = null, onEditField = null } = this.props;
+        let wasChange = wasChangeState;
 
         const isTruthyClassName = !_.isNull(classNameTarget) || !_.isNull(className);
 
@@ -100,12 +152,20 @@ class TodoPopup extends React.Component {
 
         const visibility = !visible;
 
+        if (!visibility && uuidTodo && wasChange && onEditField && additionalNote){
+            wasChange = false;
+            onEditField(additionalNote, uuidTodo);
+        }
+
         this.setState({
             visible: visibility,
+            wasChange,
             editMode: !visibility ? false : editMode
         }, () => {
-            if (clearConfig && !this.state.visible) clearConfig();
-          });
+            if (clearConfig && !this.state.visible){
+                clearConfig();
+            }
+        });
 
         event.stopPropagation();
     };
@@ -124,15 +184,30 @@ class TodoPopup extends React.Component {
 
     onViewMode = event => {
         const { target: { className = '' } = {} } = event || {};
-        const { editMode = false } = this.state;
+        const { 
+            editMode = false, 
+            wasChange: wasChangeState = false, 
+            uuidTodo = "",
+            currentRecordData: { additionalNote = "" } = {} 
+        } = this.state;
+
+        const { onEditField = null } = this.props;
+
+        let wasChange = wasChangeState;
 
         if (!editMode || className.includes('edit-mode') || 
             className.includes("popup-save-btn")){
                 return;
         }
 
+        if (wasChange && uuidTodo && onEditField && additionalNote){
+            wasChange = false;
+            onEditField(additionalNote, uuidTodo);
+        }
+
         this.setState({
-            editMode: false
+            editMode: false,
+            wasChange
         });
     }
 
@@ -142,6 +217,7 @@ class TodoPopup extends React.Component {
             recordName = "",
             time = ""
         } = {} } = this.state;
+
 
         if (!visible) return null;
 
@@ -169,10 +245,13 @@ class TodoPopup extends React.Component {
                             </div>
                             : 
                                 <Fragment>
-                                    <textarea className = 'additionalNote-field edit-mode'>
-                                        {additionalNote ? additionalNote : ""}
-                                    </textarea>
+                                    <textarea 
+                                        onChange = {this.onChangeNoteField}
+                                        value = {additionalNote ? additionalNote : ""}
+                                        className = 'additionalNote-field edit-mode'
+                                    />
                                     <input 
+                                        onClick = {this.onEditNoteField}
                                         className = 'popup-save-btn' 
                                         type = 'button' 
                                         value = "edit" 

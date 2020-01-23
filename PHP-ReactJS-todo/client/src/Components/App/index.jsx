@@ -197,6 +197,55 @@ class App extends React.Component {
         }
     }
 
+    onEditField = async (additionalNote, id) => {
+        try {
+            const { todoList: todoListState = [] } = this.state;
+
+            if (!additionalNote || !id){
+                throw new Error("Invalid popup data");
+            }
+
+            const body = JSON.stringify({
+                "ACTION": "edit",
+                 "TYPE": "single_record__additionalNote" ,
+                 "DATA": { additionalNote, id }
+            });
+
+            const request = new Request();
+            const res = await request.sendRequest(body);
+
+            if (!res || !res.ok) return;
+
+            const resJson = await res.json();
+
+            if (!resJson || !resJson.response){
+                 throw new Error("Invalid parse json.");
+            }
+
+            const todoList = Array.isArray(resJson.response) ? 
+                    this.sortList([...resJson.response]) : [...todoListState];
+
+            const isAll = !this.state.sorter || this.state.sorter === "all";
+
+            this.setState({ 
+                todoList,
+                filteredList: isAll ? [...todoList] : todoList.filter(it => {
+                    if (!this.state.sorter || this.state.sorter === "all"){
+                        return true;
+                    }
+                    return this.state.sorter === this.getColorRecord(it.time)
+                }),
+                error: "Запись успешно обновлена"
+             });
+
+        } catch (err){
+            console.error(err);
+            this.setState({
+                error: err.message
+            });
+        }
+    }
+
     onDeleteTodo = async (id = "") => {
         try {
 
@@ -265,6 +314,7 @@ class App extends React.Component {
                     getColorRecord = {this.getColorRecord} 
                     todoList = {filteredList} 
                     onDelete = {this.onDeleteTodo}
+                    onEditField = {this.onEditField}
                 />
             </Fragment>
         );
