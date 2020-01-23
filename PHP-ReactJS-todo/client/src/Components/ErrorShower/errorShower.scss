@@ -8,6 +8,7 @@
     padding: 10px;
     border: 1px solid black;
     background-color: #ff2600;
+    z-index: 999999;
   
     &.visible {
         animation: show .2s forwards ease-in-out;
