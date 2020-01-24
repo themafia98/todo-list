@@ -1,7 +1,9 @@
-**PHP API FOR TODO-LIST APPLICATION**
+**Server side on PHP and nginx (php-fpm)**
  
-
   * PHP7
+  * nginx
   * Composer
-  * MySQL
-  * XAMPP (localhost)
+  * MySQL (remote)
+  * Logger: monolog
+  * env package: phpdotenv
+  * uuid package
