@@ -1,4 +1,4 @@
-**Server side on PHP and nginx (php-fpm)**
+**Server side todo-list on PHP and nginx (php-fpm)**
  
   * PHP7
   * nginx
