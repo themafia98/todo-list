@@ -1,4 +1,5 @@
 import React, { Fragment } from 'react';
+import { connect } from 'react-redux';
 import moment from 'moment';
 import _ from "lodash";
 
@@ -7,6 +8,8 @@ import Request from "../../Request";
 import ErrorShower from "../ErrorShower";
 import Header from "../Header";
 import Main from "../Main";
+
+import { LOADING_APP } from "../../Redux/appReducer/consts";
 
 class App extends React.Component {
 
@@ -19,51 +22,9 @@ class App extends React.Component {
 
     intervalUpdateList = null;
 
-    componentDidMount = async () => {
-
-        const handleActionList = async () => {
-            try {
-                const body = JSON.stringify({"ACTION": "list", "TYPE": "all" });
-
-                const request = new Request();
-                const res = await request.sendRequest(body);
-                    
-                if (!res || !res.ok) {
-                throw new Error("Invalid loading data");
-                }
-        
-                const resJson = await res.json();
-        
-                if (!resJson) throw new Error("Invalid parse json.");
-        
-                const list = resJson.response ? this.sortList(resJson.response)  : [];
-        
-                const isAll = !this.state.sorter || this.state.sorter === "all";
-
-                this.setState({ 
-                    todoList: list,
-                    filteredList: isAll ? [...list] : list.filter(it => {
-                        if (!this.state.sorter || this.state.sorter === "all"){
-                            return true;
-                        }
-                        return this.state.sorter === this.getColorRecord(it.time)
-                    }),
-                });
-
-                this.intervalUpdateList = setTimeout(handleActionList, 30000);
-
-            } catch (err){
-                console.error(err);
-                this.setState({
-                    error: err.message
-                });
-
-                this.intervalUpdateList = setTimeout(handleActionList, 10000);
-            }
-        }
-
-
-        this.intervalUpdateList = setTimeout(handleActionList, 0);
+    componentDidMount =  () => {
+       const { onLoadRecordsList = null } = this.props;
+       if (onLoadRecordsList) onLoadRecordsList();
     }
 
     componentWillUnmount = () => {
@@ -85,6 +46,7 @@ class App extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
+        console.log(this.props);
         const { sorter = null, todoList = [] } = this.state;
         if (prevState.sorter !== sorter){
   
@@ -305,6 +267,7 @@ class App extends React.Component {
 
     render(){
         const { filteredList = [], error: message = "" } = this.state;
+        const { list = [] } = this.props;
         return (
             <Fragment>
                 <ErrorShower
@@ -317,7 +280,7 @@ class App extends React.Component {
                 />
                 <Main
                     getColorRecord = {this.getColorRecord} 
-                    todoList = {filteredList} 
+                    todoList = {list} 
                     onDelete = {this.onDeleteTodo}
                     onEditField = {this.onEditField}
                 />
@@ -326,4 +289,16 @@ class App extends React.Component {
     }
 }
 
-export default App;
+const mapStateToProps = state => {
+    const { list = [] } = state.appReducer || {};
+
+    return { list };
+};
+
+const mapDispatchToProps = dispatch => {
+    return {
+        onLoadRecordsList: () => dispatch({type: "GET_RECORDS_LIST"}),
+    };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);
