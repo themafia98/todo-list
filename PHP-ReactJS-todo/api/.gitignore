@@ -454,7 +454,7 @@ composer.lock
 # website: https://github.com/squizlabs/PHP_CodeSniffer
 #
 # Recommended template: PHP.gitignore
-
+!.env
 /wpcs/*
 
 ##### SASS
