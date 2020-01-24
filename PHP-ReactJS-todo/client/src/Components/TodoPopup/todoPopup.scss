@@ -78,6 +78,7 @@
         }
 
         .todo-popup-main {
+            overflow-y: auto;
             display: flex;
             flex-grow: 1;
             flex-direction: column;
@@ -116,10 +117,26 @@
                     max-height: 70%;
                     transition: all .5s ease-in-out;
                     border: 1px solid red;
-                    padding: 10px;
-                    margin: 0 auto;
                     cursor: pointer;
+                    margin: 0 3px;
+                    padding: 5px;
+                    margin-left: 2px;
+                    margin-right: 2px;
                     overflow-wrap: break-word;
+                    text-overflow: ellipsis;
+                    overflow: hidden;
+                
+                        p {
+                            overflow-wrap: break-word;
+                            word-break: break-all;
+                            margin: 0;
+                            overflow-y: auto;
+                            max-height: 100%;
+                            text-overflow: ellipsis;
+                            padding: 0;
+                            font-size: 17px;
+               
+                        }
 
                     &.edit-mode {
                         resize: none;

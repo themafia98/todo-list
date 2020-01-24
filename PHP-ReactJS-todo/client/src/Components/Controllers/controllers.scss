@@ -10,9 +10,36 @@
         outline: none;
         text-align: center;
         &::placeholder {
-            color: red;
+            color: #ff0000;
         }
     }
+
+    .controllers__btn {
+        border: 1px solid #000000;
+        border-radius: 4px;
+        &:not(.react-date-picker){
+            margin: 2px 0px;
+            padding: 4px;
+        }
+
+        &[type='button']{
+            transition: all .4s ease-in-out;
+            font-weight: bold;
+            align-self: center;
+            width: 60%;
+            cursor: pointer;
+
+            &:not(:disabled){
+                background-color: rgb(193, 193, 255);
+            }
+
+            &:not(:disabled):hover {
+                background-color: rgb(155, 155, 245);
+                color: #ff0000;
+            }
+        }
+    }
+    
 
     .react-date-picker__wrapper {
         background-color: #FFF;

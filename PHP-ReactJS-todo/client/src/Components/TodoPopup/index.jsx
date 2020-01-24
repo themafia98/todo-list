@@ -241,7 +241,7 @@ class TodoPopup extends React.Component {
                                 onClick = {this.onEditNote} 
                                 className = 'additionalNote-field'
                             >
-                                {additionalNote ? additionalNote : "click for add note"}
+                               <p> {additionalNote ? additionalNote : "click for add note"}</p>
                             </div>
                             : 
                                 <Fragment>
@@ -259,7 +259,7 @@ class TodoPopup extends React.Component {
                                 </Fragment>
                             }
                         </div>
-                        <div className = 'todo-popup-footer'>Whether not found</div>
+                        <div className = 'todo-popup-footer'></div>
                     </div>
                 </div>
             </div>

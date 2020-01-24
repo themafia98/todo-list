@@ -43,17 +43,20 @@ class Controllers extends React.Component {
         return(
             <div className = 'controllers'>
 				<input 
+					className = 'controllers__btn'
 					value = {value} 
 					type = 'text' 
 					placeholder = 'What should you do?' 
 					onChange = {this.onChange} 
 				/>
                 <DatePicker
+						className = 'controllers__btn'
                         value={date}
                         format={"d-M-yyyy"}
                         onChange={this.handleChange}
                 />
 				<input 
+					className = 'controllers__btn'
 					disabled = {!onAdd || !isValid} 
 					onClick = {onAdd ? this.onAdd : null} 
 					type = 'button'
@@ -61,7 +64,7 @@ class Controllers extends React.Component {
 				/>
                 <div className = 'sort-controllers'>
 				 	<input 
-						className = {['btn-sort', 'past', ].join(" ")} 
+						className = {['controllers__btn', 'btn-sort', 'past', ].join(" ")} 
 						type = 'button' 
 						value = 'past'
 						onClick = {onSort}
