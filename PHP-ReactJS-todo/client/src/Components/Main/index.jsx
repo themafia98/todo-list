@@ -1,9 +1,10 @@
 import React, { Fragment } from 'react';
 import _ from "lodash";
 import Scrollbars from 'react-custom-scrollbars';
-
+import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import TodoPopover from "../TodoPopup";
 import TodoItem from '../TodoItem';
+
 
 class Main extends React.Component {
 
@@ -21,6 +22,7 @@ class Main extends React.Component {
     
         if (Array.isArray(props.todoList) && 
             (isNewTodo || !_.isEqual(props.todoList, state.todoList))){
+                
             return {
                 ...state,
                 todoList: [...props.todoList]
@@ -52,6 +54,22 @@ class Main extends React.Component {
         };
     };
 
+    reorder = (list, dragIndex, dropIndex) => {
+        const result = Array.from(list);
+        const [removed] = result.splice(dragIndex, 1);
+        result.splice(dropIndex, 0, removed);
+        return result.map((item,index) => {
+            if (item && result[index - 1]){
+                const currentNum = Number(item.num);
+                const prevNum = Number(result[index - 1].num);
+                if (currentNum < prevNum){
+                    item.num = `${prevNum + (prevNum - currentNum)}`;
+                }
+            }
+            return item;
+        });
+    };
+
     getTodos = () => {
         const { todoList = [] } = this.state;
         const { getColorRecord = null } = this.props;
@@ -61,18 +79,40 @@ class Main extends React.Component {
             const color = getColorRecord ? getColorRecord(time) : null;
 
             return (
-                <TodoItem 
-                    key = {index + item.recordName + item.id} 
-                    itemUuid = {item.id}
-                    color = {color}
-                    onChangeActiveTodo = {this.onChangeActiveTodo}
-                    className = 'todo-item'
-                >
-                    <p>{item.recordName}</p>
-                </TodoItem>
+                    <TodoItem 
+                        key = {index + item.recordName + item.id} 
+                        itemUuid = {item.id}
+                        index = {index}
+                        color = {color}
+                        onChangeActiveTodo = {this.onChangeActiveTodo}
+                        className = 'todo-item'
+                     >
+                            <p>{item.recordName}</p>
+                    </TodoItem>
             );
         });
     }
+
+    onDragEnd = (result) => {
+        // dropped outside the list
+        const { onSaveList = null } = this.props;
+        if (!result.destination) {
+          return;
+        }
+
+        const todoList = this.reorder(
+           [...this.state.todoList],
+            result.source.index,
+            result.destination.index
+          );
+      
+          if (onSaveList) onSaveList(todoList);
+
+          this.setState({
+            todoList
+          });
+    }
+
 
     render(){
         const { popoverConfig = {}, todoList = [] } = this.state;
@@ -80,11 +120,21 @@ class Main extends React.Component {
         return (
             <Fragment>
                 <section className = 'main'>
-                    <div className = 'main-todoListBox'>
-                        <Scrollbars>
-                            {this.getTodos()}
-                        </Scrollbars>
-                    </div>
+                    <DragDropContext onDragEnd={this.onDragEnd}>
+                    <Droppable droppableId="droppable">
+                        {(provided, snapshot) => (
+                            <div 
+                                {...provided.droppableProps}
+                                ref={provided.innerRef}
+                                className = 'main-todoListBox'
+                            >
+                                <Scrollbars>
+                                    {this.getTodos()}
+                                </Scrollbars>
+                            </div>
+                        )}
+                        </Droppable>
+                    </DragDropContext>
                 </section>
                 <TodoPopover 
                     popoverConfig = {popoverConfig}

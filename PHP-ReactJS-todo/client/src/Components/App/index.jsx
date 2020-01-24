@@ -244,6 +244,8 @@ class App extends React.Component {
         } catch (err){
             console.error(err);
             this.setState({
+                todoList: [...this.state.todoList],
+                filteredList: [...this.state.filteredList],
                 error: err.message
             });
         }
