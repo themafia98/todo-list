@@ -1,0 +1,2 @@
+export const LOAD_RECORDS_LIST = "LOAD_RECORDS_LIST";
+export const LOAD_NEW_RECORD = "LOAD_NEW_RECORD";

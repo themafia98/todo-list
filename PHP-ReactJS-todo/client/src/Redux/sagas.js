@@ -1,19 +1,15 @@
-import { call, put, takeEvery, takeLatest } from 'redux-saga/effects';
-import { LOADING_APP } from "./appReducer/consts";
-import { getRecordsList } from '../api';
+import { takeLatest, takeEvery } from 'redux-saga/effects';
 
-function* fetchRecords(action){
-    try {
-        debugger;
-        const todoList = yield call(getRecordsList, action.payload);
-        yield put({type: LOADING_APP, payload: todoList });
-    } catch(error){
+/** Middleware consts */
+import { LOAD_RECORDS_LIST, LOAD_NEW_RECORD } from './constsMiddleware';
 
-    }
-}
+/** AppReducer */
+import { fetchRecords, fetchAddRecord } from '../Redux/appReducer/middleware';
+
 
 function* initialApp(){
-    yield takeEvery("GET_RECORDS_LIST", fetchRecords);
+    yield takeLatest(LOAD_RECORDS_LIST, fetchRecords);
+    yield takeEvery(LOAD_NEW_RECORD, fetchAddRecord);
 }
 
 export default initialApp;

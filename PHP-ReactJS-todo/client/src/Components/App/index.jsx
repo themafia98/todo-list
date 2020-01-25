@@ -14,8 +14,6 @@ import { LOADING_APP } from "../../Redux/appReducer/consts";
 class App extends React.Component {
 
     state = {
-        todoList: [],
-        filteredList: [],
         sorter: null,
         error: null,
     }
@@ -46,7 +44,6 @@ class App extends React.Component {
     }
 
     componentDidUpdate = (prevProps, prevState) => {
-        console.log(this.props);
         const { sorter = null, todoList = [] } = this.state;
         if (prevState.sorter !== sorter){
   
@@ -64,6 +61,19 @@ class App extends React.Component {
             })
         }
     };
+
+    getFilteredList = () => {
+        const { list = [] } = this.props;
+        const isAll = !this.state.sorter || this.state.sorter === "all";
+        const filteredList = isAll ? [...list] : list.filter(it => {
+            if (!this.state.sorter || this.state.sorter === "all"){
+                return true;
+            }
+            return this.state.sorter === this.getColorRecord(it.time)
+        });
+
+        return filteredList;
+    }
 
     getColorRecord = (recordDate) => {
         if (!_.isString(recordDate)) return null;
@@ -105,57 +115,10 @@ class App extends React.Component {
     }
 
     onAdd = async (controllersState) => {
+        const { onAddRecord = null } = this.props;
 
-        try {
-
-            const { todoList: todoListState = [] } = this.state;
-            const { isValid = false, date = null, value = "" } = controllersState;
-            const dateParse = moment(date);
-    
-            if (!isValid || !dateParse.isValid() || !value){
-                throw new Error("Date or record name is not valid");
-            }
-    
-            const dateFormat = dateParse.format("DD-M-YYYY");
-
-            const body = JSON.stringify({
-                "ACTION": "add",
-                 "TYPE": "single_record" ,
-                 "DATA": { time: dateFormat, recordName: value }
-            });
-
-            const request = new Request();
-            const res = await request.sendRequest(body, "PUT");
-
-            if (!res || !res.ok) return;
-
-            const resJson = await res.json();
-
-            if (!resJson || !resJson.response){
-                 throw new Error("Invalid parse json.");
-            }
-
-            const todoList = Array.isArray(resJson.response) ? 
-                    this.sortList([...resJson.response]) : [...todoListState];
-
-            const isAll = !this.state.sorter || this.state.sorter === "all";
-
-            this.setState({ 
-                todoList,
-                filteredList: isAll ? [...todoList] : todoList.filter(it => {
-                    if (!this.state.sorter || this.state.sorter === "all"){
-                        return true;
-                    }
-                    return this.state.sorter === this.getColorRecord(it.time)
-                }),
-                error: "Новая запись успешно добавлена"
-             });
-
-        } catch (err){
-            console.error(err);
-            this.setState({
-                error: err.message
-            });
+        if (onAddRecord){
+            onAddRecord(controllersState);
         }
     }
 
@@ -266,8 +229,10 @@ class App extends React.Component {
     onAdd = _.debounce(this.onAdd, 500);
 
     render(){
-        const { filteredList = [], error: message = "" } = this.state;
-        const { list = [] } = this.props;
+        const { error: message = "" } = this.state;
+
+        const filteredList = this.getFilteredList();
+
         return (
             <Fragment>
                 <ErrorShower
@@ -280,7 +245,7 @@ class App extends React.Component {
                 />
                 <Main
                     getColorRecord = {this.getColorRecord} 
-                    todoList = {list} 
+                    todoList = {filteredList} 
                     onDelete = {this.onDeleteTodo}
                     onEditField = {this.onEditField}
                 />
@@ -297,7 +262,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLoadRecordsList: () => dispatch({type: "GET_RECORDS_LIST"}),
+        onLoadRecordsList: () => dispatch({type: "LOAD_RECORDS_LIST"}),
+        onAddRecord: (payload) => dispatch({type: "LOAD_NEW_RECORD", payload })
     };
 };
 
