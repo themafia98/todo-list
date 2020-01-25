@@ -21,7 +21,7 @@ function* initialApp(){
     yield takeLatest(LOAD_RECORDS_LIST, fetchRecords);
     yield takeEvery(LOAD_NEW_RECORD, fetchAddRecord);
     yield takeLatest(FETCH_EDIT_SINGLE_RECORD, fetchEditRecord);
-    yield takeLatest(FETCH_DELETE_SINGLE_RECORD, fetchDeleteRecord)
+    yield takeLatest(FETCH_DELETE_SINGLE_RECORD, fetchDeleteRecord);
 }
 
 export default initialApp;
