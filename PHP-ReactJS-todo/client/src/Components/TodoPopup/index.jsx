@@ -91,7 +91,7 @@ class TodoPopup extends React.Component {
         const { onEditField = null } = this.props;
         let wasChange = wasChangeState;
 
-        if (!editMode || !additionalNote || !wasChange){
+        if (!editMode || !wasChange){
             return this.setState({ editMode: false });
         }
 
@@ -152,7 +152,7 @@ class TodoPopup extends React.Component {
 
         const visibility = !visible;
 
-        if (!visibility && uuidTodo && wasChange && onEditField && additionalNote){
+        if (!visibility && uuidTodo && wasChange && onEditField){
             wasChange = false;
             onEditField(additionalNote, uuidTodo);
         }
@@ -200,7 +200,7 @@ class TodoPopup extends React.Component {
                 return;
         }
 
-        if (wasChange && uuidTodo && onEditField && additionalNote){
+        if (wasChange && uuidTodo && onEditField){
             wasChange = false;
             onEditField(additionalNote, uuidTodo);
         }

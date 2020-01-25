@@ -1,3 +1,0 @@
-export const LOADING_APP = "LOADING_APP";
-export const REQUEST_FAIL_ACTION = "REQUEST_FAIL_ACTION";
-export const ADD_NEW_RECORD = "ADD_NEW_RECORD";

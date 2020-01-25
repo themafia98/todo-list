@@ -1,13 +1,14 @@
 import { call, put } from 'redux-saga/effects';
-import { LOADING_APP, REQUEST_FAIL_ACTION, ADD_NEW_RECORD } from "./consts";
-import { getRecordsList, addRecord } from '../../api';
+import { LOAD_RECORDS, ADD_NEW_RECORD,EDIT_RECORD } from "./const";
+import { REQUEST_FAIL_ACTION, DELETE_RECORD_DONE } from "../appReducer/const";
+import { getRecordsList, addRecord, onEditRecord, deleteRecord } from '../../api';
 
 function* fetchRecords(action){
     try {
         const todoList = yield call(getRecordsList, action.payload);
-        yield put({type: LOADING_APP, payload: todoList });
+        yield put({type: LOAD_RECORDS, payload: todoList });
     } catch(error){
-        yield put ({REQUEST_FAIL_ACTION, payload: error.message});
+        yield put ({type: REQUEST_FAIL_ACTION, payload: error.message});
     }
 }
 
@@ -16,8 +17,26 @@ function* fetchAddRecord(action){
         const rewriteTodoList = yield call(addRecord, action.payload);
         yield put({type: ADD_NEW_RECORD, payload: rewriteTodoList});
     } catch(error){
-        yield put ({REQUEST_FAIL_ACTION, payload: error.message});
+        yield put ({type: REQUEST_FAIL_ACTION, payload: error.message});
     }
 }
 
-export { fetchRecords, fetchAddRecord };
+function* fetchEditRecord(action){
+    try {
+        const updateRecordsList = yield call(onEditRecord, action.payload);
+        yield put({type: EDIT_RECORD, payload: updateRecordsList });
+    } catch(error){
+        yield put ({type: REQUEST_FAIL_ACTION, payload: error.message});
+    }
+}
+
+function* fetchDeleteRecord(action){
+    try {
+        const refreshRecordsList = yield call(deleteRecord, action.payload);
+        yield put({type: DELETE_RECORD_DONE, payload: refreshRecordsList});
+    } catch(error){
+        yield put({type: REQUEST_FAIL_ACTION, payload: error.message});
+    }
+}
+
+export { fetchRecords, fetchAddRecord, fetchEditRecord, fetchDeleteRecord };
