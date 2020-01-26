@@ -35,7 +35,6 @@ const clearStatus = () => {
 }
 
 const deleteRecord = payload => {
-    console.log(payload);
     return {
         type: FETCH_DELETE_SINGLE_RECORD,
         payload
