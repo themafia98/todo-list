@@ -1,4 +1,5 @@
 import React from 'react';
+import classnames from 'classnames';
 import DatePicker from "react-date-picker";
 
 class Controllers extends React.Component {
@@ -64,7 +65,7 @@ class Controllers extends React.Component {
 				/>
                 <div className = 'sort-controllers'>
 				 	<input 
-						className = {['controllers__btn', 'btn-sort', 'past', ].join(" ")} 
+						className = {classnames('controllers__btn', 'btn-sort', 'past')} 
 						type = 'button' 
 						value = 'past'
 						onClick = {onSort}

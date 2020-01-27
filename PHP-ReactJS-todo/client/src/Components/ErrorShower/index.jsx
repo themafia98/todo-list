@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-
+import classnames from 'classnames';
 
 const ErrorShower = ({ message = "", cbClearError = null }) => {
     const [isShow, setShow] = useState(false);
@@ -33,7 +33,11 @@ const ErrorShower = ({ message = "", cbClearError = null }) => {
 
     return (
         <div  
-        className = {["error-shower", isShow ? "visible" : "hidden"].join(" ")}>
+        className = {classnames({
+            "error-shower": true,
+            "visible": isShow,
+            "hidden" : !isShow
+        })}>
                 {msg}
         </div>
     )

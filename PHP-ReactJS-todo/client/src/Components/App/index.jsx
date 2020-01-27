@@ -11,6 +11,7 @@ import {
     deleteRecord 
 } from '../../Redux/appReducer/actions';
 
+import LoginForm from '../LoginForm';
 import ErrorShower from "../ErrorShower";
 import Header from "../Header";
 import Main from "../Main";
@@ -140,6 +141,8 @@ class App extends React.Component {
 
         return (
             <Fragment>
+                <LoginForm 
+                />
                 <ErrorShower
                     cbClearError = {this.onClearError}
                     message = {message} 

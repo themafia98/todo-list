@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import classnames from 'classnames';
 import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 
 const TodoItem = ({ itemUuid, children, onChangeActiveTodo, color = "", index }) => {
@@ -18,7 +19,7 @@ const TodoItem = ({ itemUuid, children, onChangeActiveTodo, color = "", index })
             {...provided.dragHandleProps}
             key = {UUID} 
             onClick = {onOpenPopover} 
-            className = {['todo-item', color].join(" ")}
+            className = {classnames('todo-item', color)}
         >
             <React.Fragment>
                 {children}
