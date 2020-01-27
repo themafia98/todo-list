@@ -8,7 +8,9 @@ import {
     loadNewRecord, 
     editRecord, 
     clearStatus,
-    deleteRecord 
+    deleteRecord,
+    loginUser,
+    regUser,
 } from '../../Redux/appReducer/actions';
 
 import LoginForm from '../LoginForm';
@@ -26,7 +28,9 @@ class App extends React.Component {
     intervalUpdateList = null;
 
     componentDidMount =  () => {
-       const { onLoadRecordsList = null } = this.props;
+       const { onLoadRecordsList = null, sessionLoading = false } = this.props;
+
+       if (!sessionLoading) return;
 
        const onLoadingRecord = () => {
             if (onLoadRecordsList){
@@ -36,6 +40,23 @@ class App extends React.Component {
         }
 
         this.intervalUpdateList = setTimeout(onLoadingRecord, 0);
+    }
+
+    componentDidUpdate = (prevProps) => {
+        const { onLoadRecordsList = null, sessionLoading = false } = this.props;
+
+        if (prevProps.sessionLoading && prevProps.sessionLoading === sessionLoading){
+             return;
+        }
+ 
+        const onLoadingRecord = () => {
+             if (onLoadRecordsList){
+                 onLoadRecordsList();
+                 this.intervalUpdateList = setTimeout(onLoadingRecord, 20000);
+             } else if (this.intervalUpdateList) clearInterval(this.intervalUpdateList);
+         }
+ 
+         this.intervalUpdateList = setTimeout(onLoadingRecord, 0);
     }
 
     componentWillUnmount = () => {
@@ -132,31 +153,47 @@ class App extends React.Component {
         }
     }
 
+    onLogin = ({ username = "", password = "" }) => {
+
+    };
+
+    onReg = ({ username = "", password = "", name = "" }) => {
+
+    };
+
     onAdd = _.debounce(this.onAdd, 500);
 
     render(){
-        const { status: message = "" } = this.props;
+        const { status: message = "", sessionLoading = false } = this.props;
 
         const filteredList = this.getFilteredList();
 
         return (
             <Fragment>
-                <LoginForm 
-                />
-                <ErrorShower
-                    cbClearError = {this.onClearError}
-                    message = {message} 
-                />
-                <Header 
-                    onSort = {this.onSort} 
-                    onAdd = {this.onAdd} 
-                />
-                <Main
-                    getColorRecord = {this.getColorRecord} 
-                    todoList = {filteredList} 
-                    onDelete = {this.onDeleteTodo}
-                    onEditField = {this.onEditField}
-                />
+                {sessionLoading ? (
+                    <React.Fragment>
+                        <ErrorShower
+                            cbClearError = {this.onClearError}
+                            message = {message} 
+                        />
+                        <Header 
+                            onSort = {this.onSort} 
+                            onAdd = {this.onAdd} 
+                        />
+                        <Main
+                            getColorRecord = {this.getColorRecord} 
+                            todoList = {filteredList} 
+                            onDelete = {this.onDeleteTodo}
+                            onEditField = {this.onEditField}
+                        />
+                    </React.Fragment>
+                )
+                : (
+                    <LoginForm 
+                        onLogin = {this.onLogin}
+                        onReg = {this.onReg}
+                    />
+                )}
             </Fragment>
         );
     }
@@ -175,6 +212,8 @@ const mapDispatchToProps = dispatch => {
         onEditRecord: payload => dispatch(editRecord(payload)),
         onClearStatus: () => dispatch(clearStatus()),
         onDeleteRecord: payload => dispatch(deleteRecord(payload)),
+        onLoginUser: payload => dispatch(loginUser(payload)),
+        onRegistration: payload => dispatch(regUser(payload)),
     };
 };
 

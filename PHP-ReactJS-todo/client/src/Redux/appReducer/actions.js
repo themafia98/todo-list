@@ -3,7 +3,9 @@ import {
     LOAD_RECORDS_LIST, 
     LOAD_NEW_RECORD, 
     FETCH_EDIT_SINGLE_RECORD, 
-    FETCH_DELETE_SINGLE_RECORD 
+    FETCH_DELETE_SINGLE_RECORD,
+    FETCH_LOGIN,
+    FETCH_REG
 } from '../constMiddleware';
 
 import { CLEAR_STATUS } from "./const";
@@ -41,4 +43,26 @@ const deleteRecord = payload => {
     }
 }
 
-export { loadRecordList, loadNewRecord, editRecord, clearStatus,deleteRecord };
+const loginUser = payload => {
+    return {
+        type: FETCH_LOGIN,
+        payload
+    }
+}
+
+const regUser = payload => {
+    return {
+        type: FETCH_REG,
+        payload
+    }
+}
+
+export { 
+    loadRecordList, 
+    loadNewRecord, 
+    editRecord, 
+    clearStatus, 
+    deleteRecord,
+    loginUser,
+    regUser
+ };
