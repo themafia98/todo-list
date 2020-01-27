@@ -177,7 +177,7 @@ class App extends React.Component {
 
     onAdd = _.debounce(this.onAdd, 500);
     onReg = _.debounce(this.onReg, 500);
-    onReg = _.debounce(this.onReg, 500);
+    onLogin = _.debounce(this.onReg, 500);
 
     render(){
         const { status: message = "", sessionLoading = false } = this.props;
