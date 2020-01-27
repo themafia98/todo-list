@@ -188,10 +188,6 @@ class App extends React.Component {
             <Fragment>
                 {sessionLoading ? (
                     <React.Fragment>
-                        <ErrorShower
-                            cbClearError = {this.onClearError}
-                            message = {message} 
-                        />
                         <Header 
                             onSort = {this.onSort} 
                             onAdd = {this.onAdd} 
@@ -210,6 +206,10 @@ class App extends React.Component {
                         onReg = {this.onReg}
                     />
                 )}
+                <ErrorShower
+                    cbClearError = {this.onClearError}
+                    message = {message} 
+                />
             </Fragment>
         );
     }
