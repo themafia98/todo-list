@@ -56,7 +56,7 @@ function* fetchRegUser(action){
 
 function* fetchLoginUser(action){
     try {
-        const loginResponse = yield(fetchLogin, action.payload);
+        const loginResponse = yield call(fetchLogin, action.payload);
     } catch(error){
         yield put({type: REQUEST_FAIL_ACTION, payload: error.message});
     }

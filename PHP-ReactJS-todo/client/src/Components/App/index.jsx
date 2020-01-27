@@ -45,18 +45,19 @@ class App extends React.Component {
     componentDidUpdate = (prevProps) => {
         const { onLoadRecordsList = null, sessionLoading = false } = this.props;
 
-        if (prevProps.sessionLoading && prevProps.sessionLoading === sessionLoading){
-             return;
-        }
+        const isEqual = prevProps.sessionLoading === sessionLoading;
+
+        if (isEqual || this.intervalUpdateLis) return;
+
  
-        const onLoadingRecord = () => {
-             if (onLoadRecordsList){
-                 onLoadRecordsList();
-                 this.intervalUpdateList = setTimeout(onLoadingRecord, 20000);
-             } else if (this.intervalUpdateList) clearInterval(this.intervalUpdateList);
-         }
+        // const onLoadingRecord = () => {
+        //      if (onLoadRecordsList){
+        //          onLoadRecordsList();
+        //          this.intervalUpdateList = setTimeout(onLoadingRecord, 20000);
+        //      } else if (this.intervalUpdateList) clearInterval(this.intervalUpdateList);
+        //  }
  
-         this.intervalUpdateList = setTimeout(onLoadingRecord, 0);
+        //  this.intervalUpdateList = setTimeout(onLoadingRecord, 0);
     }
 
     componentWillUnmount = () => {
@@ -154,14 +155,29 @@ class App extends React.Component {
     }
 
     onLogin = ({ username = "", password = "" }) => {
-
+        const { onLoginUser = null } = this.props;
+        if (username && password && onLoginUser){
+            onLoginUser({
+                username,
+                password
+            });
+        }
     };
 
     onReg = ({ username = "", password = "", name = "" }) => {
-
+        const { onRegistration = null } = this.props;
+        if (username && password && name && onRegistration){
+            onRegistration({
+                username,
+                password,
+                name
+            });
+        }
     };
 
     onAdd = _.debounce(this.onAdd, 500);
+    onReg = _.debounce(this.onReg, 500);
+    onReg = _.debounce(this.onReg, 500);
 
     render(){
         const { status: message = "", sessionLoading = false } = this.props;
