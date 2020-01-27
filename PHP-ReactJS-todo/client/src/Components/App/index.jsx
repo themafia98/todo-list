@@ -187,7 +187,7 @@ class App extends React.Component {
         return (
             <Fragment>
                 {sessionLoading ? (
-                    <React.Fragment>
+                    <Fragment>
                         <Header 
                             onSort = {this.onSort} 
                             onAdd = {this.onAdd} 
@@ -198,7 +198,7 @@ class App extends React.Component {
                             onDelete = {this.onDeleteTodo}
                             onEditField = {this.onEditField}
                         />
-                    </React.Fragment>
+                    </Fragment>
                 )
                 : (
                     <LoginForm 
