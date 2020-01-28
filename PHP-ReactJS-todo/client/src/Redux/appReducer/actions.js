@@ -5,7 +5,8 @@ import {
     FETCH_EDIT_SINGLE_RECORD, 
     FETCH_DELETE_SINGLE_RECORD,
     FETCH_LOGIN,
-    FETCH_REG
+    FETCH_REG,
+    FETCH_SESSION
 } from '../constMiddleware';
 
 import { CLEAR_STATUS } from "./const";
@@ -57,6 +58,12 @@ const regUser = payload => {
     }
 }
 
+const loadingSession = () => {
+    return {
+        type: FETCH_SESSION,
+    }
+}
+
 export { 
     loadRecordList, 
     loadNewRecord, 
@@ -64,5 +71,6 @@ export {
     clearStatus, 
     deleteRecord,
     loginUser,
-    regUser
+    regUser,
+    loadingSession
  };

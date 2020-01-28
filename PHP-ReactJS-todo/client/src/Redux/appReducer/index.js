@@ -5,11 +5,14 @@ import {
     CLEAR_STATUS, 
     EDIT_RECORD,
     DELETE_RECORD_DONE,
-    DONE_REG
+    DONE_REG,
+    LOAD_SESSION
 } from './const';
 
 const initialState = {
     list: [],
+    uid: null,
+    loadingApp: false,
     sessionLoading: false,
     status: null
 };
@@ -27,6 +30,17 @@ const appReducer = (state = initialState, action) => {
                 ...state,
                 list: [...action.payload],
                 status: "Запись успешно создана"
+            }
+        }
+
+        case LOAD_SESSION: {
+            const { uid = "" } = action.payload || {};
+
+            return {
+                ...state,
+                loadingApp: true,
+                uid: uid ? uid : null,
+                sessionLoading: uid ? true : false,
             }
         }
 
@@ -49,6 +63,7 @@ const appReducer = (state = initialState, action) => {
         case REQUEST_FAIL_ACTION: {
             return {
                 ...state,
+                loadingApp: true,
                 status: action.payload
             }
         }

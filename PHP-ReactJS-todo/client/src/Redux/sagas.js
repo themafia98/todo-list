@@ -7,7 +7,8 @@ import {
     FETCH_EDIT_SINGLE_RECORD,
     FETCH_DELETE_SINGLE_RECORD,
     FETCH_LOGIN,
-    FETCH_REG
+    FETCH_REG,
+    FETCH_SESSION
 } from './constMiddleware';
 
 /** AppReducer */
@@ -17,7 +18,8 @@ import {
     fetchEditRecord, 
     fetchDeleteRecord,
     fetchLoginUser,
-    fetchRegUser
+    fetchRegUser,
+    fetchSession
 } from '../Redux/appReducer/middleware';
 
 
@@ -28,6 +30,7 @@ function* initialApp(){
     yield takeLatest(FETCH_DELETE_SINGLE_RECORD, fetchDeleteRecord);
     yield takeLatest(FETCH_LOGIN, fetchLoginUser);
     yield takeLatest(FETCH_REG, fetchRegUser);
+    yield takeLatest(FETCH_SESSION, fetchSession);
 }
 
 export default initialApp;

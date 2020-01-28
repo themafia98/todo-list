@@ -11,6 +11,7 @@ import {
     deleteRecord,
     loginUser,
     regUser,
+    loadingSession,
 } from '../../Redux/appReducer/actions';
 
 import LoginForm from '../LoginForm';
@@ -23,41 +24,38 @@ class App extends React.Component {
     state = {
         sorter: null,
         error: null,
+        updateListInitial: false,
     }
 
     intervalUpdateList = null;
 
     componentDidMount =  () => {
-       const { onLoadRecordsList = null, sessionLoading = false } = this.props;
+       const { onLoadingSession = null, sessionLoading = false } = this.props;
 
-       if (!sessionLoading) return;
-
-       const onLoadingRecord = () => {
-            if (onLoadRecordsList){
-                onLoadRecordsList();
-                this.intervalUpdateList = setTimeout(onLoadingRecord, 20000);
-            } else if (this.intervalUpdateList) clearInterval(this.intervalUpdateList);
-        }
-
-        this.intervalUpdateList = setTimeout(onLoadingRecord, 0);
+       if (!sessionLoading){
+        onLoadingSession();
+       }
     }
 
     componentDidUpdate = (prevProps) => {
         const { onLoadRecordsList = null, sessionLoading = false } = this.props;
+        const { updateListInitial = true } = this.state;
 
-        const isEqual = prevProps.sessionLoading === sessionLoading;
 
-        if (isEqual || this.intervalUpdateLis) return;
-
- 
-        // const onLoadingRecord = () => {
-        //      if (onLoadRecordsList){
-        //          onLoadRecordsList();
-        //          this.intervalUpdateList = setTimeout(onLoadingRecord, 20000);
-        //      } else if (this.intervalUpdateList) clearInterval(this.intervalUpdateList);
-        //  }
- 
-        //  this.intervalUpdateList = setTimeout(onLoadingRecord, 0);
+        if (sessionLoading && !updateListInitial && !this.intervalUpdateLis){
+            const onLoadingRecord = () => {
+                if (onLoadRecordsList){
+                    onLoadRecordsList();
+                    this.intervalUpdateList = setTimeout(onLoadingRecord, 20000);
+                } else if (this.intervalUpdateList) clearInterval(this.intervalUpdateList);
+            }
+    
+            this.setState({
+                updateListInitial: true,
+            }, () => {
+            this.intervalUpdateList = setTimeout(onLoadingRecord, 0);
+            });
+        }
     }
 
     componentWillUnmount = () => {
@@ -181,9 +179,15 @@ class App extends React.Component {
     onLogin = _.debounce(this.onLogin, 500);
 
     render(){
-        const { status: message = "", sessionLoading = false } = this.props;
+        const { status: message = "", sessionLoading = false, loadingApp = false } = this.props;
 
         const filteredList = this.getFilteredList();
+
+        if (!loadingApp) return (
+            <div className = "loader-wrapper">
+                <img alt = 'loader' title = 'loader' src = "loader.gif" />
+            </div>
+        )
 
         return (
             <Fragment>
@@ -217,9 +221,14 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const { list = [], status, sessionLoading = false } = state.appReducer || {};
+    const { 
+        list = [], 
+        status, 
+        sessionLoading = false, 
+        loadingApp = false 
+    } = state.appReducer || {};
 
-    return { list, status, sessionLoading };
+    return { list, status, sessionLoading, loadingApp };
 };
 
 const mapDispatchToProps = dispatch => {
@@ -231,6 +240,7 @@ const mapDispatchToProps = dispatch => {
         onDeleteRecord: payload => dispatch(deleteRecord(payload)),
         onLoginUser: payload => dispatch(loginUser(payload)),
         onRegistration: payload => dispatch(regUser(payload)),
+        onLoadingSession: () => dispatch(loadingSession())
     };
 };
 

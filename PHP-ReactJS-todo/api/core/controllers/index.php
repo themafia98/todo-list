@@ -324,9 +324,9 @@ class AppController implements Controller
             return true;
         } elseif (isset($_COOKIE["sid"])) {
             $sid = $_COOKIE["sid"];
-            $parseCookie = explode(".x.", $sid);
+            $parseCookie = explode("|x|", $sid);
             if (isset($parseCookie[1])) {
-
+                $pass = password_get_info($parseCookie[0]);
                 $sql = "SELECT * FROM users WHERE userId='$parseCookie[0]'";
                 $this->getDb()->connection();
                 $query = $this->getDb()->makeQuery($sql);
@@ -345,7 +345,7 @@ class AppController implements Controller
 
                 if (!$password || !$id) return false;
 
-                $isEqualId = password_verify($id, $parseCookie[0]);
+                $isEqualId = $id === $parseCookie[0];
                 $isEqualPassword = $password === $parseCookie[1];
 
                 if (!$isEqualPassword || !$isEqualId) return false;
@@ -358,7 +358,7 @@ class AppController implements Controller
 
     public function loginAction($data, string $actionType)
     {
-        if ($actionType) {
+        if (!$actionType) {
             $this->log->error("Bad action type: $actionType");
             http_response_code(503);
             return;
@@ -381,22 +381,31 @@ class AppController implements Controller
 
         if (!$query || mysqli_num_rows($query) < 1) {
             $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-            $this->log->error("regAction: $error");
+            $this->log->error("loginAction: $error");
 
             http_response_code(404);
             return array("error" => $error);
         }
 
         $user = mysqli_fetch_assoc($query);
+        $userPassword = isset($user["password"]) ? $user["password"] : null;
+
+        if (!$userPassword){
+            $error = "Password not exist in db";
+            $this->log->error("loginAction: $error");
+
+            http_response_code(404);
+            return array("error" => $error);
+        }
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $isEqual = password_verify($password, $hash);
+        $isEqual = password_verify($password, $userPassword);
 
         if ($isEqual) {
 
-            $key =  password_hash($user["userId"], PASSWORD_DEFAULT);
+            $key =  $user["userId"];
 
-            setcookie("sid", $key . ".x." . $hash, time() + 60 * 60 * 24 * 3, "/", null, null, true);
+            setcookie("sid", $key . "|x|" . $userPassword, time() + 60 * 60 * 24 * 1, "/", null, null, true);
             $_SESSION["userId"] = $user["userId"];
 
             $userId = $_SESSION["userId"];
@@ -406,8 +415,8 @@ class AppController implements Controller
             return array("uid" => $userId);
         } else {
             $this->getDb()->disconnection();
-            $this->log->error("loginAction: bad query: $error");
-            http_response_code(401);
+            $this->log->error("loginAction: invalid user: $error");
+            http_response_code(404);
             return array("error" => $error);
         }
     }

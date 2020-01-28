@@ -8,3 +8,14 @@ section, header, footer {
 body {
     background: repeat url($bg);
 }
+
+.loader-wrapper {
+    position: absolute;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    top: 50%;
+    img[alt='loader'] {
+        width: 100%;
+        max-width: 200px;
+    }
+}

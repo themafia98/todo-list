@@ -132,7 +132,8 @@ class Response extends Http
                     break;
                 }
             case "session": {
-                    if (!call_user_func($session)) {
+                    $response = call_user_func($session);
+                    if (!$response) {
                         http_response_code(401);
                         return;
                     }
@@ -158,9 +159,14 @@ class Response extends Http
             $data = $bodyAction && array_key_exists("DATA", $bodyAction) ? $bodyAction["DATA"] : null;
 
 
-            $isValid = $actionType && $actionPath;
+            $isValid = $actionType && $actionPath && $actionType !== "session";
 
-            if (!is_string($actionPath) || !is_string($actionType) || !is_callable($parseAction)) {
+            $simpleActionInvalid = !is_string($actionPath) ||
+                !is_string($actionType) ||
+                !is_callable($parseAction);
+
+
+            if ($simpleActionInvalid && $actionType !== "session") {
 
                 $props["response"] = array(
                     "parseAction" => $parseAction,
