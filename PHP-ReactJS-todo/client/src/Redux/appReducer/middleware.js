@@ -49,8 +49,8 @@ function* fetchDeleteRecord(action){
 
 function* fetchRegUser(action){
     try {
-        yield call(fetchRegistration, action.payload);
-        yield put({type: DONE_REG, payload: action.payload});
+        const response = yield call(fetchRegistration, action.payload);
+        yield put({type: DONE_REG, payload: response });
     } catch (error){
         yield put({type: REQUEST_FAIL_ACTION, payload: error.message});
     }
@@ -67,8 +67,9 @@ function* fetchLoginUser(action){
 
 function* fetchSession(action){
     try {
-        yield call(fetchUserSession);
-        yield put({type: LOAD_SESSION, payload: {"uid": "test"}});
+        const uid = yield call(fetchUserSession);
+
+        yield put({type: LOAD_SESSION, payload: { uid }});
     } catch(error){
          yield put({type: REQUEST_FAIL_ACTION, payload: null });
     }

@@ -13,7 +13,8 @@ import { CLEAR_STATUS } from "./const";
 
 const loadRecordList = payload => {
     return {
-        type: LOAD_RECORDS_LIST
+        type: LOAD_RECORDS_LIST,
+        payload
     }
 };
 

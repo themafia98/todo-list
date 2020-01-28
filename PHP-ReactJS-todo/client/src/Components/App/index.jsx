@@ -38,14 +38,18 @@ class App extends React.Component {
     }
 
     componentDidUpdate = (prevProps) => {
-        const { onLoadRecordsList = null, sessionLoading = false } = this.props;
+        const { 
+            onLoadRecordsList = null, 
+            sessionLoading = false, 
+            uid = "", 
+            onLoadingSession = null 
+        } = this.props;
         const { updateListInitial = true } = this.state;
-
 
         if (sessionLoading && !updateListInitial && !this.intervalUpdateLis){
             const onLoadingRecord = () => {
                 if (onLoadRecordsList){
-                    onLoadRecordsList();
+                    onLoadRecordsList({ uid });
                     this.intervalUpdateList = setTimeout(onLoadingRecord, 20000);
                 } else if (this.intervalUpdateList) clearInterval(this.intervalUpdateList);
             }
@@ -131,24 +135,24 @@ class App extends React.Component {
     }
 
     onAdd = async (controllersState) => {
-        const { onAddRecord = null } = this.props;
+        const { onAddRecord = null, uid = "" } = this.props;
 
         if (onAddRecord){
-            onAddRecord(controllersState);
+            onAddRecord({controllersState, uid});
         }
     }
 
     onEditField = async (additionalNote, id) => {
-        const { onEditRecord = null } = this.props;
+        const { onEditRecord = null, uid = "" } = this.props;
         if (id && onEditRecord){
-            onEditRecord({additionalNote, id});
+            onEditRecord({additionalNote, id, uid});
         }
     }
 
     onDeleteTodo = async (id = "") => {
-        const { onDeleteRecord = null } = this.props;
+        const { onDeleteRecord = null, uid = "" } = this.props;
         if (id && onDeleteRecord){
-            onDeleteRecord({ id });
+            onDeleteRecord({ id, uid });
         }
     }
 
@@ -225,15 +229,16 @@ const mapStateToProps = state => {
         list = [], 
         status, 
         sessionLoading = false, 
-        loadingApp = false 
+        loadingApp = false,
+        uid = "",
     } = state.appReducer || {};
 
-    return { list, status, sessionLoading, loadingApp };
+    return { list, status, sessionLoading, loadingApp, uid };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        onLoadRecordsList: () => dispatch(loadRecordList()),
+        onLoadRecordsList: payload => dispatch(loadRecordList(payload)),
         onAddRecord: payload => dispatch(loadNewRecord(payload)),
         onEditRecord: payload => dispatch(editRecord(payload)),
         onClearStatus: () => dispatch(clearStatus()),

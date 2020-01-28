@@ -69,12 +69,11 @@ const appReducer = (state = initialState, action) => {
         }
         
         case DONE_REG: {
-            debugger;
-            console.log(action.payload);
+            const { userId = "" } = action.payload || {};
+
             return {
                 ...state,
-                userId: action.payload.userId ? action.payload.userId : null,
-                sessionLoading: true,
+                uid: userId ? userId : null,
                 status: "Регистрация прошла успешна"
             }
         }

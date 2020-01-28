@@ -137,7 +137,10 @@ class Response extends Http
                         http_response_code(401);
                         return;
                     }
-                    http_response_code(200);
+                    
+                   echo json_encode(array(
+                       "uid" => $_SESSION["userId"]
+                   ), JSON_OBJECT_AS_ARRAY);
                     break;
                 }
 

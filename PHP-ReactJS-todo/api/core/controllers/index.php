@@ -67,13 +67,13 @@ class AppController implements Controller
         return $this->requestBody;
     }
 
-    public function getAllRecords($actionType)
+    public function getAllRecords($actionType, string $uid)
     {
-        if ($actionType !== "all" && $actionType !== "updateAfterAction") {
+        if ($actionType !== "all" && $actionType !== "updateAfterAction" || !$uid) {
             return [];
         }
 
-        $sql = "SELECT * FROM `records`";
+        $sql = "SELECT * FROM `records` WHERE userId='$uid'";
         $query = $this->getDb()->makeQuery($sql);
 
         $this->getDb()->disconnection();
@@ -110,12 +110,12 @@ class AppController implements Controller
         return $list;
     }
 
-    public function getSqlQueryUpdateByCol(string $col, $updateField, $id)
+    public function getSqlQueryUpdateByCol(string $col, $updateField, $id, $uid)
     {
 
         switch ($col) {
             case "additionalNote": {
-                    return  "UPDATE records SET additionalNote = '$updateField' WHERE id = '$id'";
+                    return  "UPDATE records SET additionalNote = '$updateField' WHERE id = '$id' AND userId='$uid'";
                 }
             default: {
                     return null;
@@ -141,8 +141,9 @@ class AppController implements Controller
                         $field = explode("__", $actionType);
 
                         $id = isset($data["id"]) ? $data["id"] : null;
+                        $uid = isset($data["uid"]) ? $data["uid"] : null;
 
-                        if (!$id) {
+                        if (!$id || $uid) {
                             $this->log->error("editAction: id invalid");
 
                             http_response_code(404);
@@ -158,7 +159,7 @@ class AppController implements Controller
                         $content = $data[$col];
 
 
-                        $sql = $this->getSqlQueryUpdateByCol($col, $content, $id);
+                        $sql = $this->getSqlQueryUpdateByCol($col, $content, $id, $uid);
 
                         if (!$sql) {
                             $this->log->error("editAction: invalid sql query string");;
@@ -175,14 +176,14 @@ class AppController implements Controller
                             return array("error" => $error);
                         }
 
-                        return $this->getAllRecords("updateAfterAction");
+                        return $this->getAllRecords("updateAfterAction", $uid);
                     }
                 case false: {
 
-                        return $this->getAllRecords("updateAfterAction");
+                        return $this->getAllRecords("updateAfterAction", $uid);
                     }
                 default: {
-                        return $this->getAllRecords("updateAfterAction");
+                        return $this->getAllRecords("updateAfterAction", $uid);
                     }
             }
         }
@@ -201,15 +202,16 @@ class AppController implements Controller
             $this->getDb()->connection();
 
             $id = isset($data["id"]) ? $data["id"] : null;
+            $uid = isset($data["uid"]) ? $data["uid"] : null;
 
-            if (!$id) {
+            if (!$id || !$uid) {
                 $this->log->error("deleteAction: invalid id");
 
                 http_response_code(404);
                 return array("error" => "invalid id");
             }
 
-            $sql = "DELETE FROM records WHERE id = '$id'";
+            $sql = "DELETE FROM records WHERE id = '$id' AND userId = '$uid'";
 
             $query = $this->getDb()->makeQuery($sql);
 
@@ -221,7 +223,7 @@ class AppController implements Controller
                 return array("error" => $error);
             }
 
-            return $this->getAllRecords("updateAfterAction");
+            return $this->getAllRecords("updateAfterAction", $uid);
         }
     }
 
@@ -238,18 +240,19 @@ class AppController implements Controller
             $this->getDb()->connection();
 
             $id = Uuid::uuid4();
+            $uid = isset($data["uid"]) ? $data["uid"] : null;
             $recordName = isset($data["recordName"]) ? $data["recordName"] : null;
             $time = isset($data["time"]) ? $data["time"] : null;
 
-            if (!$recordName || !$time) {
+            if (!$recordName || !$time || !$uid) {
                 $this->log->error("addAction: bad data");
 
                 http_response_code(404);
                 return array("error" => "bad data");
             }
 
-            $sql = "INSERT INTO records (id, recordName, time, additionalNote)
-                        VALUES ('$id', '$recordName' , '$time', '')";
+            $sql = "INSERT INTO records (id, recordName, time, additionalNote, userId)
+                        VALUES ('$id', '$recordName' , '$time', '', '$uid')";
             $query = $this->getDb()->makeQuery($sql);
 
             if (!$query) {
@@ -260,7 +263,7 @@ class AppController implements Controller
                 return array("error" => $error);
             }
 
-            return $this->getAllRecords("updateAfterAction");
+            return $this->getAllRecords("updateAfterAction", $uid);
         }
     }
 
@@ -318,7 +321,7 @@ class AppController implements Controller
      */
     public function session()
     {
-        if (!isset($_SESSION)) session_start();
+        //if (!isset($_SESSION)) session_start();
 
         if (isset($_SESSION["userId"]) && isset($_COOKIE["sid"])) {
             return true;
@@ -430,7 +433,10 @@ class AppController implements Controller
 
             if (strpos($actionType, "all") !== false) {
                 $this->getDb()->connection();
-                return $this->getAllRecords($actionType);
+                $uid = isset($data["uid"]) ? $data["uid"] : null;
+                if (!$uid) return null;
+
+                return $this->getAllRecords($actionType, $uid);
             }
         } elseif ($actionPath === "add") {
 
