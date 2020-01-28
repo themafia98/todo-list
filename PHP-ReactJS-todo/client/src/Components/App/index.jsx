@@ -216,9 +216,9 @@ class App extends React.Component {
 }
 
 const mapStateToProps = state => {
-    const { list = [], status } = state.appReducer || {};
+    const { list = [], status, sessionLoading = false } = state.appReducer || {};
 
-    return { list, status };
+    return { list, status, sessionLoading };
 };
 
 const mapDispatchToProps = dispatch => {

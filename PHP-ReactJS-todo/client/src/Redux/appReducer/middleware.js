@@ -1,6 +1,6 @@
 import { call, put } from 'redux-saga/effects';
 import { LOAD_RECORDS, ADD_NEW_RECORD,EDIT_RECORD } from "./const";
-import { REQUEST_FAIL_ACTION, DELETE_RECORD_DONE } from "../appReducer/const";
+import { REQUEST_FAIL_ACTION, DELETE_RECORD_DONE, DONE_REG } from "../appReducer/const";
 import { 
     getRecordsList, 
     addRecord, 
@@ -48,7 +48,8 @@ function* fetchDeleteRecord(action){
 
 function* fetchRegUser(action){
     try {
-        const regResponse = yield call(fetchRegistration, action.payload);
+        yield call(fetchRegistration, action.payload);
+        yield put({type: DONE_REG, payload: action.payload});
     } catch (error){
         yield put({type: REQUEST_FAIL_ACTION, payload: error.message});
     }
@@ -57,6 +58,7 @@ function* fetchRegUser(action){
 function* fetchLoginUser(action){
     try {
         const loginResponse = yield call(fetchLogin, action.payload);
+
     } catch(error){
         yield put({type: REQUEST_FAIL_ACTION, payload: error.message});
     }

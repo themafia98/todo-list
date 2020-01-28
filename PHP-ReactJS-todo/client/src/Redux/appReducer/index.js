@@ -4,11 +4,13 @@ import {
     REQUEST_FAIL_ACTION, 
     CLEAR_STATUS, 
     EDIT_RECORD,
-    DELETE_RECORD_DONE
+    DELETE_RECORD_DONE,
+    DONE_REG
 } from './const';
 
 const initialState = {
     list: [],
+    sessionLoading: false,
     status: null
 };
 
@@ -48,6 +50,14 @@ const appReducer = (state = initialState, action) => {
             return {
                 ...state,
                 status: action.payload
+            }
+        }
+        
+        case DONE_REG: {
+            return {
+                ...state,
+                sessionLoading: true,
+                status: "Регистрация прошла успешна"
             }
         }
         case CLEAR_STATUS: {

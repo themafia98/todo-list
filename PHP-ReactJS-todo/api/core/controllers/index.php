@@ -275,6 +275,54 @@ class AppController implements Controller
         }
     }
 
+    public function regAction($data, string $actionType)
+    {
+        if ($actionType === "default") {
+            
+            $username = isset($data["username"]) ? $data["username"] : null;
+            $password = isset($data["password"]) ? $data["password"] : null;
+            $name = isset($data["name"]) ? $data["name"] : null;
+
+            if (!$username || !$password || !$name) {
+                $this->log->error("regAction: bad data");
+
+                http_response_code(404);
+                echo "bad data";
+                return;
+            }
+
+            $userId = Uuid::uuid4();
+            $hash = password_hash($password, PASSWORD_DEFAULT);
+
+            if (!$hash) {
+                $this->log->error("regAction: bad data");
+
+                http_response_code(404);
+                echo "bad data";
+                return;
+            }
+
+            $this->getDb()->connection();
+
+            $sql = "INSERT INTO users (name, password, userId, username)
+                    VALUES ('$name', '$hash' , '$userId', '$username')";
+
+            $query = $this->getDb()->makeQuery($sql);
+
+            if (!$query) {
+                $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                $this->log->error("regAction: $error");
+
+                http_response_code(403);
+                echo $error;
+                return;
+            }
+
+            return '{"status": "done"}';
+
+        }
+    }
+
     public function parseAction(string $actionPath, string $actionType, $data = null)
     {
         $field = explode("__", $actionType);
@@ -295,6 +343,9 @@ class AppController implements Controller
         } elseif ($actionPath === "edit") {
 
             return $this->editAction($data, $actionType, $isSingleField);
+        } elseif ($actionPath === "reg") {
+
+            return $this->regAction($data, $actionType);
         }
 
         return null;

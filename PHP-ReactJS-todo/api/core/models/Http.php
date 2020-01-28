@@ -119,6 +119,7 @@ class Response extends Http
         $type = explode("__", $actionType);
 
         switch ($type[0]) {
+            case "default":
             case "single_record":
             case "all": {
                     $res = array(
