@@ -27,11 +27,6 @@ class JsonBody
     public $id = null;
 };
 
-function strbool($value)
-{
-    return $value ? 'true' : 'false';
-}
-
 abstract class Http implements HttpServer
 {
     private $bodyRequest = array();
@@ -130,7 +125,6 @@ class Response extends Http
                     $res = array(
                         "response" => $actionData,
                         "actionPath" => $actionPath,
-                        "active" => strbool(call_user_func($session)),
                         "actionType" => $actionType
                     );
 

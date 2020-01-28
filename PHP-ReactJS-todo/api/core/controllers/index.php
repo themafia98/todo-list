@@ -161,8 +161,7 @@ class AppController implements Controller
                         $sql = $this->getSqlQueryUpdateByCol($col, $content, $id);
 
                         if (!$sql) {
-                            $this->log->error("editAction: invalid sql query string");
-;
+                            $this->log->error("editAction: invalid sql query string");;
                             return array("error" => "invalid sql query string");
                         }
 
@@ -268,7 +267,7 @@ class AppController implements Controller
     public function regAction($data, string $actionType)
     {
         if ($actionType === "default") {
-            
+
             $username = isset($data["username"]) ? $data["username"] : null;
             $password = isset($data["password"]) ? $data["password"] : null;
             $name = isset($data["name"]) ? $data["name"] : null;
@@ -311,55 +310,60 @@ class AppController implements Controller
                 "status" => "done",
                 "userId" => $userId,
             );
-
         }
     }
 
     /**
-    * check session
-    */
-   public function session()
-   {
-      if (!isset($_SESSION)) session_start();
+     * check session
+     */
+    public function session()
+    {
+        if (!isset($_SESSION)) session_start();
 
-       if (isset($_SESSION["userId"]) && isset($_COOKIE["sid"])) {
-           return true;
-       } elseif (isset($_COOKIE["sid"])){
-           $sid = $_COOKIE["sid"];
-           $parseCookie = explode(".x.", $sid);
-           if (isset($parseCookie[1])){
+        if (isset($_SESSION["userId"]) && isset($_COOKIE["sid"])) {
+            return true;
+        } elseif (isset($_COOKIE["sid"])) {
+            $sid = $_COOKIE["sid"];
+            $parseCookie = explode(".x.", $sid);
+            if (isset($parseCookie[1])) {
 
-               $sql = "SELECT * FROM users WHERE userId='$parseCookie[0]'";
-               $this->getDb()->connection();
-               $query = $this->getDb()->makeQuery($sql);
+                $sql = "SELECT * FROM users WHERE userId='$parseCookie[0]'";
+                $this->getDb()->connection();
+                $query = $this->getDb()->makeQuery($sql);
 
-               if (!$query || mysqli_num_rows($query) < 1) {
-                   $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-                   $this->log->error("regAction: $error");
-       
-                  return false;
-               }
-       
-               $user = mysqli_fetch_assoc($query);
+                if (!$query || mysqli_num_rows($query) < 1) {
+                    $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                    $this->log->error("regAction: $error");
 
-               $password = isset($user["password"]) ? $user["password"] : null;
-               $id = isset($user["userId"]) ? $user["userId"] : null;
+                    return false;
+                }
 
-               if (!$password || !$id) return false;
+                $user = mysqli_fetch_assoc($query);
 
-               $isEqualId = password_verify($id, $parseCookie[0]);
-               $isEqualPassword = $password === $parseCookie[1];
+                $password = isset($user["password"]) ? $user["password"] : null;
+                $id = isset($user["userId"]) ? $user["userId"] : null;
 
-               if (!$isEqualPassword || !$isEqualId) return false;
+                if (!$password || !$id) return false;
+
+                $isEqualId = password_verify($id, $parseCookie[0]);
+                $isEqualPassword = $password === $parseCookie[1];
+
+                if (!$isEqualPassword || !$isEqualId) return false;
 
                 $_SESSION["userId"] = $id;
                 return true;
-           }
-       } else return false;
-   }
+            }
+        } else return false;
+    }
 
     public function loginAction($data, string $actionType)
     {
+        if ($actionType) {
+            $this->log->error("Bad action type: $actionType");
+            http_response_code(503);
+            return;
+        }
+
         $username = isset($data["username"]) ? $data["username"] : null;
         $password = isset($data["password"]) ? $data["password"] : null;
 
@@ -386,13 +390,13 @@ class AppController implements Controller
         $user = mysqli_fetch_assoc($query);
 
         $hash = password_hash($password, PASSWORD_DEFAULT);
-        $isEqual = password_verify($password, $hash); 
+        $isEqual = password_verify($password, $hash);
 
         if ($isEqual) {
 
             $key =  password_hash($user["userId"], PASSWORD_DEFAULT);
 
-            setcookie("sid", $key.".x.".$hash, time() +60*60*24*3, "/", null, null, true);
+            setcookie("sid", $key . ".x." . $hash, time() + 60 * 60 * 24 * 3, "/", null, null, true);
             $_SESSION["userId"] = $user["userId"];
 
             $userId = $_SESSION["userId"];
@@ -400,7 +404,6 @@ class AppController implements Controller
             $this->getDb()->disconnection();
 
             return array("uid" => $userId);
-
         } else {
             $this->getDb()->disconnection();
             $this->log->error("loginAction: bad query: $error");
