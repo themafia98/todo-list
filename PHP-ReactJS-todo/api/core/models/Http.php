@@ -27,6 +27,11 @@ class JsonBody
     public $id = null;
 };
 
+function strbool($value)
+{
+    return $value ? 'true' : 'false';
+}
+
 abstract class Http implements HttpServer
 {
     private $bodyRequest = array();
@@ -113,7 +118,7 @@ class Response extends Http
     /**
      * POST METHOD
      */
-    private function post(string $actionPath, string $actionType, $actionData)
+    private function post(string $actionPath, string $actionType, $actionData, callable $session)
     {
 
         $type = explode("__", $actionType);
@@ -125,10 +130,19 @@ class Response extends Http
                     $res = array(
                         "response" => $actionData,
                         "actionPath" => $actionPath,
+                        "active" => strbool(call_user_func($session)),
                         "actionType" => $actionType
                     );
 
                     echo json_encode($this->setBody($res), JSON_OBJECT_AS_ARRAY);
+                    break;
+                }
+            case "session": {
+                    if (!call_user_func($session)) {
+                        http_response_code(401);
+                        return;
+                    }
+                    http_response_code(200);
                     break;
                 }
 
@@ -139,7 +153,7 @@ class Response extends Http
         }
     }
 
-    public function active(callable $parseAction)
+    public function active(callable $parseAction, callable $session)
     {
         try {
             $bodyAction = $this->getBody()["BODY_ACTION"];
@@ -171,7 +185,7 @@ class Response extends Http
                 case "DELETE":
                 case "PUT":
                 case "POST": {
-                        return $this->post($actionPath, $actionType, $actionData);
+                        return $this->post($actionPath, $actionType, $actionData, $session);
                         break;
                     }
                 default: {

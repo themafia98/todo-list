@@ -130,8 +130,7 @@ class AppController implements Controller
             $this->log->error("editAction: !is_null(data)");
 
             http_response_code(404);
-            echo 'bad data';
-            return;
+            return array("error" => "bad data");
         }
 
         if (strpos($actionType, "single_record") !== false) {
@@ -147,13 +146,12 @@ class AppController implements Controller
                             $this->log->error("editAction: id invalid");
 
                             http_response_code(404);
-                            echo "invalid id";
-                            return;
+                            return array("error" => "invalid id");
                         }
 
                         if (!isset($field[1])) {
                             $this->log->error("editAction: !isset(field[1])");
-                            return "lost field action";
+                            return array("error" => "lost field action");
                         }
 
                         $col = $field[1];
@@ -164,9 +162,8 @@ class AppController implements Controller
 
                         if (!$sql) {
                             $this->log->error("editAction: invalid sql query string");
-
-                            echo "invalid sql query string";
-                            return;
+;
+                            return array("error" => "invalid sql query string");
                         }
 
                         $query = $this->getDb()->makeQuery($sql);
@@ -176,8 +173,7 @@ class AppController implements Controller
                             $this->log->error("editAction: $error");
 
                             http_response_code(500);
-                            var_export($error);
-                            return;
+                            return array("error" => $error);
                         }
 
                         return $this->getAllRecords("updateAfterAction");
@@ -200,8 +196,7 @@ class AppController implements Controller
                 $this->log->error("deleteAction: bad data");
 
                 http_response_code(404);
-                echo 'bad data';
-                return;
+                return array("error" => "bad data");
             }
 
             $this->getDb()->connection();
@@ -212,8 +207,7 @@ class AppController implements Controller
                 $this->log->error("deleteAction: invalid id");
 
                 http_response_code(404);
-                echo "invalid id";
-                return;
+                return array("error" => "invalid id");
             }
 
             $sql = "DELETE FROM records WHERE id = '$id'";
@@ -225,8 +219,7 @@ class AppController implements Controller
                 $this->log->error("deleteAction: $error");
 
                 http_response_code(500);
-                var_export($error);
-                return;
+                return array("error" => $error);
             }
 
             return $this->getAllRecords("updateAfterAction");
@@ -240,8 +233,7 @@ class AppController implements Controller
                 $this->log->error("addAction: bad data is_null(data)");
 
                 http_response_code(404);
-                echo "bad data";
-                return;
+                return array("error" => "bad data");
             }
 
             $this->getDb()->connection();
@@ -254,8 +246,7 @@ class AppController implements Controller
                 $this->log->error("addAction: bad data");
 
                 http_response_code(404);
-                echo 'bad data';
-                return;
+                return array("error" => "bad data");
             }
 
             $sql = "INSERT INTO records (id, recordName, time, additionalNote)
@@ -267,8 +258,7 @@ class AppController implements Controller
                 $this->log->error("addAction: $error");
 
                 http_response_code(500);
-                var_export($error);
-                return;
+                return array("error" => $error);
             }
 
             return $this->getAllRecords("updateAfterAction");
@@ -287,8 +277,7 @@ class AppController implements Controller
                 $this->log->error("regAction: bad data");
 
                 http_response_code(404);
-                echo "bad data";
-                return;
+                return array("error" => "bad data");
             }
 
             $userId = Uuid::uuid4();
@@ -298,8 +287,7 @@ class AppController implements Controller
                 $this->log->error("regAction: bad data");
 
                 http_response_code(404);
-                echo "bad data";
-                return;
+                return array("error" => "bad data");
             }
 
             $this->getDb()->connection();
@@ -314,14 +302,110 @@ class AppController implements Controller
                 $this->log->error("regAction: $error");
 
                 http_response_code(403);
-                echo $error;
-                return;
+                return array("error" => $error);
             }
-            
+
             $this->getDb()->disconnection();
 
-            return '{"status": "done"}';
+            return array(
+                "status" => "done",
+                "userId" => $userId,
+            );
 
+        }
+    }
+
+    /**
+    * check session
+    */
+   public function session()
+   {
+      if (!isset($_SESSION)) session_start();
+
+       if (isset($_SESSION["userId"]) && isset($_COOKIE["sid"])) {
+           return true;
+       } elseif (isset($_COOKIE["sid"])){
+           $sid = $_COOKIE["sid"];
+           $parseCookie = explode(".x.", $sid);
+           if (isset($parseCookie[1])){
+
+               $sql = "SELECT * FROM users WHERE userId='$parseCookie[0]'";
+               $this->getDb()->connection();
+               $query = $this->getDb()->makeQuery($sql);
+
+               if (!$query || mysqli_num_rows($query) < 1) {
+                   $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                   $this->log->error("regAction: $error");
+       
+                  return false;
+               }
+       
+               $user = mysqli_fetch_assoc($query);
+
+               $password = isset($user["password"]) ? $user["password"] : null;
+               $id = isset($user["userId"]) ? $user["userId"] : null;
+
+               if (!$password || !$id) return false;
+
+               $isEqualId = password_verify($id, $parseCookie[0]);
+               $isEqualPassword = $password === $parseCookie[1];
+
+               if (!$isEqualPassword || !$isEqualId) return false;
+
+                $_SESSION["userId"] = $id;
+                return true;
+           }
+       } else return false;
+   }
+
+    public function loginAction($data, string $actionType)
+    {
+        $username = isset($data["username"]) ? $data["username"] : null;
+        $password = isset($data["password"]) ? $data["password"] : null;
+
+        if (!$username || !$password) {
+            $this->log->error("loginAction: bad data");
+
+            http_response_code(404);
+            return array("error" => "bad data");
+        }
+
+        $this->getDb()->connection();
+
+        $sql = "SELECT * FROM users WHERE username='$username'";
+        $query = $this->getDb()->makeQuery($sql);
+
+        if (!$query || mysqli_num_rows($query) < 1) {
+            $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+            $this->log->error("regAction: $error");
+
+            http_response_code(404);
+            return array("error" => $error);
+        }
+
+        $user = mysqli_fetch_assoc($query);
+
+        $hash = password_hash($password, PASSWORD_DEFAULT);
+        $isEqual = password_verify($password, $hash); 
+
+        if ($isEqual) {
+
+            $key =  password_hash($user["userId"], PASSWORD_DEFAULT);
+
+            setcookie("sid", $key.".x.".$hash, time() +60*60*24*3, "/", null, null, true);
+            $_SESSION["userId"] = $user["userId"];
+
+            $userId = $_SESSION["userId"];
+
+            $this->getDb()->disconnection();
+
+            return array("uid" => $userId);
+
+        } else {
+            $this->getDb()->disconnection();
+            $this->log->error("loginAction: bad query: $error");
+            http_response_code(401);
+            return array("error" => $error);
         }
     }
 
@@ -348,6 +432,9 @@ class AppController implements Controller
         } elseif ($actionPath === "reg") {
 
             return $this->regAction($data, $actionType);
+        } elseif ($actionPath === "login") {
+
+            return $this->loginAction($data, $actionType);
         }
 
         return null;
@@ -357,6 +444,7 @@ class AppController implements Controller
     {
         try {
             $callback = array($this, 'parseAction');
+            $session = array($this, 'session');
 
             $props = array(
                 'METHOD' => $this->getMethod(),
@@ -367,7 +455,7 @@ class AppController implements Controller
             $res = new Response($props);
 
             $res->setJsonHeaders();
-            $res->active($callback);
+            $res->active($callback, $session);
         } catch (Exception $error) {
             $msg = $error->getMessage();
             $this->log->error("global error handler: $msg");

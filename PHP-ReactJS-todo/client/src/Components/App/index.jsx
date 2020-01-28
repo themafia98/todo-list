@@ -155,6 +155,7 @@ class App extends React.Component {
     }
 
     onLogin = ({ username = "", password = "" }) => {
+
         const { onLoginUser = null } = this.props;
         if (username && password && onLoginUser){
             onLoginUser({
@@ -177,7 +178,7 @@ class App extends React.Component {
 
     onAdd = _.debounce(this.onAdd, 500);
     onReg = _.debounce(this.onReg, 500);
-    onLogin = _.debounce(this.onReg, 500);
+    onLogin = _.debounce(this.onLogin, 500);
 
     render(){
         const { status: message = "", sessionLoading = false } = this.props;
