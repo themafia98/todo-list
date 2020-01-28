@@ -317,6 +317,8 @@ class AppController implements Controller
                 echo $error;
                 return;
             }
+            
+            $this->getDb()->disconnection();
 
             return '{"status": "done"}';
 
