@@ -19,3 +19,11 @@ body {
         max-width: 200px;
     }
 }
+
+img[alt="logout"] {
+    width: 47px;
+    cursor: pointer;
+    position: absolute;
+    left: 1vw;
+    top: 1vh;
+}

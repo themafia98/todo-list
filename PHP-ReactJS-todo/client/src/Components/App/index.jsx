@@ -14,6 +14,7 @@ import {
     loadingSession,
 } from '../../Redux/appReducer/actions';
 
+import Request from '../../Request';
 import LoginForm from '../LoginForm';
 import ErrorShower from "../ErrorShower";
 import Header from "../Header";
@@ -41,8 +42,7 @@ class App extends React.Component {
         const { 
             onLoadRecordsList = null, 
             sessionLoading = false, 
-            uid = "", 
-            onLoadingSession = null 
+            uid = "",
         } = this.props;
         const { updateListInitial = true } = this.state;
 
@@ -178,6 +178,22 @@ class App extends React.Component {
         }
     };
 
+    logout = async () => {
+        try {
+            const body = JSON.stringify({
+                "ACTION": "logout",
+                "TYPE": "logout"
+            });
+
+            const request = new Request();
+            const res = await request.sendRequest(body, "DELETE");
+
+            if (res.ok) window.location.assign("/");
+        } catch (error) {
+            console.error(error);
+        }
+    }
+
     onAdd = _.debounce(this.onAdd, 500);
     onReg = _.debounce(this.onReg, 500);
     onLogin = _.debounce(this.onLogin, 500);
@@ -197,6 +213,12 @@ class App extends React.Component {
             <Fragment>
                 {sessionLoading ? (
                     <Fragment>
+                        <img 
+                            src = "logout.jpg"
+                            alt = 'logout' 
+                            title = 'logout' 
+                            onClick = {this.logout} 
+                        />
                         <Header 
                             onSort = {this.onSort} 
                             onAdd = {this.onAdd} 

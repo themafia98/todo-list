@@ -359,6 +359,13 @@ class AppController implements Controller
         } else return false;
     }
 
+    public function logoutAction()
+    {
+        session_unset();
+        session_destroy();
+        setcookie("sid",null,null, "/", null, null, true);
+    }
+
     public function loginAction($data, string $actionType)
     {
         if (!$actionType) {
@@ -453,6 +460,9 @@ class AppController implements Controller
         } elseif ($actionPath === "login") {
 
             return $this->loginAction($data, $actionType);
+        } elseif($actionPath === 'logout') {
+
+            return $this->logoutAction();
         }
 
         return null;
