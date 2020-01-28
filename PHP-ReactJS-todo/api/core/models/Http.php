@@ -71,9 +71,11 @@ abstract class Http implements HttpServer
 
 
         $this->setPropResponseBody("response", $props["response"]);
-        $this->setPropResponseBody("id", Uuid::uuid4());
-        $this->setPropResponseBody("actionPath", $props["actionPath"]);
-        $this->setPropResponseBody("actionType", $props["actionType"]);
+        $this->setPropResponseBody("options", array(
+            "responseId" => Uuid::uuid4(),
+            "actionPath" => $props["actionPath"],
+            "actionType" => $props["actionType"]
+        ));
 
         if ($this->getResponseBody()) {
             return $this->getResponseBody();

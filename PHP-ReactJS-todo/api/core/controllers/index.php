@@ -143,7 +143,7 @@ class AppController implements Controller
                         $id = isset($data["id"]) ? $data["id"] : null;
                         $uid = isset($data["uid"]) ? $data["uid"] : null;
 
-                        if (!$id || $uid) {
+                        if (!$id || !$uid) {
                             $this->log->error("editAction: id invalid");
 
                             http_response_code(404);
