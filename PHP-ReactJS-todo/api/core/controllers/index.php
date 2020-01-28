@@ -332,7 +332,7 @@ class AppController implements Controller
                 $query = $this->getDb()->makeQuery($sql);
 
                 if (!$query || mysqli_num_rows($query) < 1) {
-                    $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
+                    $error = "Error: " .$sql." || ". $this->getDb()->getConnect()->error;
                     $this->log->error("regAction: $error");
 
                     return false;
