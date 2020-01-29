@@ -64,6 +64,8 @@ interface Controller
     public function getDb();
     public function getMethod();
     public function getRequestBody();
-    public function parseAction(string $actionPath, string $actionType);
+    public function session();
+    public function getSqlQueryUpdateByCol(string $col, $updateField, $id, $uid);
+    public function getActionData($path, $type, $data);
     public function runRequest();
 }

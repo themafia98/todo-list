@@ -9,6 +9,7 @@ namespace core\models\server;
 require_once realpath("") . "/core/utils/consts.php";
 
 use core\interfaces\models\{HttpServer};
+use core\models\Action\Action;
 use Error;
 use Exception;
 use Ramsey\Uuid\Uuid;
@@ -154,7 +155,7 @@ class Response extends Http
         }
     }
 
-    public function active(callable $parseAction, callable $session)
+    public function active(callable $getActionData, callable $session)
     {
         try {
             $bodyAction = $this->getBody()["BODY_ACTION"];
@@ -169,13 +170,13 @@ class Response extends Http
 
             $simpleActionInvalid = !is_string($actionPath) ||
                 !is_string($actionType) ||
-                !is_callable($parseAction);
+                !is_callable($getActionData);
 
 
             if ($simpleActionInvalid && $actionType !== "session") {
 
                 $props["response"] = array(
-                    "parseAction" => $parseAction,
+                    "getActionData" => $getActionData,
                     "actionPath" => $actionPath,
                     "actionType" => $actionType
                 );
@@ -185,7 +186,7 @@ class Response extends Http
             }
 
 
-            $actionData = $isValid ? call_user_func($parseAction, $actionPath, $actionType, $data) : null;
+            $actionData = $isValid ? call_user_func($getActionData, $actionPath, $actionType, $data) : null;
 
             switch ($method) {
                 case "DELETE":

@@ -7,19 +7,16 @@
 namespace core\controllers;
 
 require_once realpath("") . "/core/interfaces/index.php";
-require_once realpath("") . "/core/models/Record.php";
-require_once realpath("") . "/core/models/RecordList.php";
 require_once realpath("") . "/core/models/Http.php";
+require_once realpath("") . "/core/models/Action.php";
 
 use Monolog\Logger as Logger;
 use Monolog\Handler\StreamHandler as StreamHandler;
-use Ramsey\Uuid\Uuid;
 
 use core\models\server\{Response};
-use core\models\Records\{RecordManagment};
-use core\models\lists\{RecordList};
 
 use core\interfaces\models\{Controller};
+use core\models\Action\{Action};
 use Exception;
 
 class AppController implements Controller
@@ -67,49 +64,6 @@ class AppController implements Controller
         return $this->requestBody;
     }
 
-    public function getAllRecords($actionType, string $uid)
-    {
-        if ($actionType !== "all" && $actionType !== "updateAfterAction" || !$uid) {
-            return [];
-        }
-
-        $sql = "SELECT * FROM `records` WHERE userId='$uid'";
-        $query = $this->getDb()->makeQuery($sql);
-
-        $this->getDb()->disconnection();
-
-        $manager = new RecordManagment();
-        $recordList = new RecordList();
-
-        $list = $recordList->createList();
-
-        if ($query && $query->num_rows > 0) {
-            // output data of each row
-            while ($row = $query->fetch_assoc()) {
-
-                if (
-                    isset($row["num"]) &&
-                    isset($row["id"]) &&
-                    isset($row["recordName"]) &&
-                    isset($row["time"]) &&
-                    isset($row["additionalNote"])
-                ) {
-
-                    $manager->create(
-                        $row["num"],
-                        $row["id"],
-                        $row["recordName"],
-                        $row["time"],
-                        $row["additionalNote"]
-                    );
-                    array_push($list, $manager->getRecord());
-                }
-            }
-        }
-
-        return $list;
-    }
-
     public function getSqlQueryUpdateByCol(string $col, $updateField, $id, $uid)
     {
 
@@ -120,199 +74,6 @@ class AppController implements Controller
             default: {
                     return null;
                 }
-        }
-    }
-
-    public function editAction($data, string $actionType, bool $isSingleField)
-    {
-
-        if (is_null($data)) {
-            $this->log->error("editAction: !is_null(data)");
-
-            http_response_code(404);
-            return array("error" => "bad data");
-        }
-
-        if (strpos($actionType, "single_record") !== false) {
-            switch ($isSingleField) {
-                case true: {
-                        $this->getDb()->connection();
-
-                        $field = explode("__", $actionType);
-
-                        $id = isset($data["id"]) ? $data["id"] : null;
-                        $uid = isset($data["uid"]) ? $data["uid"] : null;
-
-                        if (!$id || !$uid) {
-                            $this->log->error("editAction: id invalid");
-
-                            http_response_code(404);
-                            return array("error" => "invalid id");
-                        }
-
-                        if (!isset($field[1])) {
-                            $this->log->error("editAction: !isset(field[1])");
-                            return array("error" => "lost field action");
-                        }
-
-                        $col = $field[1];
-                        $content = $data[$col];
-
-
-                        $sql = $this->getSqlQueryUpdateByCol($col, $content, $id, $uid);
-
-                        if (!$sql) {
-                            $this->log->error("editAction: invalid sql query string");;
-                            return array("error" => "invalid sql query string");
-                        }
-
-                        $query = $this->getDb()->makeQuery($sql);
-
-                        if (!$query) {
-                            $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-                            $this->log->error("editAction: $error");
-
-                            http_response_code(500);
-                            return array("error" => $error);
-                        }
-
-                        return $this->getAllRecords("updateAfterAction", $uid);
-                    }
-                case false: {
-
-                        return $this->getAllRecords("updateAfterAction", $uid);
-                    }
-                default: {
-                        return $this->getAllRecords("updateAfterAction", $uid);
-                    }
-            }
-        }
-    }
-
-    public function deleteAction($data, string $actionType, bool $isSingleField)
-    {
-        if (strpos($actionType, "single_record") !== false) {
-            if (is_null($data)) {
-                $this->log->error("deleteAction: bad data");
-
-                http_response_code(404);
-                return array("error" => "bad data");
-            }
-
-            $this->getDb()->connection();
-
-            $id = isset($data["id"]) ? $data["id"] : null;
-            $uid = isset($data["uid"]) ? $data["uid"] : null;
-
-            if (!$id || !$uid) {
-                $this->log->error("deleteAction: invalid id");
-
-                http_response_code(404);
-                return array("error" => "invalid id");
-            }
-
-            $sql = "DELETE FROM records WHERE id = '$id' AND userId = '$uid'";
-
-            $query = $this->getDb()->makeQuery($sql);
-
-            if (!$query) {
-                $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-                $this->log->error("deleteAction: $error");
-
-                http_response_code(500);
-                return array("error" => $error);
-            }
-
-            return $this->getAllRecords("updateAfterAction", $uid);
-        }
-    }
-
-    public function addAction($data, $actionType, $isSingleField)
-    {
-        if (strpos($actionType, "single_record") !== false) {
-            if (is_null($data)) {
-                $this->log->error("addAction: bad data is_null(data)");
-
-                http_response_code(404);
-                return array("error" => "bad data");
-            }
-
-            $this->getDb()->connection();
-
-            $id = Uuid::uuid4();
-            $uid = isset($data["uid"]) ? $data["uid"] : null;
-            $recordName = isset($data["recordName"]) ? $data["recordName"] : null;
-            $time = isset($data["time"]) ? $data["time"] : null;
-
-            if (!$recordName || !$time || !$uid) {
-                $this->log->error("addAction: bad data");
-
-                http_response_code(404);
-                return array("error" => "bad data");
-            }
-
-            $sql = "INSERT INTO records (id, recordName, time, additionalNote, userId)
-                        VALUES ('$id', '$recordName' , '$time', '', '$uid')";
-            $query = $this->getDb()->makeQuery($sql);
-
-            if (!$query) {
-                $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-                $this->log->error("addAction: $error");
-
-                http_response_code(500);
-                return array("error" => $error);
-            }
-
-            return $this->getAllRecords("updateAfterAction", $uid);
-        }
-    }
-
-    public function regAction($data, string $actionType)
-    {
-        if ($actionType === "default") {
-
-            $username = isset($data["username"]) ? $data["username"] : null;
-            $password = isset($data["password"]) ? $data["password"] : null;
-            $name = isset($data["name"]) ? $data["name"] : null;
-
-            if (!$username || !$password || !$name) {
-                $this->log->error("regAction: bad data");
-
-                http_response_code(404);
-                return array("error" => "bad data");
-            }
-
-            $userId = Uuid::uuid4();
-            $hash = password_hash($password, PASSWORD_DEFAULT);
-
-            if (!$hash) {
-                $this->log->error("regAction: bad data");
-
-                http_response_code(404);
-                return array("error" => "bad data");
-            }
-
-            $this->getDb()->connection();
-
-            $sql = "INSERT INTO users (name, password, userId, username)
-                    VALUES ('$name', '$hash' , '$userId', '$username')";
-
-            $query = $this->getDb()->makeQuery($sql);
-
-            if (!$query) {
-                $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-                $this->log->error("regAction: $error");
-
-                http_response_code(403);
-                return array("error" => $error);
-            }
-
-            $this->getDb()->disconnection();
-
-            return array(
-                "status" => "done",
-                "userId" => $userId,
-            );
         }
     }
 
@@ -362,123 +123,19 @@ class AppController implements Controller
         } else return false;
     }
 
-    public function logoutAction()
+    public function getActionData($path, $type, $data)
     {
-        session_unset();
-        session_destroy();
-        setcookie("sid",null,null, "/", null, null, true);
-    }
+        $action = new Action($path, $type, $data, $this->log, $this->getDb());
+        $cb = array($this, "getSqlQueryUpdateByCol");
 
-    public function loginAction($data, string $actionType)
-    {
-        if (!$actionType) {
-            $this->log->error("Bad action type: $actionType");
-            http_response_code(503);
-            return;
-        }
-
-        $username = isset($data["username"]) ? $data["username"] : null;
-        $password = isset($data["password"]) ? $data["password"] : null;
-
-        if (!$username || !$password) {
-            $this->log->error("loginAction: bad data");
-
-            http_response_code(404);
-            return array("error" => "bad data");
-        }
-
-        $this->getDb()->connection();
-
-        $sql = "SELECT * FROM users WHERE username='$username'";
-        $query = $this->getDb()->makeQuery($sql);
-
-        if (!$query || mysqli_num_rows($query) < 1) {
-            $error = "Error: " . $sql . "<br>" . $this->getDb()->getConnect()->error;
-            $this->log->error("loginAction: $error");
-
-            http_response_code(404);
-            return array("error" => $error);
-        }
-
-        $user = mysqli_fetch_assoc($query);
-        $userPassword = isset($user["password"]) ? $user["password"] : null;
-        $name = isset($user["name"]) ? $user["name"] : null;
-
-        if (!$userPassword){
-            $error = "Password not exist in db";
-            $this->log->error("loginAction: $error");
-
-            http_response_code(404);
-            return array("error" => $error);
-        }
-
-        $hash = password_hash($password, PASSWORD_DEFAULT);
-        $isEqual = password_verify($password, $userPassword);
-
-        if ($isEqual) {
-
-            $key =  $user["userId"];
-
-            setcookie("sid", $key . "|x|" . $userPassword, time() + 60 * 60 * 24 * 1, "/", null, null, true);
-            $_SESSION["userId"] = $user["userId"];
-
-            $userId = $_SESSION["userId"];
-
-            $this->getDb()->disconnection();
-
-            return array(
-                "uid" => $userId,
-                "name" => $name,
-            );
-        } else {
-            $this->getDb()->disconnection();
-            $this->log->error("loginAction: invalid user: $error");
-            http_response_code(404);
-            return array("error" => $error);
-        }
-    }
-
-    public function parseAction(string $actionPath, string $actionType, $data = null)
-    {
-        $field = explode("__", $actionType);
-        $isSingleField = isset($field[1]);
-
-        if ($actionPath === "list") {
-
-            if (strpos($actionType, "all") !== false) {
-                $this->getDb()->connection();
-                $uid = isset($data["uid"]) ? $data["uid"] : null;
-                if (!$uid) return null;
-
-                return $this->getAllRecords($actionType, $uid);
-            }
-        } elseif ($actionPath === "add") {
-
-            return $this->addAction($data, $actionType, $isSingleField);
-        } elseif ($actionPath === "delete") {
-
-            return $this->deleteAction($data, $actionType, $isSingleField);
-        } elseif ($actionPath === "edit") {
-
-            return $this->editAction($data, $actionType, $isSingleField);
-        } elseif ($actionPath === "reg") {
-
-            return $this->regAction($data, $actionType);
-        } elseif ($actionPath === "login") {
-
-            return $this->loginAction($data, $actionType);
-        } elseif($actionPath === 'logout') {
-
-            return $this->logoutAction();
-        }
-
-        return null;
+        return $action->parse($cb);
     }
 
     public function runRequest()
     {
         try {
-            $callback = array($this, 'parseAction');
+            
+            $callback = array($this, 'getActionData');
             $session = array($this, 'session');
 
             $props = array(
