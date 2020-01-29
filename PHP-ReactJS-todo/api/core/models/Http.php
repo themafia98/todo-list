@@ -140,11 +140,11 @@ class Response extends Http
                         http_response_code(401);
                         return;
                     }
-                    
-                   echo json_encode(array(
-                       "uid" => $_SESSION["userId"],
-                       "name" => $_SESSION["name"]
-                   ), JSON_OBJECT_AS_ARRAY);
+
+                    echo json_encode(array(
+                        "uid" => $_SESSION["userId"],
+                        "name" => $_SESSION["name"]
+                    ), JSON_OBJECT_AS_ARRAY);
                     break;
                 }
 
