@@ -8,7 +8,7 @@
 
 namespace core\root;
 
-require_once "./bootstrap.php";
+require_once "../bootstrap.php";
 require_once realpath("") . "/core/models/Database.php";
 // require_once  "./utils/headers.php"; /** includes this if you want use default headers */
 require_once "./core/controllers/index.php";
