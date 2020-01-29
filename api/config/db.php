@@ -6,7 +6,7 @@
 
 namespace config\db;
 
-require_once 'vendor/autoload.php';
+require_once '/app/vendor/autoload.php';
 
 use Dotenv\Dotenv;
 
