@@ -345,6 +345,7 @@ class AppController implements Controller
 
                 $password = isset($user["password"]) ? $user["password"] : null;
                 $id = isset($user["userId"]) ? $user["userId"] : null;
+                $name = isset($user["name"]) ? $user["name"] : null;
 
                 if (!$password || !$id) return false;
 
@@ -354,6 +355,8 @@ class AppController implements Controller
                 if (!$isEqualPassword || !$isEqualId) return false;
 
                 $_SESSION["userId"] = $id;
+                $_SESSION["name"] = $name;
+
                 return true;
             }
         } else return false;
@@ -399,6 +402,7 @@ class AppController implements Controller
 
         $user = mysqli_fetch_assoc($query);
         $userPassword = isset($user["password"]) ? $user["password"] : null;
+        $name = isset($user["name"]) ? $user["name"] : null;
 
         if (!$userPassword){
             $error = "Password not exist in db";
@@ -422,7 +426,10 @@ class AppController implements Controller
 
             $this->getDb()->disconnection();
 
-            return array("uid" => $userId);
+            return array(
+                "uid" => $userId,
+                "name" => $name,
+            );
         } else {
             $this->getDb()->disconnection();
             $this->log->error("loginAction: invalid user: $error");

@@ -12,6 +12,7 @@ import {
 const initialState = {
     list: [],
     uid: null,
+    nameUser: null,
     loadingApp: false,
     sessionLoading: false,
     status: null
@@ -34,13 +35,14 @@ const appReducer = (state = initialState, action) => {
         }
 
         case LOAD_SESSION: {
-            const { uid = "" } = action.payload || {};
+            const { uid = "", name: nameUser = "" } = action.payload || {};
 
             return {
                 ...state,
                 loadingApp: true,
                 uid: uid ? uid : null,
                 sessionLoading: uid ? true : false,
+                nameUser,
             }
         }
 

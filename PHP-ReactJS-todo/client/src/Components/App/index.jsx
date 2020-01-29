@@ -199,7 +199,12 @@ class App extends React.Component {
     onLogin = _.debounce(this.onLogin, 500);
 
     render(){
-        const { status: message = "", sessionLoading = false, loadingApp = false } = this.props;
+        const { 
+            status: message = "", 
+            sessionLoading = false, 
+            loadingApp = false,
+            nameUser = "" 
+        } = this.props;
 
         const filteredList = this.getFilteredList();
 
@@ -213,12 +218,19 @@ class App extends React.Component {
             <Fragment>
                 {sessionLoading ? (
                     <Fragment>
+                        <div className = 'info-block'>
                         <img 
                             src = "logout.jpg"
                             alt = 'logout' 
                             title = 'logout' 
                             onClick = {this.logout} 
                         />
+                        {nameUser ?
+                            <p className = 'info-block__name'>
+                                {nameUser}
+                             </p>
+                        : null}
+                        </div>
                         <Header 
                             onSort = {this.onSort} 
                             onAdd = {this.onAdd} 
@@ -253,9 +265,10 @@ const mapStateToProps = state => {
         sessionLoading = false, 
         loadingApp = false,
         uid = "",
+        nameUser = ""
     } = state.appReducer || {};
 
-    return { list, status, sessionLoading, loadingApp, uid };
+    return { list, status, sessionLoading, loadingApp, uid, nameUser };
 };
 
 const mapDispatchToProps = dispatch => {

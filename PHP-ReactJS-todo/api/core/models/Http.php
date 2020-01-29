@@ -141,7 +141,8 @@ class Response extends Http
                     }
                     
                    echo json_encode(array(
-                       "uid" => $_SESSION["userId"]
+                       "uid" => $_SESSION["userId"],
+                       "name" => $_SESSION["name"]
                    ), JSON_OBJECT_AS_ARRAY);
                     break;
                 }

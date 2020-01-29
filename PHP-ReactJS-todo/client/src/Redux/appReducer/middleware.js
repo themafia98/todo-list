@@ -67,9 +67,9 @@ function* fetchLoginUser(action){
 
 function* fetchSession(action){
     try {
-        const uid = yield call(fetchUserSession);
+        const { uid = "", name = "" } = yield call(fetchUserSession);
 
-        yield put({type: LOAD_SESSION, payload: { uid }});
+        yield put({type: LOAD_SESSION, payload: { uid, name }});
     } catch(error){
          yield put({type: REQUEST_FAIL_ACTION, payload: null });
     }
