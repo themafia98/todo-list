@@ -4,4 +4,4 @@
  * Bootstrap backend application
  */
 
-require "./vendor/autoload.php";
+require realpath("") . "/vendor/autoload.php";
