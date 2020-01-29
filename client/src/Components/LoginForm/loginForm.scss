@@ -1,0 +1,67 @@
+.popover-wrapper {
+    .login-popup-wrapper {
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 75%;
+        height: 75%;
+        background: #f5f5f5;
+        box-shadow: 0 0 3px #add8e6;
+        border: 5px solid #add8e6;
+        z-index: 99999;
+        .login-popup {
+            display: flex;
+            max-height: 95%;
+            flex-direction: column;
+            align-items: center;
+
+            .login-popup-header {
+                .title-login-popup {
+                    font-weight: bold;
+                    font-size: 24px;
+                }
+
+            }
+            .login-popup-main {
+                display: flex;
+                flex-direction: column;
+                width: 45%;
+
+                .validation-msg {
+                    color: rgb(236, 76, 47);
+                    margin: 0;
+                    height: 20px;
+                }
+
+                &.loginMode {
+                    input {
+                        margin: 5px 0;
+                    }
+                }
+
+                label {
+                    font-size: 20px;
+                    padding: 10px 0;
+                }
+
+                input {
+                    border: 1px solid #c6b9b9;
+                    padding: 5px;
+                }
+
+                input[type='button'] {
+                    padding: 10px;
+                    margin-top: 10px;
+                }
+
+                .login-change-mode {
+                    align-self: flex-start;
+                    margin: 2px;
+                    cursor: pointer;
+                    color: rgb(16, 16, 255);
+                }
+            }
+        }
+    }
+}
