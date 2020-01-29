@@ -7,3 +7,4 @@
   * Logger: monolog
   * env package: phpdotenv
   * uuid package
+  * Cookie, Auth, Session
