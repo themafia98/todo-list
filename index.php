@@ -8,12 +8,12 @@
 
 namespace core\root;
 
-require_once "../api/bootstrap.php";
+require_once "./api/bootstrap.php";
 require_once realpath("") . "/core/models/Database.php";
 // require_once  "./utils/headers.php"; /** includes this if you want use default headers */
-require_once "./core/controllers/index.php";
-require_once "./core/utils/index.php";
-require_once "./config/db.php";
+require_once "./api/core/controllers/index.php";
+require_once "./api/core/utils/index.php";
+require_once "./api/config/db.php";
 
 use Exception;
 use config\app\http;
