@@ -1,5 +1,6 @@
 .env
 
-PHP-ReactJS-todo/
+
+/node_modules/
 
 /vendor

@@ -1,0 +1,30 @@
+@media screen and (max-width: 560px) {
+
+    .controllers {
+        width: 70%;
+        max-width: 70%;
+    }
+
+    .info-block {
+        flex-direction: column;
+    }
+
+    header h1 {
+        font-size: 25px;
+        margin-bottom: 0;
+    }
+
+}
+
+@media screen and (max-width: 345px) {
+    
+    .info-block {
+        top: 50px;
+        img {
+            width: 30px;
+        }
+        .info-block__name {
+            font-size: 13px;
+        }
+    }
+}
