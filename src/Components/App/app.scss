@@ -9,6 +9,10 @@ body {
     background: repeat url($bg);
 }
 
+#root {
+    height: 100vh;
+}
+
 .loader-wrapper {
     position: absolute;
     left: 50%;

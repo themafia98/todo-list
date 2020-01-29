@@ -8,6 +8,8 @@
 
 # testing
 /coverage
+/PHP-ReactJS-todo/
+/PHP-ReactJS-todo
 
 # production
 /build
