@@ -20,5 +20,11 @@
     
     .info-block {
         top: 50px;
+        img {
+            width: 30px;
+        }
+        .info-block__name {
+            font-size: 13px;
+        }
     }
 }
