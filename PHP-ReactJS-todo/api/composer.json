@@ -17,7 +17,7 @@
     "require": {
         "ramsey/uuid": "^3.9",
         "vlucas/phpdotenv": "^4.1",
-      "ext-mysqli": "*",
+        "ext-mysqli": "*",
         "ext-json": "*",
         "monolog/monolog": "^2.0"
     }
