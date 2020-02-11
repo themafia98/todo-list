@@ -31,14 +31,40 @@ interface Dbms
  */
 interface TodoRecord
 {
+    public function __construct(
+        string $num,
+        string $id,
+        string $recordName,
+        string $time,
+        string $additionalNote,
+        int $position
+    );
 };
 
+/**
+ * inerface for calss RecordManagment
+ */
+interface ManagerRecord
+{
+    public function create(
+        string $num,
+        string $id,
+        string $recordName,
+        string $time,
+        string $additionalNote,
+        int $position
+    ): void;
+    public function getRecord();
+}
 /**
  * Interface for class RecordList
  */
 
 interface TodoList
 {
+    public function fill(array $records, array $list): void;
+    public function getList(): array;
+    public function createList(): array;
 };
 
 

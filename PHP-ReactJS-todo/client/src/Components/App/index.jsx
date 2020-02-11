@@ -12,6 +12,7 @@ import {
     loginUser,
     regUser,
     loadingSession,
+    updateItems
 } from '../../Redux/appReducer/actions';
 
 import Request from '../../Request';
@@ -135,10 +136,21 @@ class App extends React.Component {
     }
 
     onAdd = async (controllersState) => {
-        const { onAddRecord = null, uid = "" } = this.props;
+        const { onAddRecord = null, uid = "", list = [] } = this.props;
 
+        const listItem = { ...controllersState };
+        listItem.position = list && list.length ? list[list.length - 1].position + 1 : 0;
+        
         if (onAddRecord){
-            onAddRecord({controllersState, uid});
+            onAddRecord({listItem, uid});
+        }
+    }
+
+    onSaveList = async (items) => {
+        const { onUpdateRecords = null, uid = "" } = this.props;
+        
+        if (onUpdateRecords && uid){
+            onUpdateRecords({ items, uid });
         }
     }
 
@@ -240,6 +252,7 @@ class App extends React.Component {
                             todoList = {filteredList} 
                             onDelete = {this.onDeleteTodo}
                             onEditField = {this.onEditField}
+                            onSaveList = {this.onSaveList}
                         />
                     </Fragment>
                 )
@@ -280,6 +293,7 @@ const mapDispatchToProps = dispatch => {
         onDeleteRecord: payload => dispatch(deleteRecord(payload)),
         onLoginUser: payload => dispatch(loginUser(payload)),
         onRegistration: payload => dispatch(regUser(payload)),
+        onUpdateRecords: payload => dispatch(updateItems(payload)),
         onLoadingSession: () => dispatch(loadingSession())
     };
 };

@@ -2,21 +2,30 @@
 
 namespace core\models\lists;
 
+use core\interfaces\models\TodoList;
+
 /**
  * Todo list entity
  */
-class RecordList
+class RecordList implements TodoList
 {
 
-    public function fill(array $records, array $list)
+    private $array = array();
+
+    public function fill(array $records, array $list): void
     {
         foreach ($records as $key => $value) {
             $this->$list[$key] = $value;
         }
     }
 
+    public function getList(): array
+    {
+        return $this->array;
+    }
+
     public function createList(): array
     {
-        return array();
+        return $this->array;
     }
 };

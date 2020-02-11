@@ -41,7 +41,7 @@ class Database
         return $this->dbData[$key];
     }
 
-    public function setConnect($cnt)
+    public function setConnect($cnt): void
     {
         $this->connect = $cnt;
     }
@@ -62,7 +62,7 @@ class Database
         return $this->connect;
     }
 
-    public function disconnection()
+    public function disconnection(): bool
     {
         if (!is_null($this->getConnect())) {
             mysqli_close($this->getConnect());

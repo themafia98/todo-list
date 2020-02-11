@@ -74,19 +74,28 @@ class Action
                     isset($row["id"]) &&
                     isset($row["recordName"]) &&
                     isset($row["time"]) &&
-                    isset($row["additionalNote"])
+                    isset($row["additionalNote"]) &&
+                    isset($row["position"])
                 ) {
                     $manager->create(
                         $row["num"],
                         $row["id"],
                         $row["recordName"],
                         $row["time"],
-                        $row["additionalNote"]
+                        $row["additionalNote"],
+                        $row["position"]
                     );
                     array_push($list, $manager->getRecord());
                 }
             }
         }
+
+        /**
+         * Sort position todo
+         */
+        usort($list, function($a, $b){
+            return strcmp($a->position, $b->position);
+        });
 
         return $list;
     }
@@ -209,6 +218,7 @@ class Action
             $uid = isset($this->getActionData()["uid"]) ? $this->getActionData()["uid"] : null;
             $recordName = isset($this->getActionData()["recordName"]) ? $this->getActionData()["recordName"] : null;
             $time = isset($this->getActionData()["time"]) ? $this->getActionData()["time"] : null;
+            $position = isset($this->getActionData()["position"]) ? $this->getActionData()["position"] : null;
 
             if (!$recordName || !$time || !$uid) {
                 $this->log->error("addAction: bad data");
@@ -217,8 +227,8 @@ class Action
                 return array("error" => "bad data");
             }
 
-            $sql = "INSERT INTO records (id, recordName, time, additionalNote, userId)
-                        VALUES ('$id', '$recordName' , '$time', '', '$uid')";
+            $sql = "INSERT INTO records (id, recordName, time, additionalNote, userId, position)
+                        VALUES ('$id', '$recordName' , '$time', '', '$uid', '$position')";
             $query = $this->getDb()->makeQuery($sql);
 
             if (!$query) {
@@ -375,6 +385,7 @@ class Action
                     }
                     break;
                 }
+
             case "add": {
                     return $this->addAction($isSingleField);
                     break;

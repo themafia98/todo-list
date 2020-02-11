@@ -38,13 +38,13 @@ abstract class Http implements HttpServer
         $this->bodyRequest = $props;
     }
 
-    protected function getBody()
+    protected function getBody(): array
     {
         return $this->bodyRequest;
     }
 
 
-    protected function getResponseBody()
+    protected function getResponseBody(): array
     {
         if (is_array($this->responseBody)) {
             return $this->responseBody;
@@ -54,7 +54,7 @@ abstract class Http implements HttpServer
         }
     }
 
-    protected function setPropResponseBody(string $key, $prop)
+    protected function setPropResponseBody(string $key, $prop): void
     {
 
         if (is_array($this->responseBody)) {
