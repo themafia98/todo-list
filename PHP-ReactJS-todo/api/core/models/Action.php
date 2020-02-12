@@ -336,7 +336,7 @@ class Action
         if ($isEqual) {
             $key =  $user["userId"];
 
-            setcookie("sid", $key . "|x|" . $userPassword, time() + 60 * 60 * 24 * 1, "/", null, null, true);
+            setcookie("sid", $key . "|x|" . $userPassword, time() + 60 * 60 * 24 * 1, "/", "", false, true);
             $_SESSION["userId"] = $user["userId"];
 
             $userId = $_SESSION["userId"];
@@ -359,7 +359,7 @@ class Action
     {
         session_unset();
         session_destroy();
-        setcookie("sid", null, null, "/", null, null, true);
+        setcookie("sid", "", 0, "/", "");
     }
 
     public function regAction()
