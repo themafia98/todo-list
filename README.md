@@ -1,7 +1,3 @@
-# This is my todo-lists projects
+***Todo-list on PHP7/React.js***
 
-***Deploy version in php-reactjs branch***
-
-**Links:**
-* [link to PHP/React.js todo-list](https://todo-list-php-reactjs.herokuapp.com/)
-* [link to my old todo-list (ES6)](http://tremendous-carriage.surge.sh/)
+**Deploy branch.**
