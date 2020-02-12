@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Entity for requst/response managment
  */
@@ -38,13 +40,13 @@ abstract class Http implements HttpServer
         $this->bodyRequest = $props;
     }
 
-    protected function getBody()
+    protected function getBody(): array
     {
         return $this->bodyRequest;
     }
 
 
-    protected function getResponseBody()
+    protected function getResponseBody(): array
     {
         if (is_array($this->responseBody)) {
             return $this->responseBody;
@@ -54,7 +56,7 @@ abstract class Http implements HttpServer
         }
     }
 
-    protected function setPropResponseBody(string $key, $prop)
+    protected function setPropResponseBody(string $key, $prop): void
     {
 
         if (is_array($this->responseBody)) {
@@ -123,6 +125,7 @@ class Response extends Http
 
         switch ($type[0]) {
             case "default":
+            case "update_list":
             case "single_record":
             case "all": {
                     $res = array(
@@ -187,6 +190,7 @@ class Response extends Http
 
 
             $actionData = $isValid ? call_user_func($getActionData, $actionPath, $actionType, $data) : null;
+      
 
             switch ($method) {
                 case "DELETE":

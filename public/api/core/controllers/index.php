@@ -3,6 +3,7 @@
 /**
  * Application controllers
  */
+declare(strict_types=1);
 
 namespace core\controllers;
 
@@ -125,10 +126,13 @@ class AppController implements Controller
 
     public function getActionData($path, $type, $data)
     {
-        $action = new Action($path, $type, $data,  $this->log, $this->getDb());
+        $action = new Action($path, $type, $data, $this->log, $this->getDb());
+       
         $cb = array($this, "getSqlQueryUpdateByCol");
 
-        return $action->parse($cb);
+        $parseData = $action->parse($cb);
+    
+        return $parseData;
     }
 
     public function runRequest()

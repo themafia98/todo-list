@@ -8,7 +8,8 @@ import {
     deleteRecord, 
     fetchRegistration,
     fetchLogin,
-    fetchUserSession
+    fetchUserSession,
+    onUpdateItems
 } from '../../api';
 
 function* fetchRecords(action){
@@ -75,6 +76,17 @@ function* fetchSession(action){
     }
 }
 
+function* fetchUpdateItems(action){
+    try {
+
+        const list = yield call(onUpdateItems, action.payload);
+
+        yield put({type: LOAD_RECORDS, payload: list});
+    } catch(error){
+        yield put({type: REQUEST_FAIL_ACTION, payload: error.message});
+    }
+}
+
 
 export { 
     fetchRecords, 
@@ -83,5 +95,6 @@ export {
     fetchDeleteRecord, 
     fetchRegUser,
     fetchLoginUser,
-    fetchSession
+    fetchSession,
+    fetchUpdateItems
 };

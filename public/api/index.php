@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Entrypoint API
  * Author: Pavel Petrovich
@@ -16,7 +18,6 @@ require_once "./core/utils/index.php";
 require_once "./config/db.php";
 
 use Exception;
-use config\app\http;
 use core\controllers\{AppController};
 
 /**
@@ -24,6 +25,7 @@ use core\controllers\{AppController};
  */
 
 use core\models\Database\{Database};
+use TypeError;
 
 try {
 
@@ -36,7 +38,12 @@ try {
     }
 
     $requestMethod = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : "";
-    $body = $requestMethod !== "GET" ? json_decode(file_get_contents('php://input'), JSON_OBJECT_AS_ARRAY) : null;
+    $content = file_get_contents('php://input');
+    $body = json_decode($content, true);
+
+    if (!$body){
+        throw new TypeError("bad body");
+    }
 
 
     $db = new Database($dbserver, $dbuser, $dbpassword, $dbname, $dbport);

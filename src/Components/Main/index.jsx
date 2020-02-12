@@ -19,10 +19,11 @@ class Main extends React.Component {
     static getDerivedStateFromProps = (props, state) => {
 
         const isNewTodo = props.todoList.length !== state.todoList.length;
+        let shouldUpdate = props.shouldUpdate;
     
         if (Array.isArray(props.todoList) && 
-            (isNewTodo || !_.isEqual(props.todoList, state.todoList))){
-                
+            (isNewTodo || shouldUpdate)){
+
             return {
                 ...state,
                 todoList: [...props.todoList]
@@ -55,15 +56,16 @@ class Main extends React.Component {
     };
 
     reorder = (list, dragIndex, dropIndex) => {
+        
         const result = Array.from(list);
         const [removed] = result.splice(dragIndex, 1);
         result.splice(dropIndex, 0, removed);
         return result.map((item,index) => {
             if (item && result[index - 1]){
-                const currentNum = Number(item.num);
-                const prevNum = Number(result[index - 1].num);
+                const currentNum = Number(item.position);
+                const prevNum = Number(result[index - 1].position);
                 if (currentNum < prevNum){
-                    item.num = `${prevNum + (prevNum - currentNum)}`;
+                    item.position = prevNum + (prevNum - currentNum);
                 }
             }
             return item;
@@ -93,9 +95,10 @@ class Main extends React.Component {
         });
     }
 
-    onDragEnd = (result) => {
+    onDragEnd = async (result) => {
         // dropped outside the list
         const { onSaveList = null } = this.props;
+   
         if (!result.destination) {
           return;
         }
@@ -106,11 +109,11 @@ class Main extends React.Component {
             result.destination.index
           );
       
-          if (onSaveList) onSaveList(todoList);
+          if (onSaveList) await onSaveList(todoList);
 
           this.setState({
             todoList
-          });
+          })
     }
 
 
