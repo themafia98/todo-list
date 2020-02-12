@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace core\models\Action;
 
 require_once realpath("") . "/core/models/Record.php";
@@ -35,12 +37,12 @@ class Action
         return $this->db;
     }
 
-    public function getActionPath()
+    public function getActionPath(): string
     {
         return $this->path;
     }
 
-    public function getActionType()
+    public function getActionType(): string
     {
         return $this->type;
     }
@@ -50,7 +52,7 @@ class Action
         return $this->actionData;
     }
 
-    public function getAllRecords(string $mode, string $uid)
+    public function getAllRecords(string $mode, string $uid): array
     {
         if ($mode !== "updateAfterAction" || !$uid) {
             return [];
@@ -83,7 +85,7 @@ class Action
                         $row["recordName"],
                         $row["time"],
                         $row["additionalNote"],
-                        $row["position"]
+                        (int) $row["position"]
                     );
                     array_push($list, $manager->getRecord());
                 }
@@ -93,11 +95,34 @@ class Action
         /**
          * Sort position todo
          */
-        usort($list, function($a, $b){
-            return strcmp($a->position, $b->position);
+        usort($list, function (object $a, object $b): int {
+            return strcmp((string) $a->position, (string) $b->position);
         });
 
         return $list;
+    }
+
+    public function manyRecordsUpdate(array $items, string $uid): bool
+    {
+
+        $isUpdate = true;
+
+        for ($i = 0; $i < count($items); $i++) {
+            $id = $items[$i]["id"];
+            $position = $items[$i]["position"];
+
+            $sql = "UPDATE records SET position = '$position' 
+                    WHERE userId='$uid' AND id='$id'";
+
+            $query = $this->getDb()->makeQuery($sql);
+
+            if (!$query) {
+                $isUpdate = false;
+                break;
+            }
+        }
+
+        return $isUpdate;
     }
 
     public function editAction(bool $isSingleField, callable $cbGetSql)
@@ -107,6 +132,25 @@ class Action
 
             http_response_code(404);
             return array("error" => "bad data");
+        }
+
+        if (strrpos($this->getActionType(), "update_list") !== false) {
+            $this->getDb()->connection();
+
+            $items = (array) $this->getActionData()["items"];
+            $uid = (string) $this->getActionData()["uid"];
+
+            if (!$items || !is_array($items)) {
+                return null;
+            }
+
+            $isUpdate = (bool) $this->manyRecordsUpdate($items, $uid);
+            
+            if (!$isUpdate) return null;
+
+            $list = $this->getAllRecords("updateAfterAction", $uid);
+
+            return $list;
         }
 
         if (strpos($this->getActionType(), "single_record") !== false) {
@@ -370,7 +414,7 @@ class Action
     public function parse(callable $cbGetSql)
     {
         $field = explode("__", $this->getActionType());
-        $isSingleField = isset($field[1]);
+        $isSingleField = isset($field[1]) || false;
 
         switch ($this->getActionPath()) {
             case "list": {
@@ -396,7 +440,9 @@ class Action
                 }
 
             case "edit": {
-                    return $this->editAction($isSingleField, $cbGetSql);
+        
+                    $editResult = $this->editAction($isSingleField, $cbGetSql);
+                    return $editResult;
                     break;
                 }
 

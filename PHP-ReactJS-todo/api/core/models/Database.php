@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Managmnet database entity
  */
@@ -54,7 +56,7 @@ class Database
             $this->getDbDataByKey("user"),
             $this->getDbDataByKey("passwd"),
             $this->getDbDataByKey("db"),
-            $this->getDbDataByKey("port")
+           (int) $this->getDbDataByKey("port")
         ) or die(mysqli_error($connect));
 
         $this->connect = $connect;

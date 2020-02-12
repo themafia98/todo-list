@@ -46,17 +46,16 @@ export const getRecordsList = async (payload) => {
 
 export const onUpdateItems = async payload => {
     const { 
-        item = [], 
+        items = [], 
         uid 
     } = payload;
 
-    
-    if (!item || !Array.isArray(item) || !item.length){
+    if (!items || !Array.isArray(items) || !items.length){
         throw new TypeError("Item list invalid");
     }
 
 
-    for (let i = 0; i < item.length; i++){
+    for (let i = 0; i < items.length; i++){
 
          const { 
             num, 
@@ -65,9 +64,9 @@ export const onUpdateItems = async payload => {
             time, 
             additionalNote = "", 
             position 
-        } = item[i] || {};
+        } = items[i] || {};
 
-        if (!num || !time || !id || !recordName || !additionalNote || _.isUndefined(position)){
+        if (!num || !time || !id || !recordName || _.isUndefined(additionalNote) || _.isUndefined(position)){
             throw new Error("Not invalid item values");
         }
 
@@ -80,7 +79,7 @@ export const onUpdateItems = async payload => {
     const body = JSON.stringify({
         "ACTION": "edit",
         "TYPE": "update_list" ,
-        "DATA": { item, uid }
+        "DATA": { items, uid }
     });
 
     const request = new Request();

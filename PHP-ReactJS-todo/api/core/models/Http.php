@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Entity for requst/response managment
  */
@@ -123,6 +125,7 @@ class Response extends Http
 
         switch ($type[0]) {
             case "default":
+            case "update_list":
             case "single_record":
             case "all": {
                     $res = array(
@@ -187,6 +190,7 @@ class Response extends Http
 
 
             $actionData = $isValid ? call_user_func($getActionData, $actionPath, $actionType, $data) : null;
+      
 
             switch ($method) {
                 case "DELETE":

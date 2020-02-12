@@ -19,10 +19,11 @@ class Main extends React.Component {
     static getDerivedStateFromProps = (props, state) => {
 
         const isNewTodo = props.todoList.length !== state.todoList.length;
+        let shouldUpdate = props.shouldUpdate;
     
         if (Array.isArray(props.todoList) && 
-            (isNewTodo || !_.isEqual(props.todoList, state.todoList))){
-                
+            (isNewTodo || shouldUpdate)){
+
             return {
                 ...state,
                 todoList: [...props.todoList]
@@ -94,7 +95,7 @@ class Main extends React.Component {
         });
     }
 
-    onDragEnd = (result) => {
+    onDragEnd = async (result) => {
         // dropped outside the list
         const { onSaveList = null } = this.props;
    
@@ -108,9 +109,11 @@ class Main extends React.Component {
             result.destination.index
           );
       
-          if (onSaveList) onSaveList(todoList);
+          if (onSaveList) await onSaveList(todoList);
 
-          
+          this.setState({
+            todoList
+          })
     }
 
 

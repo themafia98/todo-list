@@ -150,7 +150,10 @@ class App extends React.Component {
         const { onUpdateRecords = null, uid = "" } = this.props;
         
         if (onUpdateRecords && uid){
-            onUpdateRecords({ items, uid });
+           await onUpdateRecords({ items, uid });
+           this.setState({
+            shouldUpdate: true
+           });
         }
     }
 
@@ -293,7 +296,7 @@ const mapDispatchToProps = dispatch => {
         onDeleteRecord: payload => dispatch(deleteRecord(payload)),
         onLoginUser: payload => dispatch(loginUser(payload)),
         onRegistration: payload => dispatch(regUser(payload)),
-        onUpdateRecords: payload => dispatch(updateItems(payload)),
+        onUpdateRecords: async payload => await dispatch(updateItems(payload)),
         onLoadingSession: () => dispatch(loadingSession())
     };
 };
