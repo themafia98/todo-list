@@ -6,7 +6,7 @@ declare(strict_types=1);
  * Bootstrap backend application
  */
 
-require "./vendor/autoload.php";
+require "./api/vendor/autoload.php";
 
 
 
