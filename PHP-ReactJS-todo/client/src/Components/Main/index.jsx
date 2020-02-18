@@ -60,15 +60,10 @@ class Main extends React.Component {
         const result = Array.from(list);
         const [removed] = result.splice(dragIndex, 1);
         result.splice(dropIndex, 0, removed);
-        return result.map((item,index) => {
-            if (item && result[index - 1]){
-                const currentNum = Number(item.position);
-                const prevNum = Number(result[index - 1].position);
-                if (currentNum < prevNum){
-                    item.position = prevNum + (prevNum - currentNum);
-                }
-            }
-            return item;
+
+        return result.map((item, index) => { 
+            item.position = index; 
+            return item; 
         });
     };
 
