@@ -48,8 +48,8 @@ try {
 
     $db = new Database($dbserver, $dbuser, $dbpassword, $dbname, $dbport);
 
-    $controller = new AppController($db, $requestMethod, $body);
-    $controller->runRequest();
+    (new AppController($db, $requestMethod, $body)) -> runRequest();
+    
 } catch (Exception $err) {
     error_log($err->getMessage(), 1, "gaara33377@gmail.com");
 }
