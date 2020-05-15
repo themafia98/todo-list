@@ -6,5 +6,11 @@ import { Component } from '@angular/core';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent {
-  title = 'angularToDo';
+  private titleValue: string = 'Angular todo-list';
+
+  get title(): string {
+    return this.titleValue;
+  }
+
 }
+ 

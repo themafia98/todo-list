@@ -1,0 +1,15 @@
+header {
+  width: 100%;
+  max-width: 1140px;
+  margin: 0 auto 15px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  .app-title {
+    font-size: 30px;
+    color: #483d8b;
+    font-weight: 700;
+     margin-top: 5px;
+  }
+}
