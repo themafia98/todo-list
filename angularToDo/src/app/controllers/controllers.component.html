@@ -1,5 +1,42 @@
 
 <div class="controllers">
-  <input [(ngModel)]="todoInput" type='text' class="controllers__btn" placeholder="What should you do?" />
-  <input type='button' class="controllers__btn" value='add' (click)="onAdd($event)" />
+  <input
+    type='text'
+    class="controllers__btn"
+    placeholder="What should you do?"
+    [(ngModel)]="todoInput"
+  />
+  <input
+    type='button'
+    class="controllers__btn"
+    value='add'
+    [disabled]="!todoInput"
+    (click)="onAdd($event)"
+  />
+  <div class="sort-controllers">
+    <input
+      class="controllers__btn btn-sort past"
+      type="button"
+      value="past"
+      (click)="onSort('past')"
+    />
+    <input
+      class="btn-sort current"
+      type="button"
+      value="current"
+      (click)="onSort('current')"
+    />
+    <input
+      class="btn-sort future"
+      type="button"
+      value="future"
+      (click)="onSort('future')"
+    />
+    <input
+      class="btn-sort all"
+      type="button"
+      value="all"
+      (click)="onSort('all')"
+    />
+  </div>
 </div>

@@ -20,8 +20,12 @@ export class ControllersComponent {
     this.newTodoName = value;
   }
 
-  public onAdd(event: MouseEvent): void{
+  public onAdd(event: MouseEvent): void {
     this.todoInput = '';
+  }
+
+  public onSort(sortType: string): void {
+    console.log(sortType);
   }
 
 }

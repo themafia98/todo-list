@@ -1,0 +1,20 @@
+.todoListBox {
+  width: 90%;
+  background-color: #f5f5f5;
+  box-shadow: 0 0 3px #010101;
+  overflow-y: auto;
+  max-width: 66%;
+  min-width: 66%;
+  max-height: 97%;
+  min-height: 97%;
+  margin: 5px auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.wrapperBox {
+  width: 100%;
+  display: flex;
+  height: calc(100vh - 220px);
+  justify-content: center;
+}

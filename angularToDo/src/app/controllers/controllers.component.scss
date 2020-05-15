@@ -37,4 +37,33 @@ input {
   display: flex;
   flex-direction: column;
   justify-content: center;
+
+  .sort-controllers {
+    display: flex;
+    justify-content: center;
+    padding-top: 10px;
+    .btn-sort {
+      cursor: pointer;
+      border: 2px solid #000;
+      font-weight: 600;
+      margin: 2px;
+        &.past {
+          background: grey;
+          color: #680404;
+        }
+        &.current {
+          background: #c9d33e;
+          color: #680404;
+        }
+        &.future {
+          background: #add8e6;
+          color: #680404;
+        }
+        &.all {
+          background: green;
+          color: #680404;
+        }
+    }
+  }
+
 }
