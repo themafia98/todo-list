@@ -38,7 +38,6 @@ try {
     $requestMethod = isset($_SERVER["REQUEST_METHOD"]) ? $_SERVER["REQUEST_METHOD"] : "";
     $body = $requestMethod !== "GET" ? json_decode(file_get_contents('php://input'), JSON_OBJECT_AS_ARRAY) : null;
 
-
     $db = new Database($dbserver, $dbuser, $dbpassword, $dbname, $dbport);
 
     $controller = new AppController($db, $requestMethod, $body);
