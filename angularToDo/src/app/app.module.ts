@@ -1,15 +1,17 @@
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
-import { ControllersWrapperComponent } from './controllers-wrapper/controllers-wrapper.component';
+import { ControllersComponent } from './controllers/controllers.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    ControllersWrapperComponent
+    ControllersComponent
   ],
   imports: [
     BrowserModule,
+    FormsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
