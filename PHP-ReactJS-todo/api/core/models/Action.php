@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace core\models\Action;
 
 require_once realpath("") . "/core/models/Record.php";
@@ -35,12 +37,12 @@ class Action
         return $this->db;
     }
 
-    public function getActionPath()
+    public function getActionPath(): string
     {
         return $this->path;
     }
 
-    public function getActionType()
+    public function getActionType(): string
     {
         return $this->type;
     }
@@ -50,7 +52,7 @@ class Action
         return $this->actionData;
     }
 
-    public function getAllRecords(string $mode, string $uid)
+    public function getAllRecords(string $mode, string $uid): array
     {
         if ($mode !== "updateAfterAction" || !$uid) {
             return [];
@@ -74,21 +76,53 @@ class Action
                     isset($row["id"]) &&
                     isset($row["recordName"]) &&
                     isset($row["time"]) &&
-                    isset($row["additionalNote"])
+                    isset($row["additionalNote"]) &&
+                    isset($row["position"])
                 ) {
                     $manager->create(
                         $row["num"],
                         $row["id"],
                         $row["recordName"],
                         $row["time"],
-                        $row["additionalNote"]
+                        $row["additionalNote"],
+                        (int) $row["position"]
                     );
                     array_push($list, $manager->getRecord());
                 }
             }
         }
 
+        /**
+         * Sort position todo
+         */
+        usort($list, function (object $a, object $b): int {
+            return strcmp((string) $a->position, (string) $b->position);
+        });
+
         return $list;
+    }
+
+    public function manyRecordsUpdate(array $items, string $uid): bool
+    {
+
+        $isUpdate = true;
+
+        for ($i = 0; $i < count($items); $i++) {
+            $id = $items[$i]["id"];
+            $position = $items[$i]["position"];
+
+            $sql = "UPDATE records SET position = '$position' 
+                    WHERE userId='$uid' AND id='$id'";
+
+            $query = $this->getDb()->makeQuery($sql);
+
+            if (!$query) {
+                $isUpdate = false;
+                break;
+            }
+        }
+
+        return $isUpdate;
     }
 
     public function editAction(bool $isSingleField, callable $cbGetSql)
@@ -98,6 +132,25 @@ class Action
 
             http_response_code(404);
             return array("error" => "bad data");
+        }
+
+        if (strrpos($this->getActionType(), "update_list") !== false) {
+            $this->getDb()->connection();
+
+            $items = (array) $this->getActionData()["items"];
+            $uid = (string) $this->getActionData()["uid"];
+
+            if (!$items || !is_array($items)) {
+                return null;
+            }
+
+            $isUpdate = (bool) $this->manyRecordsUpdate($items, $uid);
+            
+            if (!$isUpdate) return null;
+
+            $list = $this->getAllRecords("updateAfterAction", $uid);
+
+            return $list;
         }
 
         if (strpos($this->getActionType(), "single_record") !== false) {
@@ -209,6 +262,7 @@ class Action
             $uid = isset($this->getActionData()["uid"]) ? $this->getActionData()["uid"] : null;
             $recordName = isset($this->getActionData()["recordName"]) ? $this->getActionData()["recordName"] : null;
             $time = isset($this->getActionData()["time"]) ? $this->getActionData()["time"] : null;
+            $position = isset($this->getActionData()["position"]) ? $this->getActionData()["position"] : null;
 
             if (!$recordName || !$time || !$uid) {
                 $this->log->error("addAction: bad data");
@@ -217,8 +271,8 @@ class Action
                 return array("error" => "bad data");
             }
 
-            $sql = "INSERT INTO records (id, recordName, time, additionalNote, userId)
-                        VALUES ('$id', '$recordName' , '$time', '', '$uid')";
+            $sql = "INSERT INTO records (id, recordName, time, additionalNote, userId, position)
+                        VALUES ('$id', '$recordName' , '$time', '', '$uid', '$position')";
             $query = $this->getDb()->makeQuery($sql);
 
             if (!$query) {
@@ -282,7 +336,7 @@ class Action
         if ($isEqual) {
             $key =  $user["userId"];
 
-            setcookie("sid", $key . "|x|" . $userPassword, time() + 60 * 60 * 24 * 1, "/", null, null, true);
+            setcookie("sid", $key . "|x|" . $userPassword, time() + 60 * 60 * 24 * 1, "/", "", false, true);
             $_SESSION["userId"] = $user["userId"];
 
             $userId = $_SESSION["userId"];
@@ -305,7 +359,7 @@ class Action
     {
         session_unset();
         session_destroy();
-        setcookie("sid", null, null, "/", null, null, true);
+        setcookie("sid", "", 0, "/", "");
     }
 
     public function regAction()
@@ -360,7 +414,7 @@ class Action
     public function parse(callable $cbGetSql)
     {
         $field = explode("__", $this->getActionType());
-        $isSingleField = isset($field[1]);
+        $isSingleField = isset($field[1]) || false;
 
         switch ($this->getActionPath()) {
             case "list": {
@@ -375,6 +429,7 @@ class Action
                     }
                     break;
                 }
+
             case "add": {
                     return $this->addAction($isSingleField);
                     break;
@@ -385,7 +440,9 @@ class Action
                 }
 
             case "edit": {
-                    return $this->editAction($isSingleField, $cbGetSql);
+        
+                    $editResult = $this->editAction($isSingleField, $cbGetSql);
+                    return $editResult;
                     break;
                 }
 

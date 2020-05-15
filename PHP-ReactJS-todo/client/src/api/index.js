@@ -1,5 +1,6 @@
 
 import Request from '../Request';
+import _ from 'lodash';
 import moment from 'moment';
 
 export const getRecordsList = async (payload) => {
@@ -43,16 +44,78 @@ export const getRecordsList = async (payload) => {
     }
 };
 
+export const onUpdateItems = async payload => {
+    const { 
+        items = [], 
+        uid 
+    } = payload;
+
+    if (!items || !Array.isArray(items) || !items.length){
+        throw new TypeError("Item list invalid");
+    }
+
+
+    for (let i = 0; i < items.length; i++){
+
+         const { 
+            num, 
+            id, 
+            recordName, 
+            time, 
+            additionalNote = "", 
+            position 
+        } = items[i] || {};
+
+        if (!num || !time || !id || !recordName || _.isUndefined(additionalNote) || _.isUndefined(position)){
+            throw new Error("Not invalid item values");
+        }
+
+    }
+
+    if (!uid){
+        throw new Error("User not found");
+    }
+
+    const body = JSON.stringify({
+        "ACTION": "edit",
+        "TYPE": "update_list" ,
+        "DATA": { items, uid }
+    });
+
+    const request = new Request();
+    const res = await request.sendRequest(body, "POST");
+
+    if (!res || !res.ok){
+        throw new Error("Invalid request.");
+    }
+
+    const contentType = res.headers.get('content-type');
+    if (!contentType || !contentType.includes('application/json')) {
+        throw new TypeError("Invalid response body");
+    }
+
+    const resJson = await res.json();
+
+    if (!resJson || !resJson.response){
+         throw new Error("Invalid parse json.");
+    }
+
+    const list = resJson.response ? resJson.response : [];
+
+    return list;
+
+};
+
 export const addRecord = async payload => {
         const { 
-            controllersState: { isValid = false, date = null, value = "" } = {},
+            listItem: { isValid = false, date = null, value = "", position } = {},
             uid
         } = payload;
 
         const dateParse = moment(date);
-
-        if (!isValid || !dateParse.isValid() || !value){
-            throw new Error("Date or record name is not valid");
+  
+        if (!isValid || !dateParse.isValid() || !value || _.isUndefined(position)){
+            throw new Error("Date / record name / position is not valid");
         }
 
         if (!uid){
@@ -64,7 +127,7 @@ export const addRecord = async payload => {
         const body = JSON.stringify({
             "ACTION": "add",
             "TYPE": "single_record" ,
-            "DATA": { time: dateFormat, recordName: value, uid }
+            "DATA": { time: dateFormat, recordName: value, position, uid }
         });
 
         const request = new Request();

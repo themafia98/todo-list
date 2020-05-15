@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Managmnet database entity
  */
@@ -41,7 +43,7 @@ class Database
         return $this->dbData[$key];
     }
 
-    public function setConnect($cnt)
+    public function setConnect($cnt): void
     {
         $this->connect = $cnt;
     }
@@ -54,7 +56,7 @@ class Database
             $this->getDbDataByKey("user"),
             $this->getDbDataByKey("passwd"),
             $this->getDbDataByKey("db"),
-            $this->getDbDataByKey("port")
+           (int) $this->getDbDataByKey("port")
         ) or die(mysqli_error($connect));
 
         $this->connect = $connect;
@@ -62,7 +64,7 @@ class Database
         return $this->connect;
     }
 
-    public function disconnection()
+    public function disconnection(): bool
     {
         if (!is_null($this->getConnect())) {
             mysqli_close($this->getConnect());
