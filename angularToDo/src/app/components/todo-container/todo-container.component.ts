@@ -1,4 +1,4 @@
-import { Component, Input, SimpleChange } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { TodoItem } from '../../interface';
 
 @Component({
@@ -15,9 +15,5 @@ export class TodoContainerComponent  {
    get items(){
      return this.todoList;
    }
-
-  ngOnChanges(changes: SimpleChange): void {
-    console.log(changes);
-  }
 
 }

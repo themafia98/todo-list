@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { TodoItem } from './interface';
+import { DataService } from './services';
 
 @Component({
   selector: 'app-root',
@@ -8,22 +9,23 @@ import { TodoItem } from './interface';
 })
 export class AppComponent {
   private titleValue: string = 'Angular todo-list';
-  private todoList: Array<TodoItem> = [];
 
-  get todos(){
-    return this.todoList;
-  }
-
-  set todos(todo: Array<TodoItem>){
-    this.todoList = todo;
-  }
+  constructor(private dataService: DataService){}
 
   get title(): string {
     return this.titleValue;
   }
 
-  dataChangeHandler(item: TodoItem){
-    this.todos = [...this.todos, item];
+  get list() {
+    return this.dataService.list;
+  }
+
+  set list(item: Array<TodoItem>){
+    this.dataService.list = item;
+  }
+
+  dataChangeHandler(item: TodoItem): void {
+    this.dataService.addItem(item);
   }
 
 }

@@ -4,18 +4,21 @@ import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { ControllersComponent } from './components/controllers/controllers.component';
 import { TodoContainerComponent } from './components/todo-container/todo-container.component';
+import { ModalWindowComponent } from './components/modal-window/modal-window.component';
+import { DataService } from './services';
 
 @NgModule({
   declarations: [
     AppComponent,
     ControllersComponent,
-    TodoContainerComponent
+    TodoContainerComponent,
+    ModalWindowComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule
   ],
-  providers: [],
+  providers: [DataService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
