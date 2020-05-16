@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
+import { TodoItem } from '../../interface';
 
 @Component({
   selector: 'controllers',
@@ -6,6 +7,7 @@ import { Component } from '@angular/core';
   styleUrls: ['./controllers.component.scss']
 })
 export class ControllersComponent {
+  @Output() dataChanged: EventEmitter<TodoItem> = new EventEmitter<TodoItem>();
   private newTodoName: string;
 
   constructor() {
@@ -20,7 +22,12 @@ export class ControllersComponent {
     this.newTodoName = value;
   }
 
+
   public onAdd(event: MouseEvent): void {
+    this.dataChanged.emit({
+      id: Math.random(),
+      name: this.todoInput
+    });
     this.todoInput = '';
   }
 

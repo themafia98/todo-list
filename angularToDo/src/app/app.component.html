@@ -1,8 +1,8 @@
 
 <header role="heading">
   <h1 class="app-title">{{ title }}</h1>
-  <controllers></controllers>
+  <controllers (dataChanged)="dataChangeHandler($event)" ></controllers>
 </header>
 <section class="main" role="main">
-  <todo-container></todo-container>
+  <todo-container [(list)]="todos"></todo-container>
 </section>
