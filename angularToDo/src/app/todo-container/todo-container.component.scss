@@ -10,6 +10,54 @@
   margin: 5px auto;
   display: flex;
   flex-direction: column;
+
+  .todo-item {
+    cursor: pointer;
+    padding: 5px;
+    background-color: #bbc2c7;
+    transition: all 0.5s ease-in-out;
+     span {
+        word-wrap: break-word;
+        text-align: center;
+        font-size: 17px;
+        font-weight: bold;
+        margin: 0;
+        display: flex;
+        justify-content: center;
+     }
+
+    &.future {
+        background-color: #add8e6;
+    }
+    &.past {
+        background-color: #808080;
+    }
+    &.current {
+        background-color: #c9d33e;
+    }
+
+    &:not(:first-child){
+        margin: 5px 0;
+    }
+    &:first-child {
+        margin-bottom: 5px;
+    }
+
+        &:hover {
+            background-color: #bcd5e5;
+            &.future {
+                background-color: #4cbde2;
+            }
+            &.past {
+                background-color: #bebebe;
+            }
+            &.current {
+                background-color: #2bb32b;
+            }
+        }
+
+  }
+
 }
 
 .wrapperBox {
@@ -18,3 +66,4 @@
   height: calc(100vh - 220px);
   justify-content: center;
 }
+

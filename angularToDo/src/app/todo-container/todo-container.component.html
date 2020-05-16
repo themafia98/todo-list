@@ -1,4 +1,7 @@
 <div class="wrapperBox">
   <div class="todoListBox">
+    <div class="todo-item" *ngFor="let item of items" >
+      <span class="todo-item__name">{{ item.name }}</span>
+    </div>
   </div>
 </div>
