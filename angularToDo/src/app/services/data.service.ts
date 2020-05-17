@@ -38,12 +38,12 @@ export default class DataService {
     (error: Error) => console.error(error));
   }
 
-  public addItem(item: TodoItem){
+  public addItem(item: TodoItem): void {
     this.firestore.collection('todos').add(item)
     .catch(error => console.error(error));
   }
 
-  public async deleteItem(id: string){
+  public async deleteItem(id: string): Promise<void> {
     try{
       const result = await this.firestore.collection('todos').ref.where("id", "==", id).get();
       if (!result.docs.length)  throw new Error("no data for delete");
