@@ -35,6 +35,7 @@ export class ControllersComponent {
 
   onChangePickerTitle(day: moment.Moment){
     this.selectDate = day;
+    this.onChangeVisibility();
   }
 
   @HostListener("document:click", ['$event'])
