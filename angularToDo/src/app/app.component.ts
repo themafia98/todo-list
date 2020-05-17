@@ -27,5 +27,4 @@ export class AppComponent {
   dataChangeHandler(item: TodoItem): void {
     this.dataService.addItem(item);
   }
-
 }

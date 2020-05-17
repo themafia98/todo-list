@@ -65,5 +65,18 @@ input {
         }
     }
   }
+}
 
+.mainControllers {
+  position: relative;
+  flex-direction: column;
+  display: flex
+}
+
+input.pickerDate {
+  border: 1px solid #000;
+  background-color: #eceef3;
+  width: 100%;
+  border-radius: 3px;
+  padding: 2px;
 }

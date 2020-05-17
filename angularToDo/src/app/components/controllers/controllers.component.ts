@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter } from '@angular/core';
+import { Component, Output, EventEmitter, HostListener } from '@angular/core';
 import { TodoItem } from '../../interface';
 
 @Component({
@@ -8,11 +8,9 @@ import { TodoItem } from '../../interface';
 })
 export class ControllersComponent {
   @Output() dataChanged: EventEmitter<TodoItem> = new EventEmitter<TodoItem>();
-  private newTodoName: string;
-
-  constructor() {
-    this.newTodoName = '';
-  }
+  private newTodoName: string = '';
+  private visiblePicker: boolean = false;
+  calendarRef: Element | null = null;
 
   get todoInput(){
     return this.newTodoName;
@@ -22,6 +20,31 @@ export class ControllersComponent {
     this.newTodoName = value;
   }
 
+  get visibilityPicker(){
+    return this.visiblePicker;
+  }
+
+  set visibilityPicker(visible: boolean){
+    this.visiblePicker = visible;
+  }
+
+  @HostListener("document:click", ['$event'])
+  onDocumentClick(event: MouseEvent){
+    const { target } = event;
+    const isPicker: boolean = (target as Element).className === 'pickerDate';
+
+    const parentNode = (target as HTMLElement).parentNode;
+    const offParent = (target as HTMLElement).offsetParent;
+
+    const isChild: boolean = offParent?.className.includes('custom-calendar') ||
+      (<Element>parentNode).className.includes('custom-calendar');
+
+    if ((!isPicker && !isChild) && this.visibilityPicker) this.onChangeVisibility();
+  }
+
+  public onChangeVisibility(): void {
+    this.visibilityPicker = !this.visibilityPicker;
+  }
 
   public onAdd(event: MouseEvent): void {
     this.dataChanged.emit({

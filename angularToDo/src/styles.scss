@@ -1,5 +1,11 @@
 @import '~normalize.css';
 @import './const.scss';
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+:root {
+  font-family: 'Roboto', sans-serif;
+}
+
 body {
     background: repeat url($bg);
 }

@@ -1,5 +1,8 @@
-<div class="custom-calendar">
-  <input class="prev" (click)="changeMonth(-1)" type="button" value="back" />
+<div [ngClass]="{ 'hide': !visibility, 'visible': visibility }" class="custom-calendar">
+  <button class="prev" (click)="changeMonth(-1)">
+    <i class="fas fa-arrow-left"></i>
+  </button>
+  <span class="year"> {{ date | moment: "MMM / YYYY" }} </span>
   <div class="days">
     <span *ngFor="let day of names" class="day">
       {{ day }}
@@ -10,5 +13,7 @@
       {{ day }}
     </span>
   </div>
-  <input class="next" (click)="changeMonth(1)" type="button" value="next" />
+  <button class="next" (click)="changeMonth(1)">
+    <i class="fas fa-arrow-right"></i>
+  </button>
 </div>

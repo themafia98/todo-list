@@ -7,6 +7,7 @@ import { TodoContainerComponent } from './components/todo-container/todo-contain
 import { ModalWindowComponent } from './components/modal-window/modal-window.component';
 import { DataService } from './services';
 import { CalendarComponent } from './calendar/calendar.component';
+import { MomentPipe } from './pipes/moment.pipe';
 
 @NgModule({
   declarations: [
@@ -15,6 +16,7 @@ import { CalendarComponent } from './calendar/calendar.component';
     TodoContainerComponent,
     ModalWindowComponent,
     CalendarComponent,
+    MomentPipe,
   ],
   imports: [
     BrowserModule,

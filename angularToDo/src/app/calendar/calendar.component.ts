@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, SimpleChange, Input } from '@angular/core';
 import * as moment from 'moment';
 import * as _ from 'lodash';
 
@@ -8,6 +8,7 @@ import * as _ from 'lodash';
   styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
+  @Input('visibilityPicker') visibility: boolean = false;
   private daysList: Array<number> = [];
   private dayNames: Array<string> = [];
   private selectDate: moment.Moment = moment();
@@ -16,6 +17,10 @@ export class CalendarComponent implements OnInit {
 
   constructor() {
     moment.locale(navigator.language);
+   }
+
+   get date(){
+     return this.selectDate;
    }
 
    get names(){
@@ -29,7 +34,6 @@ export class CalendarComponent implements OnInit {
    set days(list: Array<number>){
      this.daysList = list;
    }
-
 
    generateWeekDayNames(): Array<string> {
      const daysNames: Array<string> = [];
@@ -78,5 +82,4 @@ export class CalendarComponent implements OnInit {
     this.dayNames = this.generateWeekDayNames();
     this.days = this.generateDays();
   }
-
 }
