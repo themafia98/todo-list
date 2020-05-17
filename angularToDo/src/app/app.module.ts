@@ -6,7 +6,7 @@ import { ControllersComponent } from './components/controllers/controllers.compo
 import { TodoContainerComponent } from './components/todo-container/todo-container.component';
 import { ModalWindowComponent } from './components/modal-window/modal-window.component';
 import { DataService } from './services';
-import { CalendarComponent } from './calendar/calendar.component';
+import { CalendarComponent } from './components/calendar/calendar.component';
 import { MomentPipe } from './pipes/moment.pipe';
 import { ModalWindowViewComponent } from './components/modal-window/modal-window-view/modal-window-view.component';
 

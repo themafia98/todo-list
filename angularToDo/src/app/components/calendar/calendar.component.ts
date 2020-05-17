@@ -2,10 +2,10 @@ import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import * as _ from 'lodash';
-import { Day } from '../interface';
+import { Day } from '../../interface';
 
 @Component({
-  selector: 'app-calendar',
+  selector: 'calendar',
   templateUrl: './calendar.component.html',
   styleUrls: ['./calendar.component.scss']
 })

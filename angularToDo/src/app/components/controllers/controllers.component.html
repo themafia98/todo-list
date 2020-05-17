@@ -13,10 +13,10 @@
       [value]="day ? (day | moment) : 'pick date'"
       (click)="onChangeVisibility()"
     />
-    <app-calendar
+    <calendar
       (onChangeButtonTitle)="onChangePickerTitle($event)"
       [visibilityPicker]="visibilityPicker">
-    </app-calendar>
+    </calendar>
   </div>
   <input
     type='button'
