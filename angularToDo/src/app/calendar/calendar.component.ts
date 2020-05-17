@@ -73,9 +73,9 @@ export class CalendarComponent implements OnInit {
     const a: number = 5 * 7;
     let j: number = 1;
     const counter = this.skipDays + this.totalDays;
-    const countPrevMonthDays: number = moment().add(-1, 'month').daysInMonth() + 1;
+    const countPrevMonthDays: number = moment(this.selectDate).add(-1, 'month').daysInMonth();
 
-    let startSkipDay: number = countPrevMonthDays - this.skipDays;
+    let startSkipDay: number = countPrevMonthDays - this.skipDays + 1;
     const days: Array<Day> = [];
 
     for (let i = 1; i <= a; i++){
@@ -84,7 +84,7 @@ export class CalendarComponent implements OnInit {
         continue;
       }
 
-      if (i > counter  || i >= 31 + this.skipDays + 1){
+      if (i > counter  || i > countPrevMonthDays){
         days.push({id: uuid(), disabled: true, day: j++ });
         continue;
       }
@@ -99,8 +99,8 @@ export class CalendarComponent implements OnInit {
      this.selectDate = moment(this.selectDate).add(value, 'month');
      const nextMonth: number = this.selectDate.startOf('month').day();
 
-     this.skipDays = nextMonth > 0 ? nextMonth - 1 : nextMonth;
-     this.totalDays = this.selectDate.daysInMonth() + 1;
+     if (nextMonth > 0) this.skipDays = nextMonth - 1;
+     this.totalDays = this.selectDate.daysInMonth();
      this.days = this.generateDays();
    }
 

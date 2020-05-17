@@ -1,6 +1,7 @@
 interface TodoItem {
   id: string;
   name: string;
+  date: string;
 }
 
 interface Day {

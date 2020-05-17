@@ -57,9 +57,11 @@ export class ControllersComponent {
   }
 
   public onAdd(event: MouseEvent): void {
+    if (this.todoInput && this.selectDate)
     this.dataChanged.emit({
       id: uuid(),
-      name: this.todoInput
+      name: this.todoInput,
+      date: this.selectDate.format('DD.MM.YYYY')
     });
     this.todoInput = '';
   }
