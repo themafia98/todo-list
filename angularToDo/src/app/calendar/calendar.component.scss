@@ -62,12 +62,17 @@ input[type='button'], button {
 .monthDay {
   border: 1px dotted;
   text-align: center;
-  cursor: pointer;
   transition: all ease-in-out .3s;
 
-  &:hover {
+  &:hover:not(.disabled), &.select {
+    cursor: pointer;
     font-weight: bold;
     background: wheat;
+  }
+
+  &.disabled {
+    cursor: not-allowed;
+    background: #dcdcdc;
   }
 }
 

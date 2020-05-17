@@ -23,6 +23,7 @@
     "normalize.css": "^8.0.1",
     "rxjs": "~6.5.4",
     "tslib": "^1.10.0",
+    "uuid": "^8.0.0",
     "zone.js": "~0.10.2"
   },
   "devDependencies": {
@@ -33,6 +34,7 @@
     "@types/jasminewd2": "~2.0.3",
     "@types/lodash": "^4.14.151",
     "@types/node": "^12.11.1",
+    "@types/uuid": "^7.0.3",
     "codelyzer": "^5.1.2",
     "jasmine-core": "~3.5.0",
     "jasmine-spec-reporter": "~4.2.1",

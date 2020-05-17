@@ -1,4 +1,5 @@
 import { Component, Output, EventEmitter, HostListener } from '@angular/core';
+import { v4 as uuid } from 'uuid';
 import { TodoItem } from '../../interface';
 
 @Component({
@@ -8,6 +9,7 @@ import { TodoItem } from '../../interface';
 })
 export class ControllersComponent {
   @Output() dataChanged: EventEmitter<TodoItem> = new EventEmitter<TodoItem>();
+  private buttonPickerTitle: string = 'pick date';
   private newTodoName: string = '';
   private visiblePicker: boolean = false;
 
@@ -27,15 +29,28 @@ export class ControllersComponent {
     this.visiblePicker = visible;
   }
 
+  get pickerTitle(){
+    return this.buttonPickerTitle;
+  }
+
+  set pickerTitle(value: string){
+    this.buttonPickerTitle = value;
+  }
+
+  onChangePickerTitle(day: moment.Moment){
+    this.buttonPickerTitle = day.format('DD.MM.YYYY');
+  }
+
   @HostListener("document:click", ['$event'])
-  public onDocumentClick(event: MouseEvent){
+  public onDocumentClick(event: MouseEvent): void {
     const { target } = event;
     const isPicker: boolean = (target as Element).className === 'pickerDate';
 
     const parentNode = (target as HTMLElement).parentNode;
     const offParent = (target as HTMLElement).offsetParent;
 
-    const isChild: boolean = offParent?.className.includes('custom-calendar') ||
+    const isChild: boolean =
+      offParent?.className.includes('custom-calendar') ||
       (<Element>parentNode).className.includes('custom-calendar');
 
     if ((!isPicker && !isChild) && this.visibilityPicker) this.onChangeVisibility();
@@ -47,7 +62,7 @@ export class ControllersComponent {
 
   public onAdd(event: MouseEvent): void {
     this.dataChanged.emit({
-      id: Math.random(),
+      id: uuid(),
       name: this.todoInput
     });
     this.todoInput = '';

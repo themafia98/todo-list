@@ -7,8 +7,8 @@
       placeholder="What should you do?"
       [(ngModel)]="todoInput"
     />
-    <input class="pickerDate" type='button' value="pick date" (click)="onChangeVisibility()" />
-    <app-calendar [visibilityPicker]="visibilityPicker" ></app-calendar>
+    <input class="pickerDate" type='button' [value]="pickerTitle" (click)="onChangeVisibility()" />
+    <app-calendar (onChangeButtonTitle)="onChangePickerTitle($event)" [visibilityPicker]="visibilityPicker" ></app-calendar>
   </div>
   <input
     type='button'

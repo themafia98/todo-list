@@ -1,6 +1,8 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
+import { v4 as uuid } from 'uuid';
 import * as moment from 'moment';
 import * as _ from 'lodash';
+import { Day } from '../interface';
 
 @Component({
   selector: 'app-calendar',
@@ -9,7 +11,9 @@ import * as _ from 'lodash';
 })
 export class CalendarComponent implements OnInit {
   @Input('visibilityPicker') visibility: boolean = false;
-  private daysList: Array<number> = [];
+  @Output() onChangeButtonTitle: EventEmitter<moment.Moment> = new EventEmitter<moment.Moment>();
+  private selectedDay: Day | null = null;
+  private daysList: Array<Day> = [];
   private dayNames: Array<string> = [];
   private selectDate: moment.Moment = moment();
   private skipDays: number = moment().startOf('month').day();
@@ -31,8 +35,28 @@ export class CalendarComponent implements OnInit {
      return this.daysList;
    }
 
-   set days(list: Array<number>){
+   get selectDay(){
+     return this.selectedDay;
+   }
+
+   set selectDay(day: Day | null){
+     this.selectedDay = day;
+   }
+
+   getSelectDay(selectId: string): Day | null {
+     return this.daysList.find(({ id }) => id === selectId) || null;
+   }
+
+   set days(list: Array<Day>){
      this.daysList = list;
+   }
+
+   onClickDay(id: string, disabled: boolean): void {
+     if (id && !disabled) {
+       this.selectDay = this.getSelectDay(id);
+       const { day } = this.selectDay as Day;
+       this.onChangeButtonTitle.emit(this.selectDate.date(day));
+     }
    }
 
    generateWeekDayNames(): Array<string> {
@@ -45,27 +69,27 @@ export class CalendarComponent implements OnInit {
      return daysNames;
    }
 
-   generateDays(): Array<number> {
+   generateDays(): Array<Day> {
     const a: number = 5 * 7;
     let j: number = 1;
     const counter = this.skipDays + this.totalDays;
     const countPrevMonthDays: number = moment().add(-1, 'month').daysInMonth() + 1;
 
     let startSkipDay: number = countPrevMonthDays - this.skipDays;
-    const days: Array<number> = [];
+    const days: Array<Day> = [];
 
     for (let i = 1; i <= a; i++){
       if (i <= this.skipDays){
-        days.push(startSkipDay++);
+        days.push({ id: uuid(), disabled: true, day: startSkipDay++});
         continue;
       }
 
       if (i > counter  || i >= 31 + this.skipDays + 1){
-        days.push(j++);
+        days.push({id: uuid(), disabled: true, day: j++ });
         continue;
       }
 
-      days.push(i - this.skipDays);
+      days.push({id: uuid(), day: i - this.skipDays });
     }
 
     return days;

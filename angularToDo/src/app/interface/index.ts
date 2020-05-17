@@ -1,6 +1,12 @@
 interface TodoItem {
-  id: number;
+  id: string;
   name: string;
 }
 
-export { TodoItem };
+interface Day {
+  id: string;
+  disabled?: boolean;
+  day: number;
+}
+
+export { TodoItem, Day };

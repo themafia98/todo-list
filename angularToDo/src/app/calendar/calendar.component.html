@@ -9,8 +9,12 @@
     </span>
   </div>
   <div  class="main">
-    <span *ngFor="let day of days" class="monthDay">
-      {{ day }}
+    <span
+      [ngClass]="{ 'select': selectDay && selectDay!.id === day.id, 'disabled': day.disabled }"
+      *ngFor="let day of days" class="monthDay"
+      (click)="onClickDay(day.id, day.disabled)"
+    >
+      {{ day.day }}
     </span>
   </div>
   <button class="next" (click)="changeMonth(1)">
