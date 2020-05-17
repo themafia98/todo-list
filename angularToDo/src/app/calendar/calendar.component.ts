@@ -12,7 +12,7 @@ export class CalendarComponent implements OnInit {
   private daysList: Array<number> = [];
   private dayNames: Array<string> = [];
   private selectDate: moment.Moment = moment();
-  private skipDays: number = moment().startOf('month').day() - 1;
+  private skipDays: number = moment().startOf('month').day();
   private totalDays: number = moment().daysInMonth() + 1;
 
   constructor() {
@@ -79,6 +79,7 @@ export class CalendarComponent implements OnInit {
    }
 
   ngOnInit(): void {
+    if (this.skipDays > 0) this.skipDays -= 1;
     this.dayNames = this.generateWeekDayNames();
     this.days = this.generateDays();
   }
