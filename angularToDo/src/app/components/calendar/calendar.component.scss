@@ -15,7 +15,6 @@
 .year {
   background: #fff3f3;
   text-align: center;
-  border: 1px dashed;
   border-bottom: unset;
 }
 
@@ -38,11 +37,10 @@ input[type='button'], button {
   cursor: pointer;
   &.prev {
     border-radius: 5px 5px 0 0;
-    border-bottom: unset;
+
   }
   &.next {
     border-radius: 0 0 5px 5px;
-    border-top: unset;
   }
 
   &:hover {
@@ -51,8 +49,14 @@ input[type='button'], button {
 }
 
 .day {
-  border: 1px dotted;
-  border-bottom: none;
+  border-bottom: 1px solid;
+  border-top: 1px solid;
+  &:nth-of-type(7n){
+    border-right: none;
+  }
+  &:first-child {
+    border-left: none;
+  }
   text-align: center;
   color: #ff0000;
   border-color: #000000;
@@ -60,9 +64,10 @@ input[type='button'], button {
 }
 
 .monthDay {
-  border: 1px dotted;
+
   text-align: center;
   transition: all ease-in-out .3s;
+
 
   &:hover:not(.disabled), &.select {
     cursor: pointer;
