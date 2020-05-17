@@ -10,7 +10,6 @@ export class ControllersComponent {
   @Output() dataChanged: EventEmitter<TodoItem> = new EventEmitter<TodoItem>();
   private newTodoName: string = '';
   private visiblePicker: boolean = false;
-  calendarRef: Element | null = null;
 
   get todoInput(){
     return this.newTodoName;
@@ -29,7 +28,7 @@ export class ControllersComponent {
   }
 
   @HostListener("document:click", ['$event'])
-  onDocumentClick(event: MouseEvent){
+  public onDocumentClick(event: MouseEvent){
     const { target } = event;
     const isPicker: boolean = (target as Element).className === 'pickerDate';
 
