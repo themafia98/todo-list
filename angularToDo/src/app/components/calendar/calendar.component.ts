@@ -92,7 +92,6 @@ export class CalendarComponent implements OnInit {
       }
 
       const day: number = i - this.skipDays;
-      if (i - this.skipDays === 31) debugger;
 
       if  (row <= 5 || day <= this.totalDays && day < 32) {
         days.push({id: uuid(), day });

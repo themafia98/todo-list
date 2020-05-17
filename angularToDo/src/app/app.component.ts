@@ -17,20 +17,12 @@ export class AppComponent {
     return this.titleValue;
   }
 
-  get list() {
-    return this.dataService.list;
-  }
-
   get popupId(){
     return this.activePopupId;
   }
 
   set popupId(id: string){
     this.activePopupId = id;
-  }
-
-  set list(item: Array<TodoItem>){
-    this.dataService.list = item;
   }
 
   onSetActiveId(id: string): void {

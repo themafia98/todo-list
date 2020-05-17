@@ -4,7 +4,11 @@
       <div (click)="onVisibilityChange()" class="dialog-close-button">
         <i class="fas fa-times"></i>
       </div>
-      <modal-window-view [(serviceData)]="data"></modal-window-view>
+      <modal-window-view
+        (onChageVisibility)="onVisibilityChange()"
+        [(popupId)]="popupId"
+        [(serviceData)]="data">
+      </modal-window-view>
     </div>
 </div>
 </div>

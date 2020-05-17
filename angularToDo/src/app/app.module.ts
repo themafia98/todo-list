@@ -9,7 +9,8 @@ import { DataService } from './services';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { MomentPipe } from './pipes/moment.pipe';
 import { ModalWindowViewComponent } from './components/modal-window/modal-window-view/modal-window-view.component';
-
+import { AngularFireModule } from '@angular/fire';
+import { environment } from '../environments/environment';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,7 +23,8 @@ import { ModalWindowViewComponent } from './components/modal-window/modal-window
   ],
   imports: [
     BrowserModule,
-    FormsModule
+    FormsModule,
+    AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

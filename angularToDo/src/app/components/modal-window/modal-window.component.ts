@@ -41,6 +41,7 @@ export class ModalWindowComponent implements OnInit {
 
   onVisibilityChange(event?: MouseEvent){
     const { target = null } = event || {};
+
     if (target && (<Element>target).className !== 'window') return;
 
     this.visible = !this.visible;
@@ -50,7 +51,7 @@ export class ModalWindowComponent implements OnInit {
       this.onClosePopup.emit();
     }
     else if (!this.dataDialog){
-      this.dataDialog = <TodoItem>this.dataService.list.find(({ id }) => id === this.id);
+      this.dataDialog = <TodoItem>this.dataService.todo.find(({ id }) => id === this.id);
     }
   }
 
@@ -59,6 +60,7 @@ export class ModalWindowComponent implements OnInit {
   }
 
   ngOnChanges(changes: Record<string, string | SimpleChange>): void {
+
     const keys: Array<string> = Object.keys(changes);
     const idKey = keys.find(it => it === 'popupId');
 
