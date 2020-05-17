@@ -73,7 +73,9 @@ export class CalendarComponent implements OnInit {
 
    changeMonth(value: number): void {
      this.selectDate = moment(this.selectDate).add(value, 'month');
-     this.skipDays = this.selectDate.startOf('month').day() - 1;
+     const nextMonth: number = this.selectDate.startOf('month').day();
+
+     this.skipDays = nextMonth > 0 ? nextMonth - 1 : nextMonth;
      this.totalDays = this.selectDate.daysInMonth() + 1;
      this.days = this.generateDays();
    }
