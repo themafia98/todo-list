@@ -70,26 +70,33 @@ export class CalendarComponent implements OnInit {
    }
 
    generateDays(): Array<Day> {
-    const a: number = 5 * 7;
+    const matrix: number = 5 * 7 + this.skipDays;
     let j: number = 1;
     const counter = this.skipDays + this.totalDays;
     const countPrevMonthDays: number = moment(this.selectDate).add(-1, 'month').daysInMonth();
 
-    let startSkipDay: number = countPrevMonthDays - this.skipDays + 1;
+    let startSkipDay: number = countPrevMonthDays - this.skipDays;
     const days: Array<Day> = [];
 
-    for (let i = 1; i <= a; i++){
+    for (let i = 1; i <= matrix; i++){
+      const row: number = i / 7;
+
       if (i <= this.skipDays){
-        days.push({ id: uuid(), disabled: true, day: startSkipDay++});
+        days.push({ id: uuid(), disabled: true, day: ++startSkipDay});
         continue;
       }
 
-      if (i > counter){
+      if (i > counter && row <= 5){
         days.push({id: uuid(), disabled: true, day: j++ });
         continue;
       }
 
-      days.push({id: uuid(), day: i - this.skipDays });
+      const day: number = i - this.skipDays;
+      if (i - this.skipDays === 31) debugger;
+
+      if  (row <= 5 || day <= this.totalDays && day < 32) {
+        days.push({id: uuid(), day });
+      }
     }
 
     return days;
