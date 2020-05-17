@@ -1,6 +1,6 @@
 <div class="wrapperBox">
   <div class="todoListBox">
-    <div class="todo-item" *ngFor="let item of items" >
+    <div class="todo-item" *ngFor="let item of items" (click)="onOpenPopup(item)" >
       <span class="todo-item__name">{{ item.name }}</span>
     </div>
   </div>

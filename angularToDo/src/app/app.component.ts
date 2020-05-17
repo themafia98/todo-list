@@ -9,6 +9,7 @@ import { DataService } from './services';
 })
 export class AppComponent {
   private titleValue: string = 'Angular todo-list';
+  private activePopupId: string = '';
 
   constructor(private dataService: DataService){}
 
@@ -20,8 +21,20 @@ export class AppComponent {
     return this.dataService.list;
   }
 
+  get popupId(){
+    return this.activePopupId;
+  }
+
+  set popupId(id: string){
+    this.activePopupId = id;
+  }
+
   set list(item: Array<TodoItem>){
     this.dataService.list = item;
+  }
+
+  onSetActiveId(id: string): void {
+    this.popupId = id;
   }
 
   dataChangeHandler(item: TodoItem): void {

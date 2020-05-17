@@ -4,5 +4,6 @@
   <controllers (dataChanged)="dataChangeHandler($event)" ></controllers>
 </header>
 <section class="main" role="main">
-  <todo-container [(list)]="list"></todo-container>
+  <todo-container (onChangeActivePopup)="onSetActiveId($event)" [(list)]="list"></todo-container>
 </section>
+<modal-window [(popupId)]="popupId" ></modal-window>

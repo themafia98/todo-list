@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TodoItem } from '../../interface';
 
 @Component({
@@ -7,13 +7,15 @@ import { TodoItem } from '../../interface';
   styleUrls: ['./todo-container.component.scss']
 })
 export class TodoContainerComponent  {
-
   @Input('list') todoList: Array<TodoItem> = [];
-
-  constructor() { }
+  @Output() onChangeActivePopup: EventEmitter<string> = new EventEmitter<string>();
 
    get items(){
      return this.todoList;
    }
 
+   onOpenPopup(item: TodoItem): void {
+     const { id } = item;
+     this.onChangeActivePopup.emit(id);
+   }
 }
