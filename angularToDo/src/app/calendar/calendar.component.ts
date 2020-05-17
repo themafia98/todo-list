@@ -10,7 +10,7 @@ import * as _ from 'lodash';
 export class CalendarComponent implements OnInit {
   private daysList: Array<number> = [];
   private dayNames: Array<string> = [];
-  private today: number = moment().date();
+  private selectDate: moment.Moment = moment();
   private skipDays: number = moment().startOf('month').day() - 1;
   private totalDays: number = moment().daysInMonth() + 1;
 
@@ -23,13 +23,13 @@ export class CalendarComponent implements OnInit {
    }
 
    get days(){
-     debugger;
      return this.daysList;
    }
 
    set days(list: Array<number>){
      this.daysList = list;
    }
+
 
    generateWeekDayNames(): Array<string> {
      const daysNames: Array<string> = [];
@@ -42,16 +42,22 @@ export class CalendarComponent implements OnInit {
    }
 
    generateDays(): Array<number> {
-
+    const a: number = 5 * 7;
+    let j: number = 1;
     const counter = this.skipDays + this.totalDays;
     const countPrevMonthDays: number = moment().add(-1, 'month').daysInMonth() + 1;
 
     let startSkipDay: number = countPrevMonthDays - this.skipDays;
     const days: Array<number> = [];
 
-    for (let i = 1; i < counter; i++){
+    for (let i = 1; i <= a; i++){
       if (i <= this.skipDays){
         days.push(startSkipDay++);
+        continue;
+      }
+
+      if (i > counter  || i >= 31 + this.skipDays + 1){
+        days.push(j++);
         continue;
       }
 
@@ -61,12 +67,16 @@ export class CalendarComponent implements OnInit {
     return days;
    }
 
+   changeMonth(value: number): void {
+     this.selectDate = moment(this.selectDate).add(value, 'month');
+     this.skipDays = this.selectDate.startOf('month').day() - 1;
+     this.totalDays = this.selectDate.daysInMonth() + 1;
+     this.days = this.generateDays();
+   }
+
   ngOnInit(): void {
     this.dayNames = this.generateWeekDayNames();
-    console.log('skipDays:', this.skipDays);
-    console.log('today:', this.today);
     this.days = this.generateDays();
-    console.log(moment().format('ddd'));
   }
 
 }

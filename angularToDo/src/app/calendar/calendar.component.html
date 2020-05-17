@@ -1,4 +1,5 @@
 <div class="custom-calendar">
+  <input class="prev" (click)="changeMonth(-1)" type="button" value="back" />
   <div class="days">
     <span *ngFor="let day of names" class="day">
       {{ day }}
@@ -9,4 +10,5 @@
       {{ day }}
     </span>
   </div>
+  <input class="next" (click)="changeMonth(1)" type="button" value="next" />
 </div>
