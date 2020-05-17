@@ -9,7 +9,7 @@ import { TodoItem } from '../../interface';
 })
 export class ControllersComponent {
   @Output() dataChanged: EventEmitter<TodoItem> = new EventEmitter<TodoItem>();
-  private buttonPickerTitle: string = 'pick date';
+  private selectDate: moment.Moment | null = null;
   private newTodoName: string = '';
   private visiblePicker: boolean = false;
 
@@ -25,20 +25,16 @@ export class ControllersComponent {
     return this.visiblePicker;
   }
 
+  get day(){
+    return this.selectDate;
+  }
+
   set visibilityPicker(visible: boolean){
     this.visiblePicker = visible;
   }
 
-  get pickerTitle(){
-    return this.buttonPickerTitle;
-  }
-
-  set pickerTitle(value: string){
-    this.buttonPickerTitle = value;
-  }
-
   onChangePickerTitle(day: moment.Moment){
-    this.buttonPickerTitle = day.format('DD.MM.YYYY');
+    this.selectDate = day;
   }
 
   @HostListener("document:click", ['$event'])
