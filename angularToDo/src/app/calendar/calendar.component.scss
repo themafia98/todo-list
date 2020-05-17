@@ -1,0 +1,33 @@
+@mixin days() {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  background: #fff3f3;
+}
+
+.days, .main {
+  @include days();
+}
+
+.day {
+  border: 1px dotted;
+  border-bottom: none;
+  text-align: center;
+  color: #ff0000;
+  border-color: #000000;
+  font-weight: bold;
+}
+
+.monthDay {
+  border: 1px dotted;
+  text-align: center;
+  cursor: pointer;
+  transition: all ease-in-out .3s;
+
+  &:hover {
+    font-weight: bold;
+    background: wheat;
+  }
+}
+
+
+

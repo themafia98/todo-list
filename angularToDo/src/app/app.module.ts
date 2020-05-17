@@ -6,6 +6,7 @@ import { ControllersComponent } from './components/controllers/controllers.compo
 import { TodoContainerComponent } from './components/todo-container/todo-container.component';
 import { ModalWindowComponent } from './components/modal-window/modal-window.component';
 import { DataService } from './services';
+import { CalendarComponent } from './calendar/calendar.component';
 
 @NgModule({
   declarations: [
@@ -13,6 +14,7 @@ import { DataService } from './services';
     ControllersComponent,
     TodoContainerComponent,
     ModalWindowComponent,
+    CalendarComponent,
   ],
   imports: [
     BrowserModule,
