@@ -1,1 +1,10 @@
-<p [ngStyle]="{ 'display': visible ? 'block' : 'none' }" >modal-window works!</p>
+<div (click)="onVisibilityChange($event)" [ngStyle]="{ 'display': visible ? 'block' : 'none' }" class="window">
+  <div class="dialog-wrapper">
+    <div class="dialog">
+      <div (click)="onVisibilityChange()" class="dialog-close-button">
+        <i class="fas fa-times"></i>
+      </div>
+      <modal-window-view [(serviceData)]="data"></modal-window-view>
+    </div>
+</div>
+</div>

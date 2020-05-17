@@ -37,6 +37,10 @@ export class AppComponent {
     this.popupId = id;
   }
 
+  onClosePopup(): void {
+    this.popupId = '';
+  }
+
   dataChangeHandler(item: TodoItem): void {
     this.dataService.addItem(item);
   }

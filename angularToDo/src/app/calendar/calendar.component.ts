@@ -84,7 +84,7 @@ export class CalendarComponent implements OnInit {
         continue;
       }
 
-      if (i > counter  || i > countPrevMonthDays){
+      if (i > counter){
         days.push({id: uuid(), disabled: true, day: j++ });
         continue;
       }

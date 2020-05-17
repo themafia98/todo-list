@@ -1,0 +1,64 @@
+header {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+
+  input[type=button] {
+    cursor: pointer;
+    display: block;
+    margin: 0 auto;
+    font-size: 20px;
+    border-radius: 5px;
+    background: tomato;
+    border: 2px solid #8b4513;
+    font-weight: 700;
+    color: #fff;
+    padding: 3px;
+    outline: none;
+  }
+
+}
+
+section {
+  overflow-y: auto;
+  display: flex;
+  flex-grow: 1;
+  flex-direction: column;
+  align-items: center;
+  .title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 0;
+    margin-top: 2px;
+  }
+
+  .additionalNotes {
+    font-size: 15px;
+    color: #5c5959;
+  }
+
+  .editableNote {
+    text-align: center;
+    min-width: 50%;
+    max-height: 70%;
+    transition: all .5s ease-in-out;
+    border: 1px solid red;
+    cursor: pointer;
+    padding: 5px;
+    margin: 0 2px;
+    overflow-wrap: break-word;
+    text-overflow: ellipsis;
+    overflow: hidden;
+  }
+}
+
+footer {
+  padding: 10px;
+  text-align: center;
+}
+
+.date {
+  font-weight: 700;
+  font-size: 21px;
+  margin-bottom: 5px;
+}

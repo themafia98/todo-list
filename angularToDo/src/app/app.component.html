@@ -6,4 +6,4 @@
 <section class="main" role="main">
   <todo-container (onChangeActivePopup)="onSetActiveId($event)" [(list)]="list"></todo-container>
 </section>
-<modal-window [(popupId)]="popupId" ></modal-window>
+<modal-window (onClosePopup)="onClosePopup()" [(popupId)]="popupId" ></modal-window>

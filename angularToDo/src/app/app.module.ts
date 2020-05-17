@@ -8,6 +8,7 @@ import { ModalWindowComponent } from './components/modal-window/modal-window.com
 import { DataService } from './services';
 import { CalendarComponent } from './calendar/calendar.component';
 import { MomentPipe } from './pipes/moment.pipe';
+import { ModalWindowViewComponent } from './components/modal-window/modal-window-view/modal-window-view.component';
 
 @NgModule({
   declarations: [
@@ -17,6 +18,7 @@ import { MomentPipe } from './pipes/moment.pipe';
     ModalWindowComponent,
     CalendarComponent,
     MomentPipe,
+    ModalWindowViewComponent,
   ],
   imports: [
     BrowserModule,

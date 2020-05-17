@@ -1,4 +1,6 @@
-import { Component, OnInit, Input, SimpleChange } from '@angular/core';
+import { Component, OnInit, Input, SimpleChange, Output, EventEmitter } from '@angular/core';
+import { DataService } from '../../services';
+import { TodoItem } from 'src/app/interface';
 
 @Component({
   selector: 'modal-window',
@@ -7,7 +9,15 @@ import { Component, OnInit, Input, SimpleChange } from '@angular/core';
 })
 export class ModalWindowComponent implements OnInit {
   @Input() popupId: string = '';
+  @Output() onClosePopup: EventEmitter<void> = new EventEmitter<void>();
   private visibility: boolean = false;
+  private dataDialog: TodoItem | null = null;
+
+  constructor(private service: DataService){}
+
+  get dataService(){
+    return this.service;
+  }
 
   get id(){
     return this.popupId;
@@ -19,6 +29,29 @@ export class ModalWindowComponent implements OnInit {
 
   get visible(){
     return this.visibility;
+  }
+
+  get data(){
+    return this.dataDialog;
+  }
+
+  set data(data: TodoItem | null){
+    this.dataDialog = data;
+  }
+
+  onVisibilityChange(event?: MouseEvent){
+    const { target = null } = event || {};
+    if (target && (<Element>target).className !== 'window') return;
+
+    this.visible = !this.visible;
+
+    if (!this.visible) {
+      this.dataDialog = null;
+      this.onClosePopup.emit();
+    }
+    else if (!this.dataDialog){
+      this.dataDialog = <TodoItem>this.dataService.list.find(({ id }) => id === this.id);
+    }
   }
 
   ngOnInit(): void {
@@ -36,13 +69,10 @@ export class ModalWindowComponent implements OnInit {
     const { currentValue, previousValue, firstChange = false } = item;
     if (firstChange || currentValue === previousValue) return;
 
-    if (currentValue && !this.visible){
-      this.visible = true;
+    if ((currentValue && !this.visible) || (!currentValue && this.visible)){
+      this.onVisibilityChange();
     }
 
-    if (!currentValue && this.visible){
-      this.visible = false;
-    }
 
   }
 
