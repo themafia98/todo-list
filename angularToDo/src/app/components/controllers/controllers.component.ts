@@ -33,7 +33,7 @@ export class ControllersComponent {
     this.visiblePicker = visible;
   }
 
-  onChangePickerTitle(day: moment.Moment){
+  public onChangePickerTitle(day: moment.Moment){
     this.selectDate = day;
     this.onChangeVisibility();
   }
@@ -70,5 +70,4 @@ export class ControllersComponent {
   public onSort(sortType: string): void {
     console.log(sortType);
   }
-
 }

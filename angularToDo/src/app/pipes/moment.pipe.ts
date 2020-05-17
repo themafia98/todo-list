@@ -7,8 +7,7 @@ import * as moment from 'moment';
 })
 export class MomentPipe implements PipeTransform {
 
-  transform(value: moment.Moment, fmt: string = 'DD.MM.YYYY'): string {
+  public transform(value: moment.Moment, fmt: string = 'DD.MM.YYYY'): string {
     return value.locale(navigator.language).format(fmt);
   }
-
 }

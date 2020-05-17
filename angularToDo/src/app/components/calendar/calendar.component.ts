@@ -24,52 +24,56 @@ export class CalendarComponent implements OnInit {
    }
 
    get date(){
-     return this.selectDate;
+    return this.selectDate;
    }
 
    get names(){
-     return this.dayNames;
+    return this.dayNames;
    }
 
    get days(){
-     return this.daysList;
+    return this.daysList;
    }
 
    get selectDay(){
-     return this.selectedDay;
+    return this.selectedDay;
    }
 
    set selectDay(day: Day | null){
-     this.selectedDay = day;
+    this.selectedDay = day;
    }
 
    getSelectDay(selectId: string): Day | null {
-     return this.daysList.find(({ id }) => id === selectId) || null;
+    return this.daysList.find(({ id }) => id === selectId) || null;
    }
 
    set days(list: Array<Day>){
-     this.daysList = list;
+    this.daysList = list;
    }
 
-   onClickDay(id: string, disabled: boolean): void {
-     if (id && !disabled) {
-       this.selectDay = this.getSelectDay(id);
-       const { day } = this.selectDay as Day;
-       this.onChangeButtonTitle.emit(this.selectDate.date(day));
-     }
-   }
+  public  onClickDay(id: string, disabled: boolean): void {
+    if (id && !disabled) {
 
-   generateWeekDayNames(): Array<string> {
-     const daysNames: Array<string> = [];
-     for (let i = 1; i <= 6; i++){
-       daysNames.push(moment().day(i).format('ddd'));
-     }
+      this.selectDay = this.getSelectDay(id);
+      const { day } = this.selectDay as Day;
 
-     daysNames.push(moment().day(0).format('ddd'));
-     return daysNames;
-   }
+      this.onChangeButtonTitle.emit(this.selectDate.date(day));
+    }
+  }
 
-   generateDays(): Array<Day> {
+  public generateWeekDayNames(): Array<string> {
+    const daysNames: Array<string> = [];
+
+    for (let i = 1; i <= 6; i++){
+      daysNames.push(moment().day(i).format('ddd'));
+    }
+
+    daysNames.push(moment().day(0).format('ddd'));
+
+    return daysNames;
+  }
+
+  public generateDays(): Array<Day> {
     const matrix: number = 5 * 7 + this.skipDays;
     let j: number = 1;
     const counter = this.skipDays + this.totalDays;
@@ -99,18 +103,18 @@ export class CalendarComponent implements OnInit {
     }
 
     return days;
-   }
+  }
 
-   changeMonth(value: number): void {
-     this.selectDate = moment(this.selectDate).add(value, 'month');
-     const nextMonth: number = this.selectDate.startOf('month').day();
+  public changeMonth(value: number): void {
+    this.selectDate = moment(this.selectDate).add(value, 'month');
+    const nextMonth: number = this.selectDate.startOf('month').day();
 
-     if (nextMonth > 0) this.skipDays = nextMonth - 1;
-     this.totalDays = this.selectDate.daysInMonth();
-     this.days = this.generateDays();
-   }
+    if (nextMonth > 0) this.skipDays = nextMonth - 1;
+    this.totalDays = this.selectDate.daysInMonth();
+    this.days = this.generateDays();
+  }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     if (this.skipDays > 0) this.skipDays -= 1;
     this.dayNames = this.generateWeekDayNames();
     this.days = this.generateDays();

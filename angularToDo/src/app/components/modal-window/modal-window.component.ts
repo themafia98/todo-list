@@ -39,7 +39,7 @@ export class ModalWindowComponent implements OnInit {
     this.dataDialog = data;
   }
 
-  onVisibilityChange(event?: MouseEvent){
+  public onVisibilityChange(event?: MouseEvent){
     const { target = null } = event || {};
 
     if (target && (<Element>target).className !== 'window') return;
@@ -55,11 +55,11 @@ export class ModalWindowComponent implements OnInit {
     }
   }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.visible = !!this.id;
   }
 
-  ngOnChanges(changes: Record<string, string | SimpleChange>): void {
+  public ngOnChanges(changes: Record<string, string | SimpleChange>): void {
 
     const keys: Array<string> = Object.keys(changes);
     const idKey = keys.find(it => it === 'popupId');
@@ -74,8 +74,5 @@ export class ModalWindowComponent implements OnInit {
     if ((currentValue && !this.visible) || (!currentValue && this.visible)){
       this.onVisibilityChange();
     }
-
-
   }
-
 }

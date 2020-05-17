@@ -25,15 +25,15 @@ export class AppComponent {
     this.activePopupId = id;
   }
 
-  onSetActiveId(id: string): void {
+  public onSetActiveId(id: string): void {
     this.popupId = id;
   }
 
-  onClosePopup(): void {
+  public onClosePopup(): void {
     this.popupId = '';
   }
 
-  dataChangeHandler(item: TodoItem): void {
+  public dataChangeHandler(item: TodoItem): void {
     this.dataService.addItem(item);
   }
 }

@@ -15,10 +15,8 @@ export class ModalWindowViewComponent {
 
   constructor (private service: DataService){}
 
-  delete(evt: MouseEvent){
+  public delete(evt: MouseEvent){
     this.service.deleteItem(<string>this.popupId);
-
     this.onChageVisibility.emit();
   }
-
 }

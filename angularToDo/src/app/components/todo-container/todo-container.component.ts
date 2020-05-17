@@ -1,4 +1,4 @@
-import { Component, Output, EventEmitter, SimpleChange } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { TodoItem } from '../../interface';
 import { DataService } from 'src/app/services';
 
@@ -14,17 +14,11 @@ export class TodoContainerComponent  {
 
 
    get items(){
-     return this.dataService.todo;
+    return this.dataService.todo;
    }
 
-   onOpenPopup(item: TodoItem): void {
-     const { id } = item;
-     this.onChangeActivePopup.emit(id);
-   }
-
-   ngOnChanges(changes: SimpleChange): void {
-     //Called before any other lifecycle hook. Use it to inject dependencies, but avoid any serious work here.
-     //Add '${implements OnChanges}' to the class.
-
-   }
+  public onOpenPopup(item: TodoItem): void {
+    const { id } = item;
+    this.onChangeActivePopup.emit(id);
+  }
 }
