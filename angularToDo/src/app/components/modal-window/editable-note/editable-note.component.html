@@ -1,3 +1,13 @@
-<div class="editableNote">
-  <p>click for add note</p>
+<div (click)="modeView === 'view' ? onSwitchMode('edit') : null" class="wrapper-editableNote">
+  <div *ngIf="modeView === 'view'" class="editableNote">
+    <p class="note-content">{{ content }}</p>
+  </div>
+  <textarea *ngIf="modeView === 'edit'">{{ content }}</textarea>
+  <input
+    (click)="onSubmit()"
+    *ngIf="modeView === 'edit'"
+    type='button'
+    class="submitNote"
+    value="edit"
+  />
 </div>

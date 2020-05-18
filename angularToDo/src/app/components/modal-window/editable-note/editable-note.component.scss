@@ -1,34 +1,62 @@
+@mixin edit($width: 50%) {
+  text-align: center;
+  min-width: $width;
+  max-height: 70%;
+  -webkit-transition: all .5s ease-in-out;
+  transition: all .5s ease-in-out;
+  border: 1px solid red;
+  cursor: pointer;
+  padding: 5px;
+  margin: 0 2px;
+  overflow-wrap: break-word;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
 
-  .editableNote {
-    text-align: center;
-    min-width: 50%;
-    max-height: 70%;
-    -webkit-transition: all .5s ease-in-out;
-    transition: all .5s ease-in-out;
-    border: 1px solid red;
-    cursor: pointer;
-    padding: 5px;
-    margin: 0 2px;
-    overflow-wrap: break-word;
-    text-overflow: ellipsis;
-    overflow: hidden;
+.editableNote {
+   @include edit();
 
-    &:hover {
-      font-size: 16.5px;
-      font-weight: 700;
-      background: rgba(0,128,0,.61);
-      color: red;
-    }
+  &:hover {
+    font-size: 16.5px;
+    font-weight: 700;
+    background: rgba(0,128,0,.61);
+    color: red;
   }
+}
 
-  p {
-    overflow-wrap: break-word;
-    word-break: break-all;
-    margin: 0;
-    overflow-y: auto;
-    max-height: 100%;
-    text-overflow: ellipsis;
-    padding: 0;
-    font-size: 17px;
-  }
+p {
+  overflow-wrap: break-word;
+  word-break: break-all;
+  margin: 0;
+  overflow-y: auto;
+  max-height: 100%;
+  text-overflow: ellipsis;
+  padding: 0;
+  font-size: 17px;
+}
 
+textarea {
+  @include edit(100%);
+  resize: none;
+  height: 50%;
+  cursor: text;
+  outline: none;
+  overflow-y: auto;
+}
+
+.submitNote {
+  width: 30%;
+  transition: all .5s ease-in-out;
+  color: #000;
+  background-color: rgba(241,34,34,.712);
+  border: 1px solid #000;
+  margin-top: 5px;
+  padding: 5px;
+  cursor: pointer;
+}
+
+.wrapper-editableNote {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
