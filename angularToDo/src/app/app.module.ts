@@ -12,6 +12,7 @@ import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { TodoItemColorDirective } from './directive/todo-item-color.directive';
 import { SortableListPipe } from './pipes/sortable-list.pipe';
+import { EditableNoteComponent } from './components/modal-window/editable-note/editable-note.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -22,6 +23,7 @@ import { SortableListPipe } from './pipes/sortable-list.pipe';
     MomentPipe,
     TodoItemColorDirective,
     SortableListPipe,
+    EditableNoteComponent,
   ],
   imports: [
     BrowserModule,

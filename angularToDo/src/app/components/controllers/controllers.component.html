@@ -22,7 +22,7 @@
     type='button'
     class="controllers__btn"
     value='add'
-    [disabled]="!todoInput"
+    [disabled]="!todoInput || !day"
     (click)="onAdd($event)"
   />
   <div class="sort-controllers">
