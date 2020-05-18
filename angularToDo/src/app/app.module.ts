@@ -8,9 +8,9 @@ import { ModalWindowComponent } from './components/modal-window/modal-window.com
 import { DataService } from './services';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { MomentPipe } from './pipes/moment.pipe';
-import { ModalWindowViewComponent } from './components/modal-window/modal-window-view/modal-window-view.component';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
+import { TodoItemColorDirective } from './directive/todo-item-color.directive';
 @NgModule({
   declarations: [
     AppComponent,
@@ -19,7 +19,7 @@ import { environment } from '../environments/environment';
     ModalWindowComponent,
     CalendarComponent,
     MomentPipe,
-    ModalWindowViewComponent,
+    TodoItemColorDirective,
   ],
   imports: [
     BrowserModule,

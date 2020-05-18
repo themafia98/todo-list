@@ -1,14 +1,18 @@
-<div (click)="onVisibilityChange($event)" [ngStyle]="{ 'display': visible ? 'block' : 'none' }" class="window">
+<div *ngIf="visible" (click)="onVisibilityChange($event)" class="window">
   <div class="dialog-wrapper">
     <div class="dialog">
       <div (click)="onVisibilityChange()" class="dialog-close-button">
         <i class="fas fa-times"></i>
       </div>
-      <modal-window-view
-        (onChageVisibility)="onVisibilityChange()"
-        [(popupId)]="popupId"
-        [(serviceData)]="data">
-      </modal-window-view>
+      <header>
+        <p class="date">{{  data ? data!.date : '' }}</p>
+        <input type="button" (click)="delete($event)" value="delete todo" />
+       </header>
+       <section>
+         <p class="title">{{ data ? data.name : '' }}</p>
+         <p class="additionalNotes">additional notes</p>
+         <div class="editableNote">click for add note</div>
+       </section>
     </div>
 </div>
 </div>

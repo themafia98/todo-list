@@ -1,6 +1,7 @@
 import { Component, Output, EventEmitter, HostListener } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 import { TodoItem } from '../../interface';
+import { DataService } from 'src/app/services';
 
 @Component({
   selector: 'controllers',
@@ -12,6 +13,12 @@ export class ControllersComponent {
   private selectDate: moment.Moment | null = null;
   private newTodoName: string = '';
   private visiblePicker: boolean = false;
+
+  constructor(private service: DataService){}
+
+  get dataService(){
+    return this.service;
+  }
 
   get todoInput(){
     return this.newTodoName;
@@ -59,7 +66,7 @@ export class ControllersComponent {
 
   public onAdd(event: MouseEvent): void {
     if (this.todoInput && this.selectDate)
-    this.dataChanged.emit({
+    this.dataService.addItem({
       id: uuid(),
       name: this.todoInput,
       date: this.selectDate.format('DD.MM.YYYY')
