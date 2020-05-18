@@ -19,11 +19,7 @@ export class TodoItemColorDirective {
   }
 
   isSame(parsedDate: moment.Moment, today: moment.Moment): boolean {
-    const isEqualDate: boolean = parsedDate.date() === today.date();
-    const isEqualYear: boolean = parsedDate.year() === today.year();
-    const isEqualMonth: boolean = parsedDate.month() === today.month();
-
-    return isEqualDate && isEqualYear && isEqualMonth;
+    return parsedDate?.format("DD.MM.YYYY") === today?.format("DD.MM.YYYY");
   }
 
   constructor(private elementRef: ElementRef, private renderer: Renderer2) {
