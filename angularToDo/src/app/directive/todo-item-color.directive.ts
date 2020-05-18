@@ -12,14 +12,14 @@ export class TodoItemColorDirective {
     const parsedDate: moment.Moment = moment(this.date, "DD.MM.YYYY");
     const today: moment.Moment = moment();
 
-    if (this.isSome(parsedDate, today)) return '#c9d33e';
+    if (this.isSame(parsedDate, today)) return '#c9d33e';
     else if (parsedDate.isBefore(today)) return '#808080';
     else if (parsedDate.isAfter(today)) return '#add8e6';
 
     return '';
   }
 
-  isSome(parsedDate: moment.Moment, today: moment.Moment): boolean {
+  isSame(parsedDate: moment.Moment, today: moment.Moment): boolean {
     const isEqualDate: boolean = parsedDate.date() === today.date();
     const isEqualYear: boolean = parsedDate.year() === today.year();
     const isEqualMonth: boolean = parsedDate.month() === today.month();
