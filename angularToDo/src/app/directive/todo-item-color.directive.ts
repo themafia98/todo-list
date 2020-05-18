@@ -6,7 +6,6 @@ import * as moment from 'moment';
 })
 export class TodoItemColorDirective {
   @Input() date: string = '';
-  initialDate: string = '';
 
   private getColorByDate(): string {
     const parsedDate: moment.Moment = moment(this.date, "DD.MM.YYYY");
