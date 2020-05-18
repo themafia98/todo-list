@@ -1,6 +1,5 @@
-import { Component, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { v4 as uuid } from 'uuid';
-import { TodoItem } from '../../interface';
 import { DataService } from 'src/app/services';
 
 @Component({
@@ -9,7 +8,6 @@ import { DataService } from 'src/app/services';
   styleUrls: ['./controllers.component.scss']
 })
 export class ControllersComponent {
-  @Output() dataChanged: EventEmitter<TodoItem> = new EventEmitter<TodoItem>();
   private selectDate: moment.Moment | null = null;
   private newTodoName: string = '';
   private visiblePicker: boolean = false;
@@ -48,14 +46,14 @@ export class ControllersComponent {
   @HostListener("document:click", ['$event'])
   public onDocumentClick(event: MouseEvent): void {
     const { target } = event;
-    const isPicker: boolean = (target as Element).className === 'pickerDate';
+    const isPicker: boolean = (target as Element)?.className === 'pickerDate';
 
-    const parentNode = (target as HTMLElement).parentNode;
-    const offParent = (target as HTMLElement).offsetParent;
+    const parentNode = (target as HTMLElement)?.parentNode;
+    const offParent = (target as HTMLElement)?.offsetParent;
 
     const isChild: boolean =
-      offParent?.className.includes('custom-calendar') ||
-      (<Element>parentNode).className.includes('custom-calendar');
+      offParent?.className?.includes('custom-calendar') ||
+      (<Element>parentNode)?.className?.includes('custom-calendar');
 
     if ((!isPicker && !isChild) && this.visibilityPicker) this.onChangeVisibility();
   }
@@ -75,6 +73,8 @@ export class ControllersComponent {
   }
 
   public onSort(sortType: string): void {
-    console.log(sortType);
+    if (!sortType) return;
+
+    this.dataService.onSort(sortType);
   }
 }

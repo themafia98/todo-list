@@ -11,6 +11,7 @@ import { MomentPipe } from './pipes/moment.pipe';
 import { AngularFireModule } from '@angular/fire';
 import { environment } from '../environments/environment';
 import { TodoItemColorDirective } from './directive/todo-item-color.directive';
+import { SortableListPipe } from './pipes/sortable-list.pipe';
 @NgModule({
   declarations: [
     AppComponent,
@@ -20,6 +21,7 @@ import { TodoItemColorDirective } from './directive/todo-item-color.directive';
     CalendarComponent,
     MomentPipe,
     TodoItemColorDirective,
+    SortableListPipe,
   ],
   imports: [
     BrowserModule,

@@ -1,6 +1,13 @@
 <div class="wrapperBox">
   <div class="todoListBox">
-    <div  dateColor [date]="item.date" class="todo-item" *ngFor="let item of items" (click)="onOpenPopup(item)" >
+    <div
+      #todo
+      dateColor
+      [date]="item.date"
+      class="todo-item"
+      *ngFor="let item of (items | sortableList: sortType)"
+      (click)="onOpenPopup(item)"
+    >
       <span class="todo-item__name">{{ item.name }}</span>
     </div>
   </div>

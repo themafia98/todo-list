@@ -8,13 +8,23 @@ import { Observable } from 'rxjs';
 })
 export default class DataService {
 
+  private sort: string;
   private todoList: Array<TodoItem>;
   private observer: Observable<TodoItem[]>;
 
   constructor(private firestore: AngularFirestore){
+    this.sort = 'all';
     this.todoList = [];
     this.observer = this.firestore.collection<TodoItem>('todos').valueChanges();
     this.init();
+  }
+
+  get sortType(){
+    return this.sort;
+  }
+
+  set sortType(type: string){
+    this.sort = type;
   }
 
   get obs(){
@@ -36,6 +46,10 @@ export default class DataService {
       });
     },
     (error: Error) => console.error(error));
+  }
+
+  public onSort(type: string): void {
+    this.sortType = type;
   }
 
   public addItem(item: TodoItem): void {

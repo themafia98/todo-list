@@ -17,6 +17,10 @@ export class TodoContainerComponent  {
     return this.dataService.todo;
    }
 
+   get sortType(){
+     return this.dataService.sortType;
+   }
+
   public onOpenPopup(item: TodoItem): void {
     const { id } = item;
     this.onChangeActivePopup.emit(id);
