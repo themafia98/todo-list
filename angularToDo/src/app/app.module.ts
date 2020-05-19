@@ -13,6 +13,9 @@ import { environment } from '../environments/environment';
 import { TodoItemColorDirective } from './directive/todo-item-color.directive';
 import { SortableListPipe } from './pipes/sortable-list.pipe';
 import { EditableNoteComponent } from './components/modal-window/editable-note/editable-note.component';
+import router from './router';
+import { RouterModule } from '@angular/router';
+import { TodoPageComponent } from './components/todo-page/todo-page.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -24,10 +27,12 @@ import { EditableNoteComponent } from './components/modal-window/editable-note/e
     TodoItemColorDirective,
     SortableListPipe,
     EditableNoteComponent,
+    TodoPageComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
+    RouterModule.forRoot(router),
     AngularFireModule.initializeApp(environment.firebase)
   ],
   providers: [DataService],

@@ -1,0 +1,10 @@
+
+<div class="todoPage">
+  <controllers></controllers>
+  <section class="main" role="main">
+    <todo-container
+      (onChangeActivePopup)="this.modal!.onVisibilityChange(null, $event)"
+    ></todo-container>
+  </section>
+</div>
+<modal-window></modal-window>

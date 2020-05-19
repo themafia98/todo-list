@@ -1,11 +1,7 @@
 
 <header role="heading">
   <h1 class="app-title">{{ title }}</h1>
-  <controllers></controllers>
+  <section>
+    <router-outlet></router-outlet>
+  </section>
 </header>
-<section class="main" role="main">
-  <todo-container
-    (onChangeActivePopup)="this.modal!.onVisibilityChange(null, $event)"
-  ></todo-container>
-</section>
-<modal-window></modal-window>

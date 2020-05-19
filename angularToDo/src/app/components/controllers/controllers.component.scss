@@ -12,10 +12,10 @@ input {
       color: #ff0000;
     }
     &[type='button']{
+      width: 50px;
       transition: all .4s ease-in-out;
       font-weight: 700;
       align-self: center;
-      width: 60%;
       cursor: pointer;
 
       &:not(:disabled){
@@ -33,7 +33,6 @@ input {
 }
 
 .controllers {
-  width: 100%;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -68,9 +67,11 @@ input {
 }
 
 .mainControllers {
+  width: 20%;
   position: relative;
+  align-self: center;
   flex-direction: column;
-  display: flex
+  display: flex;
 }
 
 input.pickerDate {
