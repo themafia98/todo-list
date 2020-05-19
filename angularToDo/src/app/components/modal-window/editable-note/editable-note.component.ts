@@ -8,31 +8,31 @@ import { EditableNote, TodoItem } from '../../../interface';
 export class EditableNoteComponent {
   @Output() onEditNote: EventEmitter<EditableNote> = new EventEmitter<EditableNote>();
   @Input() data: TodoItem | null = null;
-  private name: string =  'click for add note';
+  private name: string = 'click for add note';
   private editName: string = this.name;
   private mode: string = 'view';
 
-  get content(){
+  get content() {
     return this.name;
   }
 
-  set content(value: string){
+  set content(value: string) {
     this.name = value;
   }
 
-  get modeView(){
+  get modeView() {
     return this.mode;
   }
 
-  set modeView(mode: string){
+  set modeView(mode: string) {
     this.mode = mode;
   }
 
-  get editValue(){
+  get editValue() {
     return this.editName;
   }
 
-  set editValue(val: string){
+  set editValue(val: string) {
     this.editName = val;
   }
 
@@ -44,7 +44,7 @@ export class EditableNoteComponent {
     event.stopPropagation();
     this.modeView = 'view';
     this.content = this.editName;
-    this.onEditNote.emit({ value: this.editName, key: 'additionalNote'});
+    this.onEditNote.emit({ value: this.editName, key: 'additionalNote' });
   }
 
   onSwitchMode(event: MouseEvent, mode: string): void {

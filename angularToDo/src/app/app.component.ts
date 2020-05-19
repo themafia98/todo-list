@@ -14,11 +14,11 @@ export class AppComponent {
     return this.titleValue;
   }
 
-  get popupId(){
+  get popupId() {
     return this.activePopupId;
   }
 
-  set popupId(id: string){
+  set popupId(id: string) {
     this.activePopupId = id;
   }
 

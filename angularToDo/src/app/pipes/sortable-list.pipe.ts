@@ -9,7 +9,7 @@ import * as moment from 'moment';
 export class SortableListPipe implements PipeTransform {
   private today: string = moment().format("DD.MM.YYYY");
 
-  get date(){
+  get date() {
     return this.today;
   }
 

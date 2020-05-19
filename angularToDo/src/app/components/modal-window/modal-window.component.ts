@@ -13,29 +13,29 @@ export class ModalWindowComponent implements OnInit {
   private visibility: boolean = false;
   private dataDialog: TodoItem | null = null;
 
-  constructor(private service: DataService){}
+  constructor(private service: DataService) { }
 
-  get dataService(){
+  get dataService() {
     return this.service;
   }
 
-  get id(){
+  get id() {
     return this.popupId;
   }
 
-  set visible(value: boolean){
+  set visible(value: boolean) {
     this.visibility = value;
   }
 
-  get visible(){
+  get visible() {
     return this.visibility;
   }
 
-  get data(){
+  get data() {
     return this.dataDialog;
   }
 
-  set data(data: TodoItem | null){
+  set data(data: TodoItem | null) {
     this.dataDialog = data;
   }
 
@@ -44,7 +44,7 @@ export class ModalWindowComponent implements OnInit {
     this.onVisibilityChange();
   }
 
-  public edit({ value = '', key = '' }){
+  public edit({ value = '', key = '' }) {
 
     if (this.data) this.dataService.edit(value, key, this.data);
   }
@@ -60,7 +60,7 @@ export class ModalWindowComponent implements OnInit {
       this.dataDialog = null;
       this.onClosePopup.emit();
     }
-    else if (!this.dataDialog){
+    else if (!this.dataDialog) {
       this.dataDialog = <TodoItem>this.dataService.todo.find(({ id }) => id === this.id);
     }
   }
@@ -81,7 +81,7 @@ export class ModalWindowComponent implements OnInit {
     const { currentValue, previousValue, firstChange = false } = item;
     if (firstChange || currentValue === previousValue) return;
 
-    if ((currentValue && !this.visible) || (!currentValue && this.visible)){
+    if ((currentValue && !this.visible) || (!currentValue && this.visible)) {
       this.onVisibilityChange();
     }
   }

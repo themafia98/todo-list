@@ -11,7 +11,7 @@ export class TodoItemColorDirective {
     /** default */
     const className = this.getColorByDate();
     this.renderer.addClass(this.elementRef.nativeElement, className);
-   }
+  }
 
   private getColorByDate(): string {
     const parsedDate: moment.Moment = moment(this.date, "DD.MM.YYYY");

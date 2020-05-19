@@ -22,41 +22,41 @@ export class CalendarComponent implements OnInit {
 
   constructor() {
     moment.locale(navigator.language);
-   }
+  }
 
-   get date(){
+  get date() {
     return this.selectDate;
-   }
+  }
 
-   get todayDay(){
-     return this.today;
-   }
+  get todayDay() {
+    return this.today;
+  }
 
-   get names(){
+  get names() {
     return this.dayNames;
-   }
+  }
 
-   get days(){
+  get days() {
     return this.daysList;
-   }
+  }
 
-   get selectDay(){
+  get selectDay() {
     return this.selectedDay;
-   }
+  }
 
-   set selectDay(day: Day | null){
+  set selectDay(day: Day | null) {
     this.selectedDay = day;
-   }
+  }
 
-   getSelectDay(selectId: string): Day | null {
+  getSelectDay(selectId: string): Day | null {
     return this.daysList.find(({ id }) => id === selectId) || null;
-   }
+  }
 
-   set days(list: Array<Day>){
+  set days(list: Array<Day>) {
     this.daysList = list;
-   }
+  }
 
-  public  onClickDay(id: string, disabled: boolean): void {
+  public onClickDay(id: string, disabled: boolean): void {
     if (id && !disabled) {
 
       this.selectDay = this.getSelectDay(id);
@@ -69,7 +69,7 @@ export class CalendarComponent implements OnInit {
   public generateWeekDayNames(): Array<string> {
     const daysNames: Array<string> = [];
 
-    for (let i = 1; i <= 6; i++){
+    for (let i = 1; i <= 6; i++) {
       daysNames.push(moment().day(i).format('ddd'));
     }
 
@@ -87,10 +87,10 @@ export class CalendarComponent implements OnInit {
     let startSkipDay: number = countPrevMonthDays - this.skipDays;
     const days: Array<Day> = [];
 
-    for (let i = 1; i <= matrix; i++){
+    for (let i = 1; i <= matrix; i++) {
       const row: number = i / 7;
 
-      if (i <= this.skipDays){
+      if (i <= this.skipDays) {
         const day = ++startSkipDay;
         days.push({
           id: uuid(),
@@ -101,7 +101,7 @@ export class CalendarComponent implements OnInit {
         continue;
       }
 
-      if (i > counter && row <= 5){
+      if (i > counter && row <= 5) {
         const day = j++;
         days.push({
           id: uuid(),
@@ -114,7 +114,7 @@ export class CalendarComponent implements OnInit {
 
       const day: number = i - this.skipDays;
 
-      if  (row <= 5 || day <= this.totalDays && day < 32) {
+      if (row <= 5 || day <= this.totalDays && day < 32) {
         days.push({
           id: uuid(),
           day,

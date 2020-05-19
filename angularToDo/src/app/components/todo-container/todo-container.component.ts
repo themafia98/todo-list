@@ -7,19 +7,19 @@ import { DataService } from 'src/app/services';
   templateUrl: './todo-container.component.html',
   styleUrls: ['./todo-container.component.scss']
 })
-export class TodoContainerComponent  {
+export class TodoContainerComponent {
   @Output() onChangeActivePopup: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private dataService: DataService) {}
+  constructor(private dataService: DataService) { }
 
 
-   get items(){
+  get items() {
     return this.dataService.todo;
-   }
+  }
 
-   get sortType(){
-     return this.dataService.sortType;
-   }
+  get sortType() {
+    return this.dataService.sortType;
+  }
 
   public onOpenPopup(item: TodoItem): void {
     const { id } = item;
