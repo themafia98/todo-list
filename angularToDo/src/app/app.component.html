@@ -4,6 +4,8 @@
   <controllers></controllers>
 </header>
 <section class="main" role="main">
-  <todo-container (onChangeActivePopup)="onSetActiveId($event)"></todo-container>
+  <todo-container
+    (onChangeActivePopup)="this.modal!.onVisibilityChange(null, $event)"
+  ></todo-container>
 </section>
-<modal-window (onClosePopup)="onClosePopup()" [(popupId)]="popupId" ></modal-window>
+<modal-window></modal-window>

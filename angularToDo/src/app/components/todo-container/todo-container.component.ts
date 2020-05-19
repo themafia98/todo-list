@@ -1,7 +1,5 @@
-import { Component, Output, EventEmitter } from '@angular/core';
-import { TodoItem } from '../../interface';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { DataService } from 'src/app/services';
-
 @Component({
   selector: 'todo-container',
   templateUrl: './todo-container.component.html',
@@ -21,8 +19,7 @@ export class TodoContainerComponent {
     return this.dataService.sortType;
   }
 
-  public onOpenPopup(item: TodoItem): void {
-    const { id } = item;
-    this.onChangeActivePopup.emit(id);
+  public onOpenPopup({ id = '' }): void {
+    if (id) this.onChangeActivePopup.emit(id);
   }
 }

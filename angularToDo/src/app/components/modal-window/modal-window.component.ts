@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, SimpleChange, Output, EventEmitter } from '@angular/core';
+import { Component, OnInit, SimpleChange, Output, EventEmitter } from '@angular/core';
 import { DataService } from '../../services';
 import { TodoItem } from 'src/app/interface';
 
@@ -8,7 +8,7 @@ import { TodoItem } from 'src/app/interface';
   styleUrls: ['./modal-window.component.scss']
 })
 export class ModalWindowComponent implements OnInit {
-  @Input() popupId: string = '';
+  private popupId: string = '';
   @Output() onClosePopup: EventEmitter<void> = new EventEmitter<void>();
   private visibility: boolean = false;
   private dataDialog: TodoItem | null = null;
@@ -19,16 +19,21 @@ export class ModalWindowComponent implements OnInit {
     return this.service;
   }
 
-  get id() {
-    return this.popupId;
-  }
-
   set visible(value: boolean) {
     this.visibility = value;
   }
 
   get visible() {
     return this.visibility;
+  }
+
+  get activePopupId() {
+    return this.popupId;
+  }
+
+  set activePopupId(id: string) {
+
+    this.popupId = id;
   }
 
   get data() {
@@ -40,7 +45,7 @@ export class ModalWindowComponent implements OnInit {
   }
 
   public delete(evt: MouseEvent): void {
-    this.dataService.deleteItem(<string>this.id);
+    this.dataService.deleteItem(<string>this.activePopupId);
     this.onVisibilityChange();
   }
 
@@ -49,7 +54,7 @@ export class ModalWindowComponent implements OnInit {
     if (this.data) this.dataService.edit(value, key, this.data);
   }
 
-  public onVisibilityChange(event?: MouseEvent): void {
+  public onVisibilityChange(event?: MouseEvent | null, _id: string = ''): void {
     const { target = null } = event || {};
 
     if (target && (<Element>target).className !== 'window') return;
@@ -58,19 +63,24 @@ export class ModalWindowComponent implements OnInit {
 
     if (!this.visible) {
       this.dataDialog = null;
-      this.onClosePopup.emit();
+      this.activePopupId = '';
     }
     else if (!this.dataDialog) {
-      this.dataDialog = <TodoItem>this.dataService.todo.find(({ id }) => id === this.id);
+      this.dataDialog = <TodoItem>this.dataService.todo.find(({ id }) => {
+        if (_id) return id === _id;
+        return id === this.activePopupId;
+      });
+
+      if (_id && this.dataDialog) this.activePopupId = _id;
     }
+
   }
 
   public ngOnInit(): void {
-    this.visible = !!this.id;
+    this.visible = !!this.activePopupId;
   }
 
   public ngOnChanges(changes: Record<string, string | SimpleChange>): void {
-
     const keys: Array<string> = Object.keys(changes);
     const idKey = keys.find(it => it === 'popupId');
 
