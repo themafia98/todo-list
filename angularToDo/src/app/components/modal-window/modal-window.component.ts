@@ -8,8 +8,8 @@ import { TodoItem } from 'src/app/interface';
   styleUrls: ['./modal-window.component.scss']
 })
 export class ModalWindowComponent implements OnInit {
-  private popupId: string = '';
   @Output() onClosePopup: EventEmitter<void> = new EventEmitter<void>();
+  private popupId: string = '';
   private visibility: boolean = false;
   private dataDialog: TodoItem | null = null;
 
@@ -32,7 +32,6 @@ export class ModalWindowComponent implements OnInit {
   }
 
   set activePopupId(id: string) {
-
     this.popupId = id;
   }
 
@@ -50,7 +49,6 @@ export class ModalWindowComponent implements OnInit {
   }
 
   public edit({ value = '', key = '' }) {
-
     if (this.data) this.dataService.edit(value, key, this.data);
   }
 

@@ -12,33 +12,33 @@ export class ControllersComponent {
   private newTodoName: string = '';
   private visiblePicker: boolean = false;
 
-  constructor(private service: DataService){}
+  constructor(private service: DataService) { }
 
-  get dataService(){
+  get dataService() {
     return this.service;
   }
 
-  get todoInput(){
+  get todoInput() {
     return this.newTodoName;
   }
 
-  set todoInput(value: string){
+  set todoInput(value: string) {
     this.newTodoName = value;
   }
 
-  get visibilityPicker(){
+  get visibilityPicker() {
     return this.visiblePicker;
   }
 
-  get day(){
+  get day() {
     return this.selectDate;
   }
 
-  set visibilityPicker(visible: boolean){
+  set visibilityPicker(visible: boolean) {
     this.visiblePicker = visible;
   }
 
-  public onChangePickerTitle(day: moment.Moment){
+  public onChangePickerTitle(day: moment.Moment) {
     this.selectDate = day;
     this.onChangeVisibility();
   }
@@ -64,11 +64,11 @@ export class ControllersComponent {
 
   public onAdd(event: MouseEvent): void {
     if (this.todoInput && this.selectDate)
-    this.dataService.addItem({
-      id: uuid(),
-      name: this.todoInput,
-      date: this.selectDate.format('DD.MM.YYYY')
-    });
+      this.dataService.addItem({
+        id: uuid(),
+        name: this.todoInput,
+        date: this.selectDate.format('DD.MM.YYYY')
+      });
     this.todoInput = '';
   }
 
