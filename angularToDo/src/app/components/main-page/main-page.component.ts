@@ -13,13 +13,13 @@ export class MainPageComponent {
     email: '',
     password: ''
   }
-  constructor(private authService: AuthService){ }
+  constructor(private authService: AuthService) { }
 
-  get auth(){
+  get auth() {
     return this.authService;
   }
 
-  get data(){
+  get data() {
     return this.formData;
   }
 
@@ -27,7 +27,7 @@ export class MainPageComponent {
     return this.formData.email;
   }
 
-  set mail(value: string){
+  set mail(value: string) {
     this.formData.email = value;
   }
 
@@ -35,7 +35,7 @@ export class MainPageComponent {
     return this.formData.password;
   }
 
-  set pass(value: string){
+  set pass(value: string) {
     this.formData.password = value;
   }
 

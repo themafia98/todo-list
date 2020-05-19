@@ -16,7 +16,7 @@ export class AuthService {
   }
 
 
-  async register(formData: User): Promise<firebase.auth.UserCredential | null> {
+  public async register(formData: User): Promise<firebase.auth.UserCredential | null> {
     try {
       return await this.auth.createUserWithEmailAndPassword(formData.email, formData.password);
     } catch (error) {
@@ -25,10 +25,10 @@ export class AuthService {
     }
   }
 
-  async login(formData: User): Promise<firebase.auth.UserCredential | null> {
+  public async login(formData: User): Promise<firebase.auth.UserCredential | null> {
     try {
-    return await this.auth.signInWithEmailAndPassword(formData.email, formData.password);
-    } catch(error){
+      return await this.auth.signInWithEmailAndPassword(formData.email, formData.password);
+    } catch (error) {
       console.error(error);
       return null;
     }

@@ -14,9 +14,9 @@ export class RegUserComponent {
     password: ''
   };
 
-  constructor(private authService: AuthService){ }
+  constructor(private authService: AuthService) { }
 
-  get auth(){
+  get auth() {
     return this.authService;
   }
 
@@ -41,7 +41,7 @@ export class RegUserComponent {
     return this.formData;
   }
 
-  get visible(){
+  get visible() {
     return this.visibleForm;
   }
 
