@@ -4,7 +4,7 @@ import * as moment from 'moment';
 
 @Pipe({
   name: 'sortableList',
-  pure: false
+  pure: true
 })
 export class SortableListPipe implements PipeTransform {
   private today: string = moment().format("DD.MM.YYYY");

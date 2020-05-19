@@ -9,10 +9,10 @@
         <input type="button" (click)="delete($event)" value="delete todo" />
        </header>
        <section>
-         <p class="title">{{ data ? data.name : '' }}</p>
+         <p class="title">{{ data ? data!.name : '' }}</p>
          <p class="additionalNotes">additional notes</p>
           <div class="content-note">
-            <editable-note></editable-note>
+            <editable-note [(data)]="data" (onEditNote)="edit($event)" ></editable-note>
           </div>
        </section>
     </div>

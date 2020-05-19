@@ -1,13 +1,15 @@
-<div (click)="modeView === 'view' ? onSwitchMode('edit') : null" class="wrapper-editableNote">
-  <div *ngIf="modeView === 'view'" class="editableNote">
+<div (click)="modeView === 'view' ? onSwitchMode($event, 'edit') : null" class="wrapper-editableNote">
+  <div *ngIf="modeView === 'view' else editBlock" class="editableNote">
     <p class="note-content">{{ content }}</p>
   </div>
-  <textarea *ngIf="modeView === 'edit'">{{ content }}</textarea>
-  <input
-    (click)="onSubmit()"
-    *ngIf="modeView === 'edit'"
-    type='button'
-    class="submitNote"
-    value="edit"
-  />
+  <ng-template #editBlock>
+  <textarea (input)="onChange($event)">{{ editValue ? editValue : content }}</textarea>
+    <input
+      (click)="onSubmit($event)"
+      type='button'
+      class="submitNote"
+      value="edit"
+    />
+  </ng-template>
 </div>
+

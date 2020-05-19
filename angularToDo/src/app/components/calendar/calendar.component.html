@@ -10,7 +10,11 @@
   </div>
   <div  class="main">
     <span
-      [ngClass]="{ 'select': selectDay && selectDay!.id === day.id, 'disabled': day.disabled }"
+      [ngClass]="{
+        'select': selectDay && selectDay!.id === day.id,
+         'today': todayDay === day.formated,
+        'disabled': day.disabled
+      }"
       *ngFor="let day of days" class="monthDay"
       (click)="onClickDay(day.id, day.disabled)"
     >

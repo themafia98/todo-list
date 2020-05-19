@@ -79,6 +79,11 @@ input[type='button'], button {
     cursor: not-allowed;
     background: #dcdcdc;
   }
+
+  &.today {
+    color: #ff0000;
+  }
+
 }
 
 

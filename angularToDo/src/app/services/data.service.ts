@@ -1,22 +1,23 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TodoItem } from '../interface';
 import * as moment from 'moment';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export default class DataService {
+export default class DataService implements OnDestroy {
 
   private sort: string;
   private todoList: Array<TodoItem>;
+  private sub: Subscription;
   private observer: Observable<TodoItem[]>;
 
   constructor(private firestore: AngularFirestore){
     this.sort = 'all';
     this.todoList = [];
     this.observer = this.firestore.collection<TodoItem>('todos').valueChanges();
-    this.init();
+    this.sub = this.onSub();
   }
 
   get sortType(){
@@ -39,8 +40,8 @@ export default class DataService {
     return this.todoList;
   }
 
-  private init(): void {
-    this.obs.subscribe((items: Array<TodoItem>) => {
+  private onSub(): Subscription {
+    return this.obs.subscribe((items: Array<TodoItem>) => {
       this.todoList = items.sort((a, b) => {
         return moment(b.date, "DD.MM.YYYY").unix() - moment(a.date, "DD.MM.YYYY").unix()
       });
@@ -50,6 +51,20 @@ export default class DataService {
 
   public onSort(type: string): void {
     this.sortType = type;
+  }
+
+  public async edit(value: string, key: string, data: TodoItem) {
+    try {
+      const result = await this.firestore.collection('todos').ref.where("id", "==", data?.id).get();
+      if (!result.docs.length)  throw new Error("no data for delete");
+      for await (let doc of result.docs){
+        await this.firestore.collection('todos').doc(doc.id).update({
+          [key]: value
+        });
+      }
+    } catch(err){
+      console.error(err);
+    }
   }
 
   public addItem(item: TodoItem): void {
@@ -67,5 +82,9 @@ export default class DataService {
     } catch(err){
       console.error(err);
     }
+  }
+
+  ngOnDestroy(): void {
+    if (this.sub) this.sub.unsubscribe();
   }
 }

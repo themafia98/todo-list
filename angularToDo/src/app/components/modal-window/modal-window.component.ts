@@ -39,12 +39,17 @@ export class ModalWindowComponent implements OnInit {
     this.dataDialog = data;
   }
 
-  public delete(evt: MouseEvent){
+  public delete(evt: MouseEvent): void {
     this.dataService.deleteItem(<string>this.id);
     this.onVisibilityChange();
   }
 
-  public onVisibilityChange(event?: MouseEvent){
+  public edit({ value = '', key = '' }){
+
+    if (this.data) this.dataService.edit(value, key, this.data);
+  }
+
+  public onVisibilityChange(event?: MouseEvent): void {
     const { target = null } = event || {};
 
     if (target && (<Element>target).className !== 'window') return;

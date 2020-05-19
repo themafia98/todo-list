@@ -15,6 +15,7 @@ export class CalendarComponent implements OnInit {
   private selectedDay: Day | null = null;
   private daysList: Array<Day> = [];
   private dayNames: Array<string> = [];
+  private today: string = moment().format("DD.MM.YYYY");
   private selectDate: moment.Moment = moment();
   private skipDays: number = moment().startOf('month').day();
   private totalDays: number = moment().daysInMonth() + 1;
@@ -25,6 +26,10 @@ export class CalendarComponent implements OnInit {
 
    get date(){
     return this.selectDate;
+   }
+
+   get todayDay(){
+     return this.today;
    }
 
    get names(){
@@ -73,7 +78,7 @@ export class CalendarComponent implements OnInit {
     return daysNames;
   }
 
-  public generateDays(): Array<Day> {
+  public generateDays(isInitial: boolean = false): Array<Day> {
     const matrix: number = 5 * 7 + this.skipDays;
     let j: number = 1;
     const counter = this.skipDays + this.totalDays;
@@ -86,19 +91,35 @@ export class CalendarComponent implements OnInit {
       const row: number = i / 7;
 
       if (i <= this.skipDays){
-        days.push({ id: uuid(), disabled: true, day: ++startSkipDay});
+        const day = ++startSkipDay;
+        days.push({
+          id: uuid(),
+          disabled: true,
+          day,
+          formated: moment(this.selectDate.set('date', day)).format('DD.MM.YYYY')
+        });
         continue;
       }
 
       if (i > counter && row <= 5){
-        days.push({id: uuid(), disabled: true, day: j++ });
+        const day = j++;
+        days.push({
+          id: uuid(),
+          disabled: true,
+          day,
+          formated: moment(this.selectDate.set('date', day)).format('DD.MM.YYYY')
+        });
         continue;
       }
 
       const day: number = i - this.skipDays;
 
       if  (row <= 5 || day <= this.totalDays && day < 32) {
-        days.push({id: uuid(), day });
+        days.push({
+          id: uuid(),
+          day,
+          formated: moment(this.selectDate.set('date', day)).format('DD.MM.YYYY')
+        });
       }
     }
 
@@ -117,6 +138,6 @@ export class CalendarComponent implements OnInit {
   public ngOnInit(): void {
     if (this.skipDays > 0) this.skipDays -= 1;
     this.dayNames = this.generateWeekDayNames();
-    this.days = this.generateDays();
+    this.days = this.generateDays(true);
   }
 }
