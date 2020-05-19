@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { TodoItem } from '../interface';
 import * as moment from 'moment';
-import { Observable, Subscription } from 'rxjs';
+import { Observable, Subscription, throwError } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
@@ -46,7 +46,10 @@ export default class DataService implements OnDestroy {
         return moment(b.date, "DD.MM.YYYY").unix() - moment(a.date, "DD.MM.YYYY").unix()
       });
     },
-    (error: Error) => console.error(error));
+    (error: Error) => {
+      console.error(error);
+      throwError(error);
+    });
   }
 
   public onSort(type: string): void {
