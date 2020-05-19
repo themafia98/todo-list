@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+import { AuthService } from 'src/app/services/auth.service';
+import { User } from 'src/app/interface';
 //import { User } from 'src/app/interface';
 
 @Component({
@@ -6,30 +8,35 @@ import { Component, OnInit } from '@angular/core';
   templateUrl: './main-page.component.html',
   styleUrls: ['./main-page.component.scss']
 })
-export class MainPageComponent implements OnInit {
-  private email: string = '';
-  private password: string = '';
+export class MainPageComponent {
+  private formData: User = {
+    email: '',
+    password: ''
+  }
+  constructor(private authService: AuthService){ }
 
+  get auth(){
+    return this.authService;
+  }
+
+  get data(){
+    return this.formData;
+  }
 
   get mail() {
-    return this.email;
+    return this.formData.email;
   }
 
   set mail(value: string){
-    this.email = value;
+    this.formData.email = value;
   }
 
   get pass() {
-    return this.password;
+    return this.formData.password;
   }
 
   set pass(value: string){
-    this.password = value;
-  }
-
-  constructor() { }
-
-  ngOnInit(): void {
+    this.formData.password = value;
   }
 
 }

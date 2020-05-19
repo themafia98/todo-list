@@ -19,6 +19,11 @@
     type='password'
     placeholder="password"
   />
-  <input [disabled]="loginEmailRef.invalid || password.invalid" type="submit" value="Enter" />
+  <input
+    [disabled]="loginEmailRef.invalid || password.invalid"
+    type="submit"
+    value="Enter"
+    (click)="auth.login(data)"
+    />
 </form>
 <reg-user></reg-user>

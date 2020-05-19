@@ -1,17 +1,25 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { User } from '../../../interface';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'reg-user',
   templateUrl: './reg-user.component.html',
   styleUrls: ['./reg-user.component.scss']
 })
-export class RegUserComponent implements OnInit {
+export class RegUserComponent {
   private visibleForm: boolean = false;
   private formData: User = {
     email: '',
     password: ''
   };
+
+  constructor(private authService: AuthService){ }
+
+  get auth(){
+    return this.authService;
+  }
+
 
   set mail(value: string) {
     this.formData.email = value;
@@ -42,16 +50,10 @@ export class RegUserComponent implements OnInit {
   }
 
   onSubmitForm(): void {
-    console.log(this.data);
+    this.auth.register(this.data);
   }
 
   onVisibleChange(): void {
     this.visible = !this.visible;
   }
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
-
 }
