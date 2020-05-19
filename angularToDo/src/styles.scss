@@ -9,3 +9,18 @@
 body {
     background: repeat url($bg);
 }
+
+input[type='submit']{
+  transition: background-color 0.3s ease-in-out;
+  border: 1px solid;
+  border-radius: 3px;
+  &:hover {
+    cursor: pointer;
+    background-color: #8877cc;
+    color: #fff;
+    border: 1px solid #000;
+  }
+  &:disabled {
+    background: #808080;
+  }
+}

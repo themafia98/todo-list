@@ -1,6 +1,24 @@
 <form>
   <p>Login form</p>
-  <input type='text' placeholder="email" value="" />
-  <input type='password' placeholder="password" value="" />
-  <input type="submit" value="Enter" />
+  <input
+    class="form-controll"
+    #loginEmailRef="ngModel"
+    name="mail"
+    pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}" required
+    type='text'
+    placeholder="email"
+    [(ngModel)]="mail"
+  />
+
+  <input
+    class="form-controll"
+    name="pass"
+    pattern="\w{4,20}" required
+    #password="ngModel"
+    [(ngModel)]="pass"
+    type='password'
+    placeholder="password"
+  />
+  <input [disabled]="loginEmailRef.invalid || password.invalid" type="submit" value="Enter" />
 </form>
+<reg-user></reg-user>

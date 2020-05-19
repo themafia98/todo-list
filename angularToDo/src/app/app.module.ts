@@ -17,6 +17,8 @@ import router from './router';
 import { RouterModule } from '@angular/router';
 import { TodoPageComponent } from './components/todo-page/todo-page.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
+import { RegUserComponent } from './components/main-page/reg-user/reg-user.component';
+import { AngularFireAuthModule  } from "@angular/fire/auth";
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,12 +32,14 @@ import { MainPageComponent } from './components/main-page/main-page.component';
     EditableNoteComponent,
     TodoPageComponent,
     MainPageComponent,
+    RegUserComponent,
   ],
   imports: [
     BrowserModule,
     FormsModule,
     RouterModule.forRoot(router),
-    AngularFireModule.initializeApp(environment.firebase)
+    AngularFireModule.initializeApp(environment.firebase),
+    AngularFireAuthModule
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

@@ -1,0 +1,44 @@
+.regUser {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  margin: 10px 0;
+  width: 100%;
+}
+
+input {
+  outline: none;
+}
+input[type='button']{
+  transition: background-color 0.3s ease-in-out;
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 3px;
+  &:hover {
+    cursor: pointer;
+    background-color: #8877cc;
+    color: #fff;
+    border: 1px solid #000;
+  }
+  &:disabled {
+    background: #808080;
+  }
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  margin: 10px 5px;
+  input:not(:first-child) {
+    margin-top: 5px;
+  }
+
+  input {
+    padding: 5px;
+  }
+}
+
+.alert {
+  color: red;
+}

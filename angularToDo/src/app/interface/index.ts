@@ -12,8 +12,11 @@ interface Day {
   formated: string;
 }
 
-interface EditableNote {
+interface EditableNote {}
 
+interface User {
+  email: string;
+  password: string;
 }
 
-export { TodoItem, Day, EditableNote };
+export { TodoItem, Day, EditableNote, User };
