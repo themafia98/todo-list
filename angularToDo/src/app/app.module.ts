@@ -16,6 +16,7 @@ import { EditableNoteComponent } from './components/modal-window/editable-note/e
 import router from './router';
 import { RouterModule } from '@angular/router';
 import { TodoPageComponent } from './components/todo-page/todo-page.component';
+import { MainPageComponent } from './components/main-page/main-page.component';
 @NgModule({
   declarations: [
     AppComponent,
@@ -28,6 +29,7 @@ import { TodoPageComponent } from './components/todo-page/todo-page.component';
     SortableListPipe,
     EditableNoteComponent,
     TodoPageComponent,
+    MainPageComponent,
   ],
   imports: [
     BrowserModule,
