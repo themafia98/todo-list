@@ -3,7 +3,7 @@
   <form *ngIf="visible">
     <input
       #emailRef="ngModel"
-      pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}" required
+      pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,10}" required
       class="form-control"
       name="mail"
       [(ngModel)]="mail"
@@ -12,7 +12,7 @@
     />
     <input
       #passwordRef="ngModel"
-      pattern="\w{4,20}" required required
+      pattern="\w{6,20}" required required
       class="form-control"
       name="password"
       [(ngModel)]="password"

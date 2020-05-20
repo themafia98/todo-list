@@ -1,7 +1,8 @@
 
 <header role="heading">
   <h1 class="app-title">{{ title }}</h1>
-  <section>
-    <router-outlet></router-outlet>
+  <section [@routeAnimations]="prepareRoute(outlet)"  *ngIf="loading">
+    <router-outlet #outlet="outlet"></router-outlet>
   </section>
 </header>
+<app-loader *ngIf="!loading"></app-loader>

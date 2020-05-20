@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/interface';
+import { Router, NavigationExtras } from '@angular/router';
 //import { User } from 'src/app/interface';
 
 @Component({
@@ -13,7 +14,7 @@ export class MainPageComponent {
     email: '',
     password: ''
   }
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService, private router: Router) { }
 
   get auth() {
     return this.authService;
@@ -37,6 +38,11 @@ export class MainPageComponent {
 
   set pass(value: string) {
     this.formData.password = value;
+  }
+
+  public async onEnter(){
+    const result = await this.auth.login(this.data);
+    if (result) this.router.navigate(['/todoList'], <NavigationExtras>result.user);
   }
 
 }

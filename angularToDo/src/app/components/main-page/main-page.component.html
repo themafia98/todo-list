@@ -4,7 +4,7 @@
     class="form-controll"
     #loginEmailRef="ngModel"
     name="mail"
-    pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}" required
+    pattern="[a-zA-Z_]+@[a-zA-Z_]+?\.[a-zA-Z]{2,10}" required
     type='text'
     placeholder="email"
     [(ngModel)]="mail"
@@ -13,7 +13,7 @@
   <input
     class="form-controll"
     name="pass"
-    pattern="\w{4,20}" required
+    pattern="\w{6,20}" required
     #password="ngModel"
     [(ngModel)]="pass"
     type='password'
@@ -23,7 +23,7 @@
     [disabled]="loginEmailRef.invalid || password.invalid"
     type="submit"
     value="Enter"
-    (click)="auth.login(data)"
+    (click)="onEnter()"
     />
 </form>
 <reg-user></reg-user>

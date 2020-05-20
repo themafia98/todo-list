@@ -1,0 +1,14 @@
+img {
+  position: absolute;
+  left: calc(50% - 256px / 2);
+  top: calc(50% - 256px / 2);
+}
+
+.loaderScreen {
+  //background-color: rgba(0,0,0,0.1);
+  top: 0;
+  left: 0;
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+}
