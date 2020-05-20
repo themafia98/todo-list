@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Output } from '@angular/core';
-import { DataService } from 'src/app/services';
+import DataService from '../../services/data.service';
 @Component({
   selector: 'todo-container',
   templateUrl: './todo-container.component.html',

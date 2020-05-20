@@ -1,5 +1,6 @@
 interface TodoItem {
   id: string;
+  uid: string;
   name: string;
   date: string;
   additionalNote?: string;
@@ -19,4 +20,8 @@ interface User {
   password: string;
 }
 
-export { TodoItem, Day, EditableNote, User };
+interface UserExist extends User {
+  uid: string;
+}
+
+export { TodoItem, Day, EditableNote, User, UserExist };

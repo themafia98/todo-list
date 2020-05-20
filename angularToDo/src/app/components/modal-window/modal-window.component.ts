@@ -1,5 +1,5 @@
 import { Component, OnInit, SimpleChange, Output, EventEmitter } from '@angular/core';
-import { DataService } from '../../services';
+import DataService from '../../services/data.service';
 import { TodoItem } from 'src/app/interface';
 
 @Component({
@@ -64,7 +64,8 @@ export class ModalWindowComponent implements OnInit {
       this.activePopupId = '';
     }
     else if (!this.dataDialog) {
-      this.dataDialog = <TodoItem>this.dataService.todo.find(({ id }) => {
+      this.dataDialog = <TodoItem>this.dataService.todo.find((todo: TodoItem) => {
+        const { id } = todo;
         if (_id) return id === _id;
         return id === this.activePopupId;
       });

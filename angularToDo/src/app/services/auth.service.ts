@@ -1,6 +1,5 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { AngularFireAuth } from '@angular/fire/auth';
-import { DataService } from '.';
 import { User } from '../interface';
 import { Router } from '@angular/router';
 import { Subscription, throwError } from 'rxjs';
@@ -12,13 +11,8 @@ export class AuthService implements OnDestroy {
   private session: Subscription | null = null;
   private isLoading: boolean = false;
 
-  constructor(private service: DataService,
-    private auth: AngularFireAuth,
-    private route: Router) { }
-
-  get dataService() {
-    return this.service;
-  }
+  constructor(private auth: AngularFireAuth,
+              private route: Router) { }
 
   get loading() {
     return this.isLoading;
@@ -40,15 +34,30 @@ export class AuthService implements OnDestroy {
     return this.route;
   }
 
+  get filterId(){
+    const item: string | null = localStorage.getItem('user');
+    if (!item) return null;
+
+    const { uid = '' } = JSON.parse(item);
+    return uid;
+  }
+
   startSession() {
     this.obsSession = this.auth.user.subscribe(user => {
       this.loading = true;
       if (!user) {
+
+        localStorage.clear();
         this.auth.signOut();
-        if (this.router.url !== '/') this.router.navigate(['/']);
-      } else if (this.router.url !== '/todoList') {
+
+        if (this.router.url !== '/')
+          return this.router.navigate(['/']);
+
+      } else if (this.router.url !== '/todoList')
         this.router.navigate(['/todoList']);
-      }
+      const { displayName, email, uid } = user || {};
+
+      localStorage.setItem('user', JSON.stringify({ displayName, email, uid }));
     },
       error => throwError(error),
       () => console.log('listener session init'));

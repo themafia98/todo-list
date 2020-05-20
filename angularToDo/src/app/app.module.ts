@@ -5,11 +5,11 @@ import { AppComponent } from './app.component';
 import { ControllersComponent } from './components/controllers/controllers.component';
 import { TodoContainerComponent } from './components/todo-container/todo-container.component';
 import { ModalWindowComponent } from './components/modal-window/modal-window.component';
-import { DataService } from './services';
+import DataService from './services/data.service';
 import { CalendarComponent } from './components/calendar/calendar.component';
 import { MomentPipe } from './pipes/moment.pipe';
 import { AngularFireModule } from '@angular/fire';
-import { environment } from '../environments/environment';
+import { environment } from './environment';
 import { TodoItemColorDirective } from './directive/todo-item-color.directive';
 import { SortableListPipe } from './pipes/sortable-list.pipe';
 import { EditableNoteComponent } from './components/modal-window/editable-note/editable-note.component';
@@ -41,7 +41,7 @@ import { LoaderComponent } from './components/loader/loader.component';
     FormsModule,
     RouterModule.forRoot(router),
     AngularFireModule.initializeApp(environment.firebase),
-    AngularFireAuthModule
+    AngularFireAuthModule,
   ],
   providers: [DataService],
   bootstrap: [AppComponent]

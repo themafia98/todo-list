@@ -1,6 +1,7 @@
 import { Component, HostListener } from '@angular/core';
 import { v4 as uuid } from 'uuid';
-import { DataService } from 'src/app/services';
+import DataService from '../../services/data.service';
+import { AuthService } from 'src/app/services/auth.service';
 
 @Component({
   selector: 'controllers',
@@ -12,10 +13,15 @@ export class ControllersComponent {
   private newTodoName: string = '';
   private visiblePicker: boolean = false;
 
-  constructor(private service: DataService) { }
+  constructor(private service: DataService,
+              private authService: AuthService) { }
 
   get dataService() {
     return this.service;
+  }
+
+  get auth() {
+    return this.authService;
   }
 
   get todoInput() {
@@ -65,6 +71,7 @@ export class ControllersComponent {
   public onAdd(event: MouseEvent): void {
     if (this.todoInput && this.selectDate)
       this.dataService.addItem({
+        uid: this.auth.filterId,
         id: uuid(),
         name: this.todoInput,
         date: this.selectDate.format('DD.MM.YYYY')
