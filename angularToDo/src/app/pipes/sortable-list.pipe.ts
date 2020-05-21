@@ -10,7 +10,7 @@ import { AuthService } from '../services/auth.service';
 export class SortableListPipe implements PipeTransform {
   private today: string = moment().format("DD.MM.YYYY");
 
-  constructor(private authService: AuthService){ }
+  constructor(private authService: AuthService) { }
 
   get auth() {
     return this.authService;

@@ -14,7 +14,7 @@ export class ControllersComponent {
   private visiblePicker: boolean = false;
 
   constructor(private service: DataService,
-              private authService: AuthService) { }
+    private authService: AuthService) { }
 
   get dataService() {
     return this.service;

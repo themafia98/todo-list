@@ -18,7 +18,7 @@ import { RouterModule } from '@angular/router';
 import { TodoPageComponent } from './components/todo-page/todo-page.component';
 import { MainPageComponent } from './components/main-page/main-page.component';
 import { RegUserComponent } from './components/main-page/reg-user/reg-user.component';
-import { AngularFireAuthModule  } from "@angular/fire/auth";
+import { AngularFireAuthModule } from "@angular/fire/auth";
 import { LoaderComponent } from './components/loader/loader.component';
 @NgModule({
   declarations: [

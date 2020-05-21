@@ -56,7 +56,7 @@ export class AuthService implements OnDestroy {
       this.isInitialSession = false;
       localStorage.clear();
       await this.auth.signOut();
-    } catch(error){
+    } catch (error) {
       console.error(error);
     }
   };

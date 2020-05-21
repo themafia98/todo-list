@@ -4,7 +4,7 @@ import { MainPageComponent } from './components/main-page/main-page.component';
 const route: Array<Route> = [
   { path: 'todoList', component: TodoPageComponent },
   { path: '', component: MainPageComponent },
-  { path: '**', redirectTo: '/'},
+  { path: '**', redirectTo: '/' },
 ];
 
 export default route;

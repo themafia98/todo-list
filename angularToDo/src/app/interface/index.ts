@@ -13,7 +13,7 @@ interface Day {
   formated: string;
 }
 
-interface EditableNote {}
+interface EditableNote { }
 
 interface User {
   email: string;
