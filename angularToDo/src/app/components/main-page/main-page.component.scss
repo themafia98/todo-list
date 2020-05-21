@@ -19,6 +19,9 @@ input {
 
 input[type='submit']{
   padding: 5px;
+  &:disabled {
+    color: #fff;
+  }
 }
 
 input:not([type='submit']){

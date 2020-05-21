@@ -1,8 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthService } from 'src/app/services/auth.service';
 import { User } from 'src/app/interface';
-import { Router, NavigationExtras } from '@angular/router';
-//import { User } from 'src/app/interface';
 
 @Component({
   selector: 'app-main-page',
@@ -14,7 +12,7 @@ export class MainPageComponent {
     email: '',
     password: ''
   }
-  constructor(private authService: AuthService, private router: Router) { }
+  constructor(private authService: AuthService) { }
 
   get auth() {
     return this.authService;
@@ -40,9 +38,15 @@ export class MainPageComponent {
     this.formData.password = value;
   }
 
-  public async onEnter(){
-    const result = await this.auth.login(this.data);
-    if (result) this.router.navigate(['/todoList'], <NavigationExtras>result.user);
+  public async onEnter() {
+    try {
+      const result = await this.auth.login(this.data);
+      if (result) this.auth.startSession();
+      else throw new Error("Invalid enter");
+
+    } catch (error) {
+      console.error(error);
+    }
   }
 
 }

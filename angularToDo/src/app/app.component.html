@@ -1,4 +1,11 @@
 
+<input
+  class="logOut"
+  *ngIf="auth.isInitialSession"
+  (click)="onLogout()"
+  type="button"
+  value="logout"
+/>
 <header role="heading">
   <h1 class="app-title">{{ title }}</h1>
   <section *ngIf="loading">

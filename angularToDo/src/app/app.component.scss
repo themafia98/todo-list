@@ -18,3 +18,22 @@ section {
   width: 100%;
 }
 
+.logOut {
+  transition: all .3s ease-in-out;
+  position: fixed;
+  left: 10px;
+  top: 10px;
+  padding: 5px;
+  border: 1px solid;
+  border-radius: 10%;
+  width: 85px;
+  height: 35px;
+  background: #eff3f8;
+  font-weight: bold;
+
+  &:hover {
+    cursor: pointer;
+    background-color: #b8d3f5;
+  }
+}
+

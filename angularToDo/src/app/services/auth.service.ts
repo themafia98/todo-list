@@ -8,14 +8,23 @@ import { Subscription, throwError } from 'rxjs';
   providedIn: 'root'
 })
 export class AuthService implements OnDestroy {
+  private sessionStatus: boolean = false;
   private session: Subscription | null = null;
   private isLoading: boolean = false;
 
   constructor(private auth: AngularFireAuth,
-              private route: Router) { }
+    private route: Router) { }
 
   get loading() {
     return this.isLoading;
+  }
+
+  get isInitialSession() {
+    return this.sessionStatus;
+  }
+
+  set isInitialSession(status: boolean) {
+    this.sessionStatus = status;
   }
 
   set loading(value: boolean) {
@@ -34,7 +43,7 @@ export class AuthService implements OnDestroy {
     return this.route;
   }
 
-  get filterId(){
+  get filterId() {
     const item: string | null = localStorage.getItem('user');
     if (!item) return null;
 
@@ -42,22 +51,42 @@ export class AuthService implements OnDestroy {
     return uid;
   }
 
-  startSession() {
+  private async clearSession(): Promise<void> {
+    try {
+      this.isInitialSession = false;
+      localStorage.clear();
+      await this.auth.signOut();
+    } catch(error){
+      console.error(error);
+    }
+  };
+
+  private saveUser(user: firebase.User) {
+    const { displayName, email, uid } = user || {};
+    localStorage.setItem('user', JSON.stringify({ displayName, email, uid }));
+  }
+
+  startSession(): void {
     this.obsSession = this.auth.user.subscribe(user => {
       this.loading = true;
+
+      if (this.router.url !== '/todoList' && user) {
+        this.isInitialSession = true;
+        this.saveUser(user);
+        return this.router.navigate(['/todoList']);
+      } else if (this.router.url !== '/' && !user) {
+        if (this.obsSession) this.obsSession.unsubscribe();
+        this.router.navigate(['/']);
+        return void this.clearSession();
+      }
+
       if (!user) {
+        if (this.obsSession) this.obsSession.unsubscribe();
+        return void this.clearSession();
+      }
 
-        localStorage.clear();
-        this.auth.signOut();
-
-        if (this.router.url !== '/')
-          return this.router.navigate(['/']);
-
-      } else if (this.router.url !== '/todoList')
-        this.router.navigate(['/todoList']);
-      const { displayName, email, uid } = user || {};
-
-      localStorage.setItem('user', JSON.stringify({ displayName, email, uid }));
+      this.isInitialSession = true;
+      this.saveUser(user);
     },
       error => throwError(error),
       () => console.log('listener session init'));
@@ -78,6 +107,14 @@ export class AuthService implements OnDestroy {
     } catch (error) {
       console.error(error);
       return null;
+    }
+  }
+
+  public async logOut(): Promise<void> {
+    try {
+      await this.clearSession();
+    } catch (error) {
+      console.error(error);
     }
   }
 

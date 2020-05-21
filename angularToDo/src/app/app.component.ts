@@ -20,8 +20,12 @@ export class AppComponent implements OnInit {
   }
 
   get loading() {
-
     return this.auth.loading;
+  }
+
+  onLogout(): void {
+
+    this.auth.logOut();
   }
 
   ngOnInit(): void {

@@ -15,7 +15,7 @@ export default class DataService implements OnDestroy {
   private observer: Observable<TodoItem[]> | null = null;
 
   constructor(private firestore: AngularFirestore,
-            private authService: AuthService){
+    private authService: AuthService) {
     this.queryList();
   }
 
@@ -45,7 +45,6 @@ export default class DataService implements OnDestroy {
 
   private onSub(): Subscription | null {
     if (!this.obs) return null;
-
     return this.obs.subscribe((items: Array<TodoItem>) => {
       this.todoList = items.sort((a, b) => {
         return moment(b.date, "DD.MM.YYYY").unix() - moment(a.date, "DD.MM.YYYY").unix()
