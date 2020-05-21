@@ -104,7 +104,7 @@ export default class DataService implements OnDestroy {
 
   }
 
-  public dispoise(): void {
+  public dispose(): void {
     if (this.sub) this.sub.unsubscribe();
     this.todoList = [];
   }

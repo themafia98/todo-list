@@ -20,6 +20,6 @@ export class TodoPageComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.dataService.dispoise();
+    this.dataService.dispose();
   }
 }
