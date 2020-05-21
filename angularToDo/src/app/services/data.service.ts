@@ -11,13 +11,11 @@ export default class DataService implements OnDestroy {
 
   private sort: string = 'all';
   private todoList: Array<TodoItem> = [];
-  private sub: Subscription | null = this.onSub();
+  private sub: Subscription | null = null;
   private observer: Observable<TodoItem[]> | null = null;
 
   constructor(private firestore: AngularFirestore,
-    private authService: AuthService) {
-    this.queryList();
-  }
+    private authService: AuthService) { }
 
   get sortType() {
     return this.sort;
@@ -91,7 +89,8 @@ export default class DataService implements OnDestroy {
     }
   }
 
-  queryList(): void {
+   start(): void {
+
     const item: string | null = localStorage.getItem('user');
     if (!item) return;
 
@@ -105,7 +104,13 @@ export default class DataService implements OnDestroy {
 
   }
 
+  public dispoise(): void {
+    if (this.sub) this.sub.unsubscribe();
+    this.todoList = [];
+  }
+
   ngOnDestroy(): void {
+
     if (this.sub) this.sub.unsubscribe();
   }
 }
