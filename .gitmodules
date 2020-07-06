@@ -1,0 +1,3 @@
+[submodule "todoListRN"]
+	path = todoListRN
+	url = https://github.com/themafia98/todo-list.git
